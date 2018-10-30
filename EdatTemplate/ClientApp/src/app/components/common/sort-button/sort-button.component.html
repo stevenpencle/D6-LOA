@@ -1,0 +1,12 @@
+﻿<button type="button" class="btn btn-sm btn-link text-white" (click)="invokeSort()" [attr.aria-label]="'Sort by ' + label"
+    title="Sort by {{label}} {{sortData.currentSortField === field ? (sortData.currentSortDirection === 'ascending' ? 'descending' : 'ascending') : 'ascending'}}">
+    <span *ngIf="sortData.currentSortField === field">
+        <span *ngIf="sortData.currentSortDirection === 'descending'">
+            <i class="fas fa-sort-alpha-up"></i>
+        </span>
+        <span *ngIf="sortData.currentSortDirection === 'ascending'">
+            <i class="fas fa-sort-alpha-down"></i>
+        </span>
+    </span>
+    {{label}}
+</button>
