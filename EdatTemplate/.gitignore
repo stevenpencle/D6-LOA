@@ -181,6 +181,7 @@ ClientBin/
 *.publishsettings
 orleans.codegen.cs
 
+/ClientApp/dist
 /ClientApp/node_modules
 /ClientApp/src/app/model
 
