@@ -181,9 +181,9 @@ ClientBin/
 *.publishsettings
 orleans.codegen.cs
 
-/EdatTemplate/ClientApp/dist
-/EdatTemplate/ClientApp/node_modules
-/EdatTemplate/ClientApp/src/app/model
+/ClientApp/dist
+/ClientApp/node_modules
+/ClientApp/src/app/model
 
 # RIA/Silverlight projects
 Generated_Code/
