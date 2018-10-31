@@ -28,7 +28,7 @@ namespace EdatTemplate.Infrastructure
             {
                 var client = new HttpClient();
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ProductKey);
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
                 var nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (nameParts.Length == 2)
                 {
@@ -69,7 +69,7 @@ namespace EdatTemplate.Infrastructure
             while (true)
             {
                 var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ProductKey);
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
                 var uri = _endpoint + $"GetStaffById?id={id}";
                 var response = await client.GetAsync(uri);
                 if (!response.IsSuccessStatusCode)
@@ -99,7 +99,7 @@ namespace EdatTemplate.Infrastructure
             {
                 var client = new HttpClient();
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ProductKey);
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
                 queryString["emailAddress"] = email;
                 queryString["status"] = "active";
                 var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;

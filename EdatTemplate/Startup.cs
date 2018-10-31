@@ -118,11 +118,9 @@ namespace EdatTemplate
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             //are we using the angular-cli server (VS Code debugging)?
-            var usingAngularCliServer = env.EnvironmentName == "Development-Node";
-            //are we developing?
-            var isDevelopment = env.IsDevelopment() || usingAngularCliServer;
+            var usingAngularCliServer = Configuration["node-server"] == "true";
 
-            if (isDevelopment)
+            if (env.IsDevelopment())
             {
                 var entityFrameworkConfig = Configuration.GetSection("EntityFrameworkConfig").Get<EntityFrameworkConfig>();
                 //drop and create database if needed
