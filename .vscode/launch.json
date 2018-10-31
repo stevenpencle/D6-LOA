@@ -36,10 +36,7 @@
         }
       },
       "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "sourceFileMap": {
-        "/Views": "${workspaceFolder}/Views"
+        "ASPNETCORE_ENVIRONMENT": "Development-Node"
       }
     },
     {
@@ -53,7 +50,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "https://localhost:44376",
-      "webRoot": "${workspaceRoot}/wwwroot"
+      "webRoot": "${workspaceRoot}/EdatTemplate/ClientApp/dist"
     }
   ]
 }

@@ -75,7 +75,7 @@ namespace EdatTemplate
                 opts.Scope.Add(OpenIdConnectScope.OpenIdProfile);
                 opts.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 opts.CallbackPath = openIdConnectB2EOptions.CallbackPath;
-                opts.TokenValidationParameters = new TokenValidationParameters {ValidateIssuer = false};
+                opts.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
                 opts.Events = new B2EOpenIdConnectEvents(openIdConnectB2EOptions, new StaffService(fdotCoreApis));
             });
             if (authProviderConfig.AllowB2C)
@@ -106,7 +106,6 @@ namespace EdatTemplate
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 })
-                //.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //global SPA config
             services.AddSpaStaticFiles(configuration =>
@@ -118,7 +117,12 @@ namespace EdatTemplate
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            //are we using the angular-cli server (VS Code debugging)?
+            var usingAngularCliServer = env.EnvironmentName == "Development-Node";
+            //are we developing?
+            var isDevelopment = env.IsDevelopment() || usingAngularCliServer;
+
+            if (isDevelopment)
             {
                 var entityFrameworkConfig = Configuration.GetSection("EntityFrameworkConfig").Get<EntityFrameworkConfig>();
                 //drop and create database if needed
@@ -143,17 +147,22 @@ namespace EdatTemplate
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
             });
+            if (!usingAngularCliServer)
+            {
+                //serve files using IIS express (VS development) or deployed code - static files located in "ClientApp/dist"
+                app.UseSpaStaticFiles();
+            }
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment())
+                if (usingAngularCliServer)
                 {
+                    //serve files from CLI server (in-memory files when debugging in VS Code)
                     spa.UseAngularCliServer("start");
                 }
             });
