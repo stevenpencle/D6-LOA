@@ -7,6 +7,7 @@ import { RouteGuard } from './app/services/security/route-guard';
 // components
 import { HomeComponent } from './app/components/home/home.component';
 import { NotAuthorizedComponent } from './app/components/not-authorized/not-authorized.component';
+import { ServerErrorComponent } from './app/components/server-error/server-error.component';
 import { SampleComponent } from './app/features/administration/sample/sample.component';
 
 const appRoutes: Routes = [
@@ -32,6 +33,7 @@ const appRoutes: Routes = [
   // base routes
   { path: 'home', component: HomeComponent, pathMatch: 'full' },
   { path: 'not-authorized', component: NotAuthorizedComponent },
+  { path: 'server-error', component: ServerErrorComponent },
   { path: '**', redirectTo: 'home' }
 ];
 

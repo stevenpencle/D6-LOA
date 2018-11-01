@@ -4,6 +4,7 @@ import { EnvironmentService } from '../../services/environment/environment.servi
 import { Router } from '@angular/router';
 import { SecurityService } from '../security/security.service';
 import { IClientToken } from '../../model/model';
+import { DataMarshalerService } from '../data/data-marshaler.service';
 
 @Injectable()
 export class HttpService implements OnDestroy {
@@ -13,6 +14,7 @@ export class HttpService implements OnDestroy {
     private httpClient: HttpClient,
     private environmentService: EnvironmentService,
     private securityService: SecurityService,
+    private dataMarshalerService: DataMarshalerService,
     private router: Router
   ) {
     this.securityService.subscribe(this, token => {
@@ -78,6 +80,10 @@ export class HttpService implements OnDestroy {
     if (applicationError) {
       throw applicationError;
     }
+    if (httpErrorResponse.status === 500) {
+      this.dataMarshalerService.load(httpErrorResponse.error);
+      this.router.navigateByUrl('/server-error');
+    }
     let modelStateErrorsConsole = '';
     let modelStateErrors = '';
     if (httpErrorResponse.status === 400) {
@@ -99,10 +105,11 @@ export class HttpService implements OnDestroy {
         this.router.navigateByUrl('/not-authorized');
       }
     }
-    modelStateErrors = modelStateErrors = '' ? null : modelStateErrors;
+    modelStateErrors = modelStateErrors == '' ? null : modelStateErrors;
     console.error(modelStateErrorsConsole || 'Server error');
-    if (modelStateErrors) {
-      return '<ul>' + modelStateErrors + '</ul>';
+    if (!modelStateErrors) {
+      modelStateErrors = '<li>Unexpected Server Exception</li>';
     }
+    return '<ul>' + modelStateErrors + '</ul>';
   }
 }

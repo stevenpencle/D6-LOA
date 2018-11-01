@@ -33,7 +33,9 @@ export class SampleModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {}
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.closeEditModal();
+  }
 
   private closeEditModal(): void {
     this.closeBtn.nativeElement.click();

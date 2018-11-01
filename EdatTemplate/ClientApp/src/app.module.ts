@@ -16,11 +16,13 @@ import { HomeComponent } from './app/components/home/home.component';
 import { FilterFieldComponent } from './app/components/common/filter-field/filter-field.component';
 import { SortButtonComponent } from './app/components/common/sort-button/sort-button.component';
 import { NotAuthorizedComponent } from './app/components/not-authorized/not-authorized.component';
+import { ServerErrorComponent } from './app/components/server-error/server-error.component';
 import { StaffPickerComponent } from './app/components/common/staff-picker/staff-picker.component';
 import { FileUploadComponent } from './app/components/common/file-upload/file-upload.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
+import { DataMarshalerService } from './app/services/data/data-marshaler.service';
 import { HttpService } from './app/services/http/http.service';
 import { SecurityService } from './app/services/security/security.service';
 import { RouteGuard } from './app/services/security/route-guard';
@@ -48,6 +50,7 @@ import { SampleStoreService } from './app/features/administration/sample/sample-
     FileUploadComponent,
     HomeComponent,
     NotAuthorizedComponent,
+    ServerErrorComponent,
     // features
     // ** administration
     SampleComponent,
@@ -62,6 +65,7 @@ import { SampleStoreService } from './app/features/administration/sample/sample-
   ],
   providers: [
     EnvironmentService,
+    DataMarshalerService,
     DataNavigationService,
     ExcelExportService,
     StaffService,

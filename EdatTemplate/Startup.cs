@@ -135,7 +135,6 @@ namespace EdatTemplate
                         }
                     }
                 }
-                //
                 app.UseDeveloperExceptionPage();
             }
             else
