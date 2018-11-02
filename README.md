@@ -30,7 +30,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ![alt text](Documentation/dotnet_config.png ".NET Core CLI Commands to verify SDK installation")
 
-> Contact Randy (randy.lee@dot.state.fl.us) to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
+> Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
 
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
 
@@ -40,26 +40,23 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 > VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets.
 
-![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets") This will copy the secrets.json file to a folder in your profile's `AppData.`
+![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets")
+
+> This will copy the secrets.json file to a folder in your profile's `AppData`
 
 ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData")
 
-> The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compile looks for user secrets based in the key in the project file.
+> The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based in the key in the project file.
 
 ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
 
 ### Run As-Is Template
 
-1. Visual Studio - Build the .NET project (uses reinforcedtypings to generate d.ts model)
-2. VS Code - Navigate to `EdatTemplate/Scripts` (the client app)
-   - Execute `npm install`
-   - Execute `“`npm run build`”`
-3. Visual Studio - Create the local database
-   - The local connection string is `Server=.;Database=EdatTemplate;Trusted_Connection=True;` so no modification is required
-   - Set the `“`initializeDatabase`”` app setting to `true`
-   - Run
-   - Stop and reset the setting to false if you don't want a fresh database each time you run
-   - Run
+> VS Code - Hit Play! VS Code will automatically execute the `dotnet restore` `dotnet build` `npm install` `ng build` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application.
+
+![alt text](Documentation/vscode_debug.png "Run in VS Code")
+
+> _What about Visual Studio? Can I still use it?_ Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.
 
 ### Create a New Application from the Template
 
@@ -70,18 +67,19 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 5. Rename the `EdatTemplate.csproj` file to `{your-project-name}.csproj`
 6. VS Code - open the `{your-project-name}` folder
 7. VS Code - Edit -> Replace in Files `EdatTemplate` with `{your-project-name]` and select "Replace All" (Ctrl + ALt + Enter)
-8. VS Code - Hit Play
+8. VS Code (optional) - Set the `UserSecretsId` in the .NET Core project to a new value (usually a GUID) and reload new secrets for your new application. All applications deployed on Azure will require their own unique secrets, but developers can use the ones provided by Randy for local development.
+9. VS Code - Hit Play!
 
 ## Features
 
 - Azure AD-B2C identity providers
-- Unified client and server model. Synchronization handled with ReinforcedTypings on "dotnet build"
+- Unified client and server model. Synchronization handled with ReinforcedTypings on `dotnet build`
 - Themed, 508 compliant, and responsive design (Bootstrap 4) for FDOT standards
 - Role impersonation to assist with testing multiple application roles
 - Components for header, footer, and navigation
 - Service for async http request and response handling
 - Security service and route guard
-- Base service for subsription based services (data stores)
+- Base service for subsription based (observable) services (data stores)
 - Data navigation service with helper components to handle sorting, filtering, and paging through large data sets
 - SRS (Staff) service and staff picker component to handle FDOT staff selections (with example)
 - Complete CRUD example for client and server architecture patterns
@@ -90,4 +88,4 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 ## Where We're Heading
 
 - Installer (CLI) to eliminate the manual steps in "Create a New Application from the Template"
-- Full-stack Node.js architecture version (at some point, maybe)
+- Full-stack Node.js architecture version (at some point, maybe...)
