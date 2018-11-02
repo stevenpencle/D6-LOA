@@ -57,6 +57,9 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
 > _What about Visual Studio? Can I still use it?_ Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.
+
+---
+
 > _Where is the unit test project, and where are the client testing frameworks and configuration?_ They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular.
 
 ### Create a New Application from the Template
