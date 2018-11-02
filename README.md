@@ -58,7 +58,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData")
 
-> The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based in the key in the project file.
+> The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the key in the project file.
 
 ---
 
