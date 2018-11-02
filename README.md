@@ -22,11 +22,19 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Prerequisite Configuration - 1 Time Setup
 
-1. VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful. ![alt text](Documentation/vscode_extensions.png "VS Code extensions")
-2. VS Code or Command Terminal - Verify that you have the latest .NET Core SDK ![alt text](Documentation/dotnet_config.png ".NET Core CLI Commands to verify SDK installation")
-3. Contact Randy (randy.lee@dot.state.fl.us) to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git. ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
-4. Save the secrets.json file in the `EdatTemplate` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `EdatTemplate` project is the .NET Core project and the `ClientApp` folder contains the Angular application. ![alt text](Documentation/vscode_project_structure.png "Project structure")
-5. VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets. ![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets") This will copy the secrets.json file to a folder in your profile's `AppData.` ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData") The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compile looks for user secrets based in the key in the project file. ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
+> VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
+> ![alt text](Documentation/vscode_extensions.png "VS Code extensions")
+> VS Code or Command Terminal - Verify that you have the latest .NET Core SDK
+> ![alt text](Documentation/dotnet_config.png ".NET Core CLI Commands to verify SDK installation")
+> Contact Randy (randy.lee@dot.state.fl.us) to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
+> ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
+> Save the secrets.json file in the `EdatTemplate` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `EdatTemplate` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
+> ![alt text](Documentation/vscode_project_structure.png "Project structure")
+> VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets.
+> ![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets") This will copy the secrets.json file to a folder in your profile's `AppData.`
+> ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData")
+> The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compile looks for user secrets based in the key in the project file.
+> ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
 
 ### Run As-Is Template
 
