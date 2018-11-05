@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EdatTemplate.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace EdatTemplate.Security
 {
@@ -64,6 +65,20 @@ namespace EdatTemplate.Security
                 }
                 ctx.Principal = new ClaimsPrincipal(claimsIdentity);
                 await Task.FromResult(0);
+            };
+            OnRemoteFailure = ctx =>
+            {
+                ctx.HandleResponse();
+                if (ctx.Failure is OpenIdConnectProtocolException && ctx.Failure.Message.Contains("access_denied"))
+                {
+                    ctx.Response.Redirect("/");
+                }
+                else
+                {
+                    throw ctx.Failure;
+                }
+
+                return Task.FromResult(0);
             };
         }
     }
