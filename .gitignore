@@ -234,5 +234,8 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
+# NLog logs
+/EdatTemplate/Logs/
+
 # user secrets
 /EdatTemplate/secrets.json 

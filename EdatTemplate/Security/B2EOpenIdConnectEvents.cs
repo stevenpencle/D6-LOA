@@ -1,10 +1,10 @@
-﻿using System;
+﻿using EdatTemplate.Services;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using EdatTemplate.Services;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace EdatTemplate.Security
 {

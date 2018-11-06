@@ -1,22 +1,37 @@
 ﻿using EdatTemplate.Models.Domain;
-using System;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Protocols;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using JetBrains.Annotations;
-using System.Linq.Expressions;
+using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace EdatTemplate.ORM
 {
     public class EntityContext : DbContext
     {
-        public EntityContext() { }
-        public EntityContext(DbContextOptions options) : base(options) { }
+        public EntityContext()
+        {
+            ConfigureLogging();
+        }
+
+        public EntityContext(DbContextOptions options) : base(options)
+        {
+            ConfigureLogging();
+        }
+        
+        private void ConfigureLogging()
+        {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var isDevelopment = environment == EnvironmentName.Development;
+            if (!isDevelopment) return;
+            var listener = this.GetService<DiagnosticSource>();
+            (listener as DiagnosticListener).SubscribeWithAdapter(new NLogSqlInterceptor());
+        }
 
         public virtual DbSet<Sample> Samples { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //reflectivly apply UTC date converter to all dates to make sure all dates are stored in SQL Server as UTC
@@ -60,3 +75,4 @@ namespace EdatTemplate.ORM
         }
     }
 }
+

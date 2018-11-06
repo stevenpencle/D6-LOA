@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EdatTemplate.Models.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EdatTemplate.Models.Domain.Enums;
 
 namespace EdatTemplate.Models.Domain
 {

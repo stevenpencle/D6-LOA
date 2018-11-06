@@ -1,4 +1,3 @@
-using System;
 using EdatTemplate.Infrastructure;
 using EdatTemplate.Models.Security;
 using EdatTemplate.Models.View;
@@ -28,7 +27,7 @@ namespace EdatTemplate
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -119,7 +118,7 @@ namespace EdatTemplate
         {
             //are we using the angular-cli server (VS Code debugging)?
             var usingAngularCliServer = Configuration["node-server"] == "true";
-
+            //optionally drop and recreate local development database
             if (env.IsDevelopment())
             {
                 var entityFrameworkConfig = Configuration.GetSection("EntityFrameworkConfig").Get<EntityFrameworkConfig>();

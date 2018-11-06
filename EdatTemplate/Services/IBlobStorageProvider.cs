@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using EdatTemplate.Models.View;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using EdatTemplate.Models.View;
 
 namespace EdatTemplate.Services
 {

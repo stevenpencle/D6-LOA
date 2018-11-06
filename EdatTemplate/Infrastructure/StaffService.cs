@@ -1,13 +1,12 @@
 ﻿using EdatTemplate.Models.Domain;
 using EdatTemplate.Services;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 
 namespace EdatTemplate.Infrastructure
 {
@@ -23,9 +22,9 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<IEnumerable<Staff>> GetStaffByName(string name)
         {
-            var retryCount = 0;
-            while (true)
-            {
+            //var retryCount = 0;
+            //while (true)
+            //{
                 var client = new HttpClient();
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
@@ -42,13 +41,13 @@ namespace EdatTemplate.Infrastructure
                 queryString["status"] = "active";
                 var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
                 var response = await client.GetAsync(uri);
-                if (!response.IsSuccessStatusCode)
-                {
-                    retryCount += 1;
-                    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
-                    Thread.Sleep(1000);
-                    continue;
-                }
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    retryCount += 1;
+                //    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
+                //    Thread.Sleep(1000);
+                //    continue;
+                //}
                 var data = await response.Content.ReadAsStringAsync();
                 var staffs = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data);
                 return staffs
@@ -60,25 +59,25 @@ namespace EdatTemplate.Infrastructure
                         RacfId = s.RacfId,
                         District = DecodeDistrict(s.District)
                     }).ToList();
-            }
+            //}
         }
 
         public async Task<Staff> GetById(int id)
         {
-            var retryCount = 0;
-            while (true)
-            {
+            //var retryCount = 0;
+            //while (true)
+            //{
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
                 var uri = _endpoint + $"GetStaffById?id={id}";
                 var response = await client.GetAsync(uri);
-                if (!response.IsSuccessStatusCode)
-                {
-                    retryCount += 1;
-                    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
-                    Thread.Sleep(1000);
-                    continue;
-                }
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    retryCount += 1;
+                //    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
+                //    Thread.Sleep(1000);
+                //    continue;
+                //}
                 var data = await response.Content.ReadAsStringAsync();
                 var s = JsonConvert.DeserializeObject<Staff>(data);
                 return new Staff
@@ -89,14 +88,14 @@ namespace EdatTemplate.Infrastructure
                     RacfId = s.RacfId,
                     District = DecodeDistrict(s.District)
                 };
-            }
+            //}
         }
 
         public async Task<Staff> GetByEmail(string email)
         {
-            var retryCount = 0;
-            while (true)
-            {
+            //var retryCount = 0;
+            //while (true)
+            //{
                 var client = new HttpClient();
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
@@ -104,13 +103,13 @@ namespace EdatTemplate.Infrastructure
                 queryString["status"] = "active";
                 var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
                 var response = await client.GetAsync(uri);
-                if (!response.IsSuccessStatusCode)
-                {
-                    retryCount += 1;
-                    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
-                    Thread.Sleep(1000);
-                    continue;
-                }
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    retryCount += 1;
+                //    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
+                //    Thread.Sleep(1000);
+                //    continue;
+                //}
                 var data = await response.Content.ReadAsStringAsync();
                 var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
                 if (sl.Count != 1)
@@ -126,7 +125,7 @@ namespace EdatTemplate.Infrastructure
                     RacfId = s.RacfId,
                     District = DecodeDistrict(s.District)
                 };
-            }
+            //}
         }
 
         private static string DecodeDistrict(string district)

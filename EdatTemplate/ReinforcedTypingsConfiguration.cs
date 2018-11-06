@@ -1,11 +1,11 @@
 ﻿using EdatTemplate.Models.Domain;
+using EdatTemplate.Models.Domain.Enums;
 using EdatTemplate.Models.Security;
 using EdatTemplate.Models.View;
+using EdatTemplate.Security;
 using Reinforced.Typings.Ast.TypeNames;
 using Reinforced.Typings.Fluent;
 using System;
-using EdatTemplate.Models.Domain.Enums;
-using EdatTemplate.Security;
 
 namespace EdatTemplate
 {
