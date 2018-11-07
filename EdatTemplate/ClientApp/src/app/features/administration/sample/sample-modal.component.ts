@@ -50,7 +50,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   }
 
   addNewSample(): void {
-    this.setBirthDateAndCalculateAge(this.tempSample);
+    this.setBirthDate(this.tempSample);
     this.sampleStoreService.add(
       this.tempSample,
       () => {
@@ -65,8 +65,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   }
 
   setTempSample(sample: ISample): void {
-    this.hasErrors = false;
-    this.errors = '';
+    this.clearErrors();
     if (sample.assignedStaffId != null && sample.assignedStaffId > 0) {
       this.staffService.get(sample.assignedStaffId, staff => {
         this.selectedStaff = staff;
@@ -84,7 +83,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
     if (this.tempSample.id == null || this.tempSample.id === 0) {
       this.addNewSample();
     } else {
-      this.setBirthDateAndCalculateAge(this.tempSample);
+      this.setBirthDate(this.tempSample);
       this.sampleStoreService.update(
         this.tempSample,
         () => {
@@ -118,7 +117,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setBirthDateAndCalculateAge(sample: ISample): void {
+  private setBirthDate(sample: ISample): void {
     if (this.birthDate != null && this.birthDate.isValid()) {
       sample.birthDate = this.birthDate.toDate();
     } else {

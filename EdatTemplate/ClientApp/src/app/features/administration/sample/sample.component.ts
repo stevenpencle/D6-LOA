@@ -18,6 +18,7 @@ import { StatusCode } from '../../../model/model.enums';
 import * as linq from 'linq';
 import { ExcelExportService } from '../../../services/data/excel-export.service';
 import { BlobService } from '../../../services/data/blob.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-sample',
@@ -122,6 +123,10 @@ export class SampleComponent implements OnInit, OnDestroy {
       this.clearCheckUserId();
       this.closeBtnDelete.nativeElement.click();
     });
+  }
+
+  calculateAge(sample: ISample): number {
+    return moment().diff(sample.birthDate, 'years');
   }
 
   export(): void {

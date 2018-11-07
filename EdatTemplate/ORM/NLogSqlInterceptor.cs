@@ -25,11 +25,12 @@ namespace EdatTemplate.ORM
         [DiagnosticName("Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted")]
         public void OnCommandExecuted(object result, bool async)
         {
-            
+
         }
 
         private static void Log(DbCommand command)
         {
+            //this method creats an executable SQL script (Logs/sql.log) for DBAs to review the SQL of the application
             lock (Lock)
             {
                 if (Commands.Contains(command.CommandText))

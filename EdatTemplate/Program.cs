@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using NLog.Web;
 using System;
 
 namespace EdatTemplate
@@ -8,6 +9,7 @@ namespace EdatTemplate
     {
         public static void Main(string[] args)
         {
+            //we need access to the environemt variables before the hosting environemt is constructed to know if we should skip NLog initialization
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var isDevelopment = environment == EnvironmentName.Development;
             if (!isDevelopment)
@@ -39,6 +41,7 @@ namespace EdatTemplate
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost
                 .CreateDefaultBuilder(args)
+                .UseNLog()
                 .UseStartup<Startup>();
     }
 }

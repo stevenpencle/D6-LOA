@@ -22,19 +22,24 @@ namespace EdatTemplate
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IConfiguration Configuration { get; }
+
+        private IHostingEnvironment Environment { get; }
+
+        public Startup(IHostingEnvironment environment, IConfiguration configuration)
         {
             Configuration = configuration;
+            Environment = environment;
         }
-
-        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //add global configuration in case needed
-            services.Configure<IConfiguration>(Configuration);
+            services.AddSingleton<IConfiguration>(Configuration);
+            //add global Environment in case needed
+            services.AddSingleton<IHostingEnvironment>(Environment);
             //add header configuration for site controller
             var edatHeader = Configuration.GetSection("EdatHeader").Get<EdatHeader>();
             services.AddSingleton(edatHeader);

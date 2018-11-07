@@ -148,7 +148,7 @@
                                         'Pending' : 'Approved'}}
                                     </td>
                                     <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.birthDate | date: 'yyyy-MM-dd'}}
+                                        {{sample.birthDate | date: 'yyyy-MM-dd'}} ({{calculateAge(sample)}})
                                     </td>
                                     <td style="white-space: nowrap; text-align: center;">
                                         {{sample.cost | currency}}

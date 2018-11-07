@@ -11,27 +11,32 @@ namespace EdatTemplate.ORM
 {
     public class EntityContext : DbContext
     {
-        public EntityContext()
+        private IHostingEnvironment _environment;
+        public EntityContext(IHostingEnvironment environment)
         {
+            Initialize(environment);
+        }
+
+        public EntityContext(IHostingEnvironment environment, DbContextOptions options) : base(options)
+        {
+            Initialize(environment);
+        }
+
+        private void Initialize(IHostingEnvironment environment)
+        {
+            _environment = environment;
             ConfigureLogging();
         }
 
-        public EntityContext(DbContextOptions options) : base(options)
-        {
-            ConfigureLogging();
-        }
-        
         private void ConfigureLogging()
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var isDevelopment = environment == EnvironmentName.Development;
-            if (!isDevelopment) return;
+            if (!_environment.IsDevelopment()) return;
             var listener = this.GetService<DiagnosticSource>();
             (listener as DiagnosticListener).SubscribeWithAdapter(new NLogSqlInterceptor());
         }
 
         public virtual DbSet<Sample> Samples { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //reflectivly apply UTC date converter to all dates to make sure all dates are stored in SQL Server as UTC
