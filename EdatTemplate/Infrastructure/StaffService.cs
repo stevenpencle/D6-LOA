@@ -22,110 +22,78 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<IEnumerable<Staff>> GetStaffByName(string name)
         {
-            //var retryCount = 0;
-            //while (true)
-            //{
-                var client = new HttpClient();
-                var queryString = HttpUtility.ParseQueryString(string.Empty);
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
-                var nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (nameParts.Length == 2)
+            var client = new HttpClient();
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
+            var nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (nameParts.Length == 2)
+            {
+                queryString["firstName"] = nameParts[0];
+                queryString["lastName"] = nameParts[1];
+            }
+            else
+            {
+                queryString["partialName"] = name;
+            }
+            queryString["status"] = "active";
+            var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
+            var response = await client.GetAsync(uri);
+            var data = await response.Content.ReadAsStringAsync();
+            var staffs = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data);
+            return staffs
+                .Select(s => new Staff
                 {
-                    queryString["firstName"] = nameParts[0];
-                    queryString["lastName"] = nameParts[1];
-                }
-                else
-                {
-                    queryString["partialName"] = name;
-                }
-                queryString["status"] = "active";
-                var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
-                var response = await client.GetAsync(uri);
-                //if (!response.IsSuccessStatusCode)
-                //{
-                //    retryCount += 1;
-                //    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
-                //    Thread.Sleep(1000);
-                //    continue;
-                //}
-                var data = await response.Content.ReadAsStringAsync();
-                var staffs = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data);
-                return staffs
-                    .Select(s => new Staff
-                    {
-                        FirstName = s.FirstName,
-                        Id = s.Id,
-                        LastName = s.LastName,
-                        RacfId = s.RacfId,
-                        District = DecodeDistrict(s.District)
-                    }).ToList();
-            //}
+                    FirstName = s.FirstName,
+                    Id = s.Id,
+                    LastName = s.LastName,
+                    RacfId = s.RacfId,
+                    District = DecodeDistrict(s.District)
+                }).ToList();
         }
 
         public async Task<Staff> GetById(int id)
         {
-            //var retryCount = 0;
-            //while (true)
-            //{
-                var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
-                var uri = _endpoint + $"GetStaffById?id={id}";
-                var response = await client.GetAsync(uri);
-                //if (!response.IsSuccessStatusCode)
-                //{
-                //    retryCount += 1;
-                //    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
-                //    Thread.Sleep(1000);
-                //    continue;
-                //}
-                var data = await response.Content.ReadAsStringAsync();
-                var s = JsonConvert.DeserializeObject<Staff>(data);
-                return new Staff
-                {
-                    FirstName = s.FirstName,
-                    Id = s.Id,
-                    LastName = s.LastName,
-                    RacfId = s.RacfId,
-                    District = DecodeDistrict(s.District)
-                };
-            //}
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
+            var uri = _endpoint + $"GetStaffById?id={id}";
+            var response = await client.GetAsync(uri);
+            var data = await response.Content.ReadAsStringAsync();
+            var s = JsonConvert.DeserializeObject<Staff>(data);
+            return new Staff
+            {
+                FirstName = s.FirstName,
+                Id = s.Id,
+                LastName = s.LastName,
+                RacfId = s.RacfId,
+                District = DecodeDistrict(s.District)
+            };
         }
 
         public async Task<Staff> GetByEmail(string email)
         {
-            //var retryCount = 0;
-            //while (true)
-            //{
-                var client = new HttpClient();
-                var queryString = HttpUtility.ParseQueryString(string.Empty);
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
-                queryString["emailAddress"] = email;
-                queryString["status"] = "active";
-                var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
-                var response = await client.GetAsync(uri);
-                //if (!response.IsSuccessStatusCode)
-                //{
-                //    retryCount += 1;
-                //    if (retryCount >= 3) throw new Exception("The Staff service returned an error");
-                //    Thread.Sleep(1000);
-                //    continue;
-                //}
-                var data = await response.Content.ReadAsStringAsync();
-                var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
-                if (sl.Count != 1)
-                {
-                    return null;
-                }
-                var s = sl.First();
-                return new Staff
-                {
-                    FirstName = s.FirstName,
-                    Id = s.Id,
-                    LastName = s.LastName,
-                    RacfId = s.RacfId,
-                    District = DecodeDistrict(s.District)
-                };
-            //}
+            var client = new HttpClient();
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
+            queryString["emailAddress"] = email;
+            queryString["status"] = "active";
+            var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
+            var response = await client.GetAsync(uri);
+
+            var data = await response.Content.ReadAsStringAsync();
+            var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
+            if (sl.Count != 1)
+            {
+                return null;
+            }
+            var s = sl.First();
+            return new Staff
+            {
+                FirstName = s.FirstName,
+                Id = s.Id,
+                LastName = s.LastName,
+                RacfId = s.RacfId,
+                District = DecodeDistrict(s.District)
+            };
         }
 
         private static string DecodeDistrict(string district)

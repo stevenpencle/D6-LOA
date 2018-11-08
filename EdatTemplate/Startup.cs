@@ -37,9 +37,9 @@ namespace EdatTemplate
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //add global configuration in case needed
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton(Configuration);
             //add global Environment in case needed
-            services.AddSingleton<IHostingEnvironment>(Environment);
+            services.AddSingleton(Environment);
             //add header configuration for site controller
             var edatHeader = Configuration.GetSection("EdatHeader").Get<EdatHeader>();
             services.AddSingleton(edatHeader);
