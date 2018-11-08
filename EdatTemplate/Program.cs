@@ -19,17 +19,10 @@ namespace EdatTemplate
             }
             var appBasePath = System.IO.Directory.GetCurrentDirectory();
             NLog.GlobalDiagnosticsContext.Set("appbasepath", appBasePath);
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            NLogBuilder.ConfigureNLog("nlog.config");
             try
             {
-                logger.Debug("init main");
                 CreateWebHostBuilder(args).Build().Run();
-            }
-            catch (Exception ex)
-            {
-                //NLog: catch setup errors
-                logger.Error(ex, "Stopped program because of exception");
-                throw;
             }
             finally
             {
