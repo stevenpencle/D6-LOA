@@ -14,6 +14,7 @@ namespace EdatTemplate.Infrastructure
     {
         private readonly FdotCoreApis _fdotCoreApis;
         private readonly string _endpoint;
+
         public StaffService(FdotCoreApis fdotCoreApis)
         {
             _fdotCoreApis = fdotCoreApis;
@@ -25,7 +26,7 @@ namespace EdatTemplate.Infrastructure
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
-            var nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var nameParts = name.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
             if (nameParts.Length == 2)
             {
                 queryString["firstName"] = nameParts[0];
@@ -35,6 +36,7 @@ namespace EdatTemplate.Infrastructure
             {
                 queryString["partialName"] = name;
             }
+
             queryString["status"] = "active";
             var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
             var response = await client.GetAsync(uri);
@@ -47,6 +49,7 @@ namespace EdatTemplate.Infrastructure
                     Id = s.Id,
                     LastName = s.LastName,
                     RacfId = s.RacfId,
+                    EmailAddress = s.EmailAddress,
                     District = DecodeDistrict(s.District)
                 }).ToList();
         }
@@ -65,6 +68,7 @@ namespace EdatTemplate.Infrastructure
                 Id = s.Id,
                 LastName = s.LastName,
                 RacfId = s.RacfId,
+                EmailAddress = s.EmailAddress,
                 District = DecodeDistrict(s.District)
             };
         }
@@ -78,7 +82,6 @@ namespace EdatTemplate.Infrastructure
             queryString["status"] = "active";
             var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
             var response = await client.GetAsync(uri);
-
             var data = await response.Content.ReadAsStringAsync();
             var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
             if (sl.Count != 1)
@@ -92,6 +95,7 @@ namespace EdatTemplate.Infrastructure
                 Id = s.Id,
                 LastName = s.LastName,
                 RacfId = s.RacfId,
+                EmailAddress = s.EmailAddress,
                 District = DecodeDistrict(s.District)
             };
         }

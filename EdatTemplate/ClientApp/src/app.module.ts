@@ -28,6 +28,7 @@ import { SecurityService } from './app/services/security/security.service';
 import { RouteGuard } from './app/services/security/route-guard';
 import { DataNavigationService } from './app/services/data/data-navigation.service';
 import { StaffService } from './app/services/data/staff.service';
+import { EmailService } from './app/services/data/email.service';
 import { NgbMomentDatePickerAdapter } from './app/services/data/ngbMomentDatePickerAdapter';
 import { ExcelExportService } from './app/services/data/excel-export.service';
 import { BlobService } from './app/services/data/blob.service';
@@ -69,6 +70,7 @@ import { SampleStoreService } from './app/features/administration/sample/sample-
     DataNavigationService,
     ExcelExportService,
     StaffService,
+    EmailService,
     BlobService,
     HttpService,
     SecurityService,

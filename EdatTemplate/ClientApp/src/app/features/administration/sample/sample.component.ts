@@ -12,13 +12,19 @@ import {
   FilterEvent
 } from '../../../services/data/data-navigation.service';
 import { SecurityService } from '../../../services/security/security.service';
-import { ISample, IDocumentMetadata } from '../../../model/model';
+import {
+  ISample,
+  IDocumentMetadata,
+  IStaff,
+  IEmailMessage
+} from '../../../model/model';
 import { SampleModalComponent } from './sample-modal.component';
 import { StatusCode } from '../../../model/model.enums';
 import * as linq from 'linq';
 import { ExcelExportService } from '../../../services/data/excel-export.service';
 import { BlobService } from '../../../services/data/blob.service';
 import * as moment from 'moment';
+import { EmailService } from 'src/app/services/data/email.service';
 
 @Component({
   selector: 'app-sample',
@@ -37,13 +43,15 @@ export class SampleComponent implements OnInit, OnDestroy {
   filters: Array<FilterEvent> = [];
   documents: Array<IDocumentMetadata> = [];
   documentContainerName = 'SAMPLE_DOCUMENTS';
+  emailStaff: IStaff;
 
   constructor(
     private securityService: SecurityService,
     private sampleStoreService: SampleStoreService,
     private dataNavigationService: DataNavigationService,
     private excelExportService: ExcelExportService,
-    private blobService: BlobService
+    private blobService: BlobService,
+    private emailService: EmailService
   ) {}
 
   ngOnInit(): void {
@@ -139,10 +147,10 @@ export class SampleComponent implements OnInit, OnDestroy {
             x.status === this.statusCode.New
               ? 'New'
               : x.status === this.statusCode.Approved
-                ? 'Approved'
-                : x.status === this.statusCode.Pending
-                  ? 'Pending'
-                  : '',
+              ? 'Approved'
+              : x.status === this.statusCode.Pending
+              ? 'Pending'
+              : '',
           birthDate: x.birthDate,
           cost: x.cost,
           assignedTo: x.assignedStaffName
@@ -177,6 +185,23 @@ export class SampleComponent implements OnInit, OnDestroy {
       this.getDocuments();
       this.clearCheckUserId();
     });
+  }
+
+  changeEmailStaff(staff: IStaff): void {
+    if (staff == null) {
+      this.emailStaff = null;
+    } else {
+      this.emailStaff = staff;
+    }
+  }
+
+  emailSelectedStaff(): void {
+    const emailMessage: IEmailMessage = {
+      tos: [this.emailStaff.emailAddress],
+      body: 'Testing',
+      subject: 'Testing EDAT Template Email Service'
+    };
+    this.emailService.send(emailMessage);
   }
 
   private getDocuments(): void {

@@ -16,6 +16,13 @@ namespace EdatTemplate.ORM
 
         private static readonly object Lock = new object();
 
+        private readonly EntityFrameworkConfig _entityFrameworkConfig;
+
+        public NLogSqlInterceptor(EntityFrameworkConfig entityFrameworkConfig)
+        {
+            _entityFrameworkConfig = entityFrameworkConfig;
+        }
+
         [DiagnosticName("Microsoft.EntityFrameworkCore.Database.Command.CommandExecuting")]
         public void OnCommandExecuting(DbCommand command, DbCommandMethod executeMethod, Guid commandId, Guid connectionId, bool async, DateTimeOffset startTime)
         {
@@ -28,16 +35,19 @@ namespace EdatTemplate.ORM
 
         }
 
-        private static void Log(DbCommand command)
+        private void Log(DbCommand command)
         {
             //this method creats an executable SQL script (Logs/sql.log) for DBAs to review the SQL of the application
-            lock (Lock)
+            if (_entityFrameworkConfig.DeduplicateLoggedCommands)
             {
-                if (Commands.Contains(command.CommandText))
+                lock (Lock)
                 {
-                    return;
+                    if (Commands.Contains(command.CommandText))
+                    {
+                        return;
+                    }
+                    Commands.Add(command.CommandText);
                 }
-                Commands.Add(command.CommandText);
             }
             if (command.Parameters.Count > 0)
             {

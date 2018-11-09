@@ -1,273 +1,472 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <h5>Sample Data</h5>
-        </div>
+  <div class="row">
+    <div class="col"><h5>Sample Data</h5></div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col d-sm-none">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="setTempSample()"
+        data-toggle="modal"
+        data-target="#sampleModal"
+        aria-label="New sample"
+        title="New sample"
+      >
+        <i class="fas fa-plus"></i> New Sample
+      </button>
     </div>
-    <hr />
-    <div class="row">
-        <div class="col d-sm-none">
-            <button type="button" class="btn btn-primary" (click)="setTempSample()" data-toggle="modal" data-target="#sampleModal"
-                aria-label="New sample" title="New sample">
-                <i class="fas fa-plus"></i>
-                New Sample
-            </button>
-        </div>
-        <div class="col text-right d-none d-md-block">
-            <button type="button" class="btn btn-primary" (click)="setTempSample()" data-toggle="modal" data-target="#sampleModal"
-                aria-label="New sample" title="New sample">
-                <i class="fas fa-plus"></i>
-                New Sample
-            </button>
-        </div>
+    <div class="col text-right d-none d-md-block">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="setTempSample()"
+        data-toggle="modal"
+        data-target="#sampleModal"
+        aria-label="New sample"
+        title="New sample"
+      >
+        <i class="fas fa-plus"></i> New Sample
+      </button>
     </div>
-    <br />
-    <div class="row">
-        <div class="col">
-            <div *ngIf="data && data.sourceData && data.sourceData.length > 0">
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col small">
-                                Page {{data.currentPage}} of {{data.totalPages}}
-                            </div>
-                            <div class="col">
-                                <div class="text-right">
-                                    <button class="btn btn-secondary btn-sm" title="previous page" [disabled]="data.currentPage == 1"
-                                        (click)="page('previous')">
-                                        <i class="fas fa-angle-left"></i>
-                                    </button>&nbsp;&nbsp;
-                                    <button class="btn btn-secondary btn-sm" title="next page" [disabled]="data.currentPage == data.totalPages"
-                                        (click)="page('next')">
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>&nbsp;&nbsp;
-                                    <button class="btn btn-primary btn-sm" title="export to excel" (click)="export()">
-                                        <i class="fas fa-file-excel"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col">
+      <div *ngIf="data && data.sourceData && data.sourceData.length > 0">
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div class="col small">
+                Page {{ data.currentPage }} of {{ data.totalPages }}
+              </div>
+              <div class="col">
+                <div class="text-right">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    title="previous page"
+                    [disabled]="data.currentPage == 1"
+                    (click)="page('previous')"
+                  >
+                    <i class="fas fa-angle-left"></i></button
+                  >&nbsp;&nbsp;
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    title="next page"
+                    [disabled]="data.currentPage == data.totalPages"
+                    (click)="page('next')"
+                  >
+                    <i class="fas fa-angle-right"></i></button
+                  >&nbsp;&nbsp;
+                  <button
+                    class="btn btn-primary btn-sm"
+                    title="export to excel"
+                    (click)="export()"
+                  >
+                    <i class="fas fa-file-excel"></i>
+                  </button>
                 </div>
-                <br />
-                <div class="row">
-                    <div class="col table-responsive">
-                        <table class="table table-hover table-sm" aria-label="Samples" title="Samples" summary="Edit or remove samples">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th style="width: 50px;"></th>
-                                    <th style="width: 50px;"></th>
-                                    <th style="width: 100px; text-align: center;">
-                                        <app-sort-button [sortData]="data" field="isActive" label="Active" (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="name" label="Name" (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="status" label="Status" (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="birthDate" label="Birth Date" (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="cost" label="Cost" (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="assignedStaffName" label="Assigned To"
-                                            (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="lastUpdatedBy" label="Last Updated By"
-                                            (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                    <th style="text-align: center;">
-                                        <app-sort-button [sortData]="data" field="lastUpdated" label="Last Updated On"
-                                            (sort)="sort($event)"></app-sort-button>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th>
-                                        <app-filter-field field="isActive" label="Active" (filter)="filter($event)"
-                                            type="select" [selectValues]="[{label: 'Yes', value: 'true'}, {label: 'No', value: 'false'}]"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="name" label="Name" (filter)="filter($event)" type="text"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="status" label="Status" (filter)="filter($event)" type="select"
-                                            [selectValues]="[{label: 'New', value: statusCode.New}, {label: 'Pending', value: statusCode.Pending}, {label: 'Approved', value: statusCode.Approved}]"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="birthDate" label="Birth Date" (filter)="filter($event)"
-                                            type="text"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="cost" label="Cost" (filter)="filter($event)" type="text"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="assignedStaffName" label="Assigned To" (filter)="filter($event)"
-                                            type="text"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="lastUpdatedBy" label="Last Updated By" (filter)="filter($event)"
-                                            type="text"></app-filter-field>
-                                    </th>
-                                    <th>
-                                        <app-filter-field field="lastUpdated" label="Last Updated On" (filter)="filter($event)"
-                                            type="text"></app-filter-field>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody *ngFor="let sample of data.pageData">
-                                <tr>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
-                                            data-target="#sampleModal" (click)="setTempSample(sample)" aria-label="Edit sample"
-                                            title="Edit sample">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-                                            data-target="#deleteSample" (click)="setTempSample(sample)" aria-label="Delete sample"
-                                            title="Delete sample">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;">
-                                        <i class="fas fa-check" *ngIf="sample.isActive"></i>
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.name}}
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.status == statusCode.New ? 'New' : sample.status == statusCode.Pending
-                                        ?
-                                        'Pending' : 'Approved'}}
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.birthDate | date: 'yyyy-MM-dd'}} ({{calculateAge(sample)}})
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.cost | currency}}
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.assignedStaffName}}
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.lastUpdatedBy}}
-                                    </td>
-                                    <td style="white-space: nowrap; text-align: center;">
-                                        {{sample.lastUpdated | date: 'yyyy-MM-dd'}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+              </div>
             </div>
-            <div *ngIf="!data || !data.sourceData || data.sourceData.length === 0">
-                There are no samples to display
-            </div>
+          </div>
         </div>
-    </div>
-    <hr />
-    <div class="row">
-        <div class="col">
-            <h5>Sample Documents</h5>
+        <br />
+        <div class="row">
+          <div class="col table-responsive">
+            <table
+              class="table table-hover table-sm"
+              aria-label="Samples"
+              title="Samples"
+              summary="Edit or remove samples"
+            >
+              <thead class="thead-dark">
+                <tr>
+                  <th style="width: 50px;"></th>
+                  <th style="width: 50px;"></th>
+                  <th style="width: 100px; text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="isActive"
+                      label="Active"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="name"
+                      label="Name"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="status"
+                      label="Status"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="birthDate"
+                      label="Birth Date"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="cost"
+                      label="Cost"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="assignedStaffName"
+                      label="Assigned To"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="lastUpdatedBy"
+                      label="Last Updated By"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                  <th style="text-align: center;">
+                    <app-sort-button
+                      [sortData]="data"
+                      field="lastUpdated"
+                      label="Last Updated On"
+                      (sort)="sort($event)"
+                    ></app-sort-button>
+                  </th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>
+                    <app-filter-field
+                      field="isActive"
+                      label="Active"
+                      (filter)="filter($event)"
+                      type="select"
+                      [selectValues]="[
+                        { label: 'Yes', value: 'true' },
+                        { label: 'No', value: 'false' }
+                      ]"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="name"
+                      label="Name"
+                      (filter)="filter($event)"
+                      type="text"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="status"
+                      label="Status"
+                      (filter)="filter($event)"
+                      type="select"
+                      [selectValues]="[
+                        { label: 'New', value: statusCode.New },
+                        { label: 'Pending', value: statusCode.Pending },
+                        { label: 'Approved', value: statusCode.Approved }
+                      ]"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="birthDate"
+                      label="Birth Date"
+                      (filter)="filter($event)"
+                      type="text"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="cost"
+                      label="Cost"
+                      (filter)="filter($event)"
+                      type="text"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="assignedStaffName"
+                      label="Assigned To"
+                      (filter)="filter($event)"
+                      type="text"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="lastUpdatedBy"
+                      label="Last Updated By"
+                      (filter)="filter($event)"
+                      type="text"
+                    ></app-filter-field>
+                  </th>
+                  <th>
+                    <app-filter-field
+                      field="lastUpdated"
+                      label="Last Updated On"
+                      (filter)="filter($event)"
+                      type="text"
+                    ></app-filter-field>
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let sample of data.pageData">
+                <tr>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary"
+                      data-toggle="modal"
+                      data-target="#sampleModal"
+                      (click)="setTempSample(sample)"
+                      aria-label="Edit sample"
+                      title="Edit sample"
+                    >
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      data-toggle="modal"
+                      data-target="#deleteSample"
+                      (click)="setTempSample(sample)"
+                      aria-label="Delete sample"
+                      title="Delete sample"
+                    >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <i class="fas fa-check" *ngIf="sample.isActive"></i>
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{ sample.name }}
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{
+                      sample.status == statusCode.New
+                        ? 'New'
+                        : sample.status == statusCode.Pending
+                        ? 'Pending'
+                        : 'Approved'
+                    }}
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{ sample.birthDate | date: 'yyyy-MM-dd' }} ({{
+                      calculateAge(sample)
+                    }})
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{ sample.cost | currency }}
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{ sample.assignedStaffName }}
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{ sample.lastUpdatedBy }}
+                  </td>
+                  <td style="white-space: nowrap; text-align: center;">
+                    {{ sample.lastUpdated | date: 'yyyy-MM-dd' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
+      <div *ngIf="!data || !data.sourceData || data.sourceData.length === 0">
+        There are no samples to display
+      </div>
     </div>
-    <hr />
-    <div class="row">
-        <div class="col">
-            <div class="table-responsive">
-                <table class="table table-sm table-borderless table-hover" aria-label="Documents" title="Documents"
-                    summary="View documents">
-                    <thead class="small">
-                        <tr>
-                            <th style="min-width: 75px;"></th>
-                            <th style="width: 100%;">
-                                <span style="padding-left: 12px;">Document</span>
-                            </th>
-                            <th style="white-space: nowrap; min-width: 150px;">
-                                Created By
-                            </th>
-                            <th style="white-space: nowrap; min-width: 150px;">
-                                Created On
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="small" *ngFor="let document of documents">
-                        <tr>
-                            <td style="text-align: center;">
-                                <button type="button" class="btn btn-sm btn-outline-danger" aria-label="Delete document"
-                                    title="Delete document" (click)="removeDocument(document.id)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                            <td style="white-space: nowrap;">
-                                <button type="button" class="btn btn-link" title="file download size: {{document.fileSize}} bytes"
-                                    (click)="getDocument(document.id, document.fileName)">{{document.fileName}}</button>
-                            </td>
-                            <td style="white-space: nowrap;">
-                                {{document.user}}
-                            </td>
-                            <td style="white-space: nowrap;">
-                                {{document.uploaded | date : 'yyyy-MM-dd, h:mm a'}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col"><h5>Sample Email</h5></div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-lg-2 col-md-4 col-sm-12">
+      <div class="form-group">
+        <label for="sampleAssignment">Select Person To Email</label>
+        <app-staff-picker
+          id="sampleAssignment"
+          title="Assigned to"
+          [selectedStaff]="emailStaff"
+          (selected)="changeEmailStaff($event)"
+        ></app-staff-picker>
+      </div>
     </div>
-    <br />
-    <div class="row">
-        <div class="col">
-            <div style="max-width: 400px;;">
-                <app-file-upload blobDirectory="{{documentContainerName}}" (documentUploaded)="documentUploaded($event)"
-                    accept=".pdf,.doc,.docx"></app-file-upload>
-            </div>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-info"
+        aria-label="Email selected staff"
+        title="Email selected staff"
+        (click)="emailSelectedStaff()"
+      >
+        <i class="fas fa-envelope"></i>&nbsp;&nbsp;Send Email
+      </button>
     </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col"><h5>Sample Documents</h5></div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col">
+      <div class="table-responsive">
+        <table
+          class="table table-sm table-borderless table-hover"
+          aria-label="Documents"
+          title="Documents"
+          summary="View documents"
+        >
+          <thead class="small">
+            <tr>
+              <th style="min-width: 75px;"></th>
+              <th style="width: 100%;">
+                <span style="padding-left: 12px;">Document</span>
+              </th>
+              <th style="white-space: nowrap; min-width: 150px;">Created By</th>
+              <th style="white-space: nowrap; min-width: 150px;">Created On</th>
+            </tr>
+          </thead>
+          <tbody class="small" *ngFor="let document of documents">
+            <tr>
+              <td style="text-align: center;">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  aria-label="Delete document"
+                  title="Delete document"
+                  (click)="removeDocument(document.id)"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+              <td style="white-space: nowrap;">
+                <button
+                  type="button"
+                  class="btn btn-link"
+                  title="file download size: {{document.fileSize}} bytes"
+                  (click)="getDocument(document.id, document.fileName)"
+                >
+                  {{ document.fileName }}
+                </button>
+              </td>
+              <td style="white-space: nowrap;">{{ document.user }}</td>
+              <td style="white-space: nowrap;">
+                {{ document.uploaded | date: 'yyyy-MM-dd, h:mm a' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col">
+      <div style="max-width: 400px;;">
+        <app-file-upload
+          blobDirectory="{{documentContainerName}}"
+          (documentUploaded)="documentUploaded($event)"
+          accept=".pdf,.doc,.docx"
+        ></app-file-upload>
+      </div>
+    </div>
+  </div>
 </div>
 <app-sample-modal></app-sample-modal>
-<div class="modal fade" id="deleteSample" tabindex="-1" role="dialog" aria-labelledby="deleteSampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header text-white bg-danger">
-                <h4 class="modal-title" id="deleteSampleModalLabel">
-                    Delete {{tempSample.name}} Sample?
-                </h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cancel delete" title="Cancel delete"
-                    (click)="clearCheckUserId()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p class="text-danger">
-                    <strong>WARNING:</strong>&nbsp;This action is permanent. Are you sure you want to delete the
-                    {{tempSample.name}}
-                    sample?
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clearCheckUserId()"
-                    aria-label="Cancel delete" title="Cancel delete" #closeBtnDelete>
-                    <i class="fas fa-ban"></i>
-                    Cancel
-                </button>
-                <input type="text" class="form-control" [(ngModel)]="checkUserId" placeholder="Enter your User ID"
-                    aria-placeholder="Enter your User ID" aria-label="Enter your user ID to enable delete option" title="Enter your user ID to enable delete option">
-                <button type="button" class="btn btn-danger" (click)="removeSample()" aria-label="Delete sample" title="Delete sample"
-                    [disabled]="checkUserId != null && userId != null && checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()">
-                    <i class="fas fa-trash-alt"></i>
-                    Delete
-                </button>
-            </div>
-        </div>
+<div
+  class="modal fade"
+  id="deleteSample"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteSampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white bg-danger">
+        <h4 class="modal-title" id="deleteSampleModalLabel">
+          Delete {{ tempSample.name }} Sample?
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Cancel delete"
+          title="Cancel delete"
+          (click)="clearCheckUserId()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-danger">
+          <strong>WARNING:</strong>&nbsp;This action is permanent. Are you sure
+          you want to delete the {{ tempSample.name }} sample?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="clearCheckUserId()"
+          aria-label="Cancel delete"
+          title="Cancel delete"
+          #closeBtnDelete
+        >
+          <i class="fas fa-ban"></i> Cancel
+        </button>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="checkUserId"
+          placeholder="Enter your User ID"
+          aria-placeholder="Enter your User ID"
+          aria-label="Enter your user ID to enable delete option"
+          title="Enter your user ID to enable delete option"
+        />
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="removeSample()"
+          aria-label="Delete sample"
+          title="Delete sample"
+          [disabled]="
+            checkUserId != null &&
+            userId != null &&
+            checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()
+          "
+        >
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
+      </div>
     </div>
+  </div>
 </div>

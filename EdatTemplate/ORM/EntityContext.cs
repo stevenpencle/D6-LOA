@@ -12,19 +12,22 @@ namespace EdatTemplate.ORM
     public class EntityContext : DbContext
     {
         private IHostingEnvironment _environment;
-        public EntityContext(IHostingEnvironment environment)
+        private EntityFrameworkConfig _entityFrameworkConfig;
+
+        public EntityContext(IHostingEnvironment environment, EntityFrameworkConfig entityFrameworkConfig)
         {
-            Initialize(environment);
+            Initialize(environment, entityFrameworkConfig);
         }
 
-        public EntityContext(IHostingEnvironment environment, DbContextOptions options) : base(options)
+        public EntityContext(IHostingEnvironment environment, EntityFrameworkConfig entityFrameworkConfig, DbContextOptions options) : base(options)
         {
-            Initialize(environment);
+            Initialize(environment, entityFrameworkConfig);
         }
 
-        private void Initialize(IHostingEnvironment environment)
+        private void Initialize(IHostingEnvironment environment, EntityFrameworkConfig entityFrameworkConfig)
         {
             _environment = environment;
+            _entityFrameworkConfig = entityFrameworkConfig;
             ConfigureLogging();
         }
 
@@ -32,7 +35,7 @@ namespace EdatTemplate.ORM
         {
             if (!_environment.IsDevelopment()) return;
             var listener = this.GetService<DiagnosticSource>();
-            (listener as DiagnosticListener).SubscribeWithAdapter(new NLogSqlInterceptor());
+            (listener as DiagnosticListener).SubscribeWithAdapter(new NLogSqlInterceptor(_entityFrameworkConfig));
         }
 
         public virtual DbSet<Sample> Samples { get; set; }

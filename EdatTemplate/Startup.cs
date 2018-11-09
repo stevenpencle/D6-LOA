@@ -51,6 +51,11 @@ namespace EdatTemplate
             services.AddSingleton(azureStorageConfig);
             //add storage provider wrapper
             services.AddSingleton<IBlobStorageProvider, BlobStorageProvider>();
+            //add send grid configuration for infrastructure services
+            var sendGridConfig = Configuration.GetSection("SendGridConfig").Get<SendGridConfig>();
+            services.AddSingleton(sendGridConfig);
+            //add email service
+            services.AddSingleton<IEmailService, EmailService>();
             //add core api configuration for infrastructure services
             var fdotCoreApis = Configuration.GetSection("FdotCoreApis").Get<FdotCoreApis>();
             services.AddSingleton(fdotCoreApis);
@@ -99,6 +104,8 @@ namespace EdatTemplate
             }
             authBuilder.AddCookie();
             //configure EntityFramework
+            var entityFrameworkConfig = Configuration.GetSection("EntityFrameworkConfig").Get<EntityFrameworkConfig>();
+            services.AddSingleton(entityFrameworkConfig);
             services.AddDbContext<EntityContext>(optionsBuilder =>
             {
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
