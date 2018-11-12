@@ -112,6 +112,10 @@ namespace EdatTemplate
                 {
                     optionsBuilder.UseSqlite(Configuration.GetConnectionString("SqliteConnection"));
                 }
+                else if (Environment.IsDevelopment() && entityFrameworkConfig.UseDocker)
+                {
+                    optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DockerDbConnection"));
+                }
                 else
                 {
                     optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
