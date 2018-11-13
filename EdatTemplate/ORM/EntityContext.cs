@@ -33,7 +33,7 @@ namespace EdatTemplate.ORM
 
         private void ConfigureLogging()
         {
-            if (!_environment.IsDevelopment() || _entityFrameworkConfig.UseSqlite) return;
+            if (!_environment.IsDevelopment()) return;
             var listener = this.GetService<DiagnosticSource>();
             (listener as DiagnosticListener).SubscribeWithAdapter(new NLogSqlInterceptor(_entityFrameworkConfig));
         }

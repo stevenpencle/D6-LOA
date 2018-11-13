@@ -108,18 +108,10 @@ namespace EdatTemplate
             services.AddSingleton(entityFrameworkConfig);
             services.AddDbContext<EntityContext>(optionsBuilder =>
             {
-                if (Environment.IsDevelopment() && entityFrameworkConfig.UseSqlite)
-                {
-                    optionsBuilder.UseSqlite(Configuration.GetConnectionString("SqliteConnection"));
-                }
-                else if (Environment.IsDevelopment() && entityFrameworkConfig.UseDocker)
-                {
-                    optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DockerDbConnection"));
-                }
-                else
-                {
-                    optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
-                }
+                var connectionString = (Environment.IsDevelopment() && entityFrameworkConfig.UseDocker)
+                    ? "DockerDbConnection"
+                    : "DbConnection";
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString(connectionString));
             });
             //configure MVC
             services
