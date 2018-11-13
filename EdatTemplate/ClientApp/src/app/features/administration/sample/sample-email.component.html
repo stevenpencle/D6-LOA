@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-lg-2 col-md-4 col-sm-12">
+    <div class="form-group">
+      <label for="sampleAssignment">Select Person To Email</label>
+      <app-staff-picker
+        id="sampleAssignment"
+        title="Assigned to"
+        [selectedStaff]="emailStaff"
+        (selected)="changeEmailStaff($event)"
+      ></app-staff-picker>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-info"
+      aria-label="Email selected staff"
+      title="Email selected staff"
+      [disabled]="emailStaff == null"
+      (click)="emailSelectedStaff()"
+    >
+      <i class="fas fa-envelope"></i>&nbsp;&nbsp;Send Email
+    </button>
+  </div>
+</div>

@@ -35,7 +35,7 @@ export class StaffPickerComponent<T> implements OnInit {
       text$: Observable<string>
     ): Observable<IStaff | any> => {
       return text$.pipe(
-        debounceTime(300),
+        debounceTime(1000),
         distinctUntilChanged(),
         tap(() => (this.searching = true)),
         switchMap(term => {

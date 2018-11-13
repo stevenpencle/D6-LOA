@@ -38,6 +38,9 @@ import { BlobService } from './app/services/data/blob.service';
 import { SampleComponent } from './app/features/administration/sample/sample.component';
 import { SampleModalComponent } from './app/features/administration/sample/sample-modal.component';
 import { SampleStoreService } from './app/features/administration/sample/sample-store.service';
+import { SampleEmailComponent } from './app/features/administration/sample/sample-email.component';
+import { SampleDocumentsComponent } from './app/features/administration/sample/sample-documents.component';
+import { SampleDataComponent } from './app/features/administration/sample/sample-data.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,10 @@ import { SampleStoreService } from './app/features/administration/sample/sample-
     // features
     // ** administration
     SampleComponent,
-    SampleModalComponent
+    SampleModalComponent,
+    SampleEmailComponent,
+    SampleDocumentsComponent,
+    SampleDataComponent
   ],
   imports: [
     BrowserModule,
