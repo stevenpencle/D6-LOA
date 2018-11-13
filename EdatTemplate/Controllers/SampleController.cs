@@ -90,5 +90,17 @@ namespace EdatTemplate.Controllers
                 .ToListAsync();
             return l;
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        public IEnumerable<NameValuePair> GetChartData()
+        {
+            return new List<NameValuePair>
+            {
+                new NameValuePair {Name = "Germany", Value = 8940000},
+                new NameValuePair {Name = "USA", Value = 5000000},
+                new NameValuePair {Name = "France", Value = 7200000}
+            };
+        }
     }
 }

@@ -28,7 +28,8 @@ namespace EdatTemplate
                 typeof(EdatHeader),
                 typeof(EdatFooter),
                 typeof(DocumentMetadata),
-                typeof(EmailMessage)
+                typeof(EmailMessage),
+                typeof(NameValuePair)
             }, c => c.WithPublicProperties(p => p.ForceNullable()).ExportTo("model.d.ts"));
             builder.ExportAsInterface<ApplicationRoles>().WithPublicFields(f => f.Constant()).ExportTo("model.d.ts");
             builder.ExportAsEnums(new[]

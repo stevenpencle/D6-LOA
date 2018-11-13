@@ -1,4 +1,45 @@
 <div class="container-fluid">
+  <h5 class="text-muted">
+    <p>
+      This template application is an Single Page Application (SPA) architecture
+      based on
+      <a href="https://docs.microsoft.com/en-us/dotnet/core/" target="blank"
+        >.NET Core</a
+      >
+      (server app) and
+      <a href="https://angular.io/" target="_blank">Angular</a> (client app).
+    </p>
+  </h5>
+  <h6 class="text-muted">
+    <p>
+      The following components demonstrate common-use scenarios encountered in
+      application development. The samples are all located in
+      /ClientApp/src/app/features/administration/sample and can be pruned out
+      once they are no longer needed. This template application does contain
+      many useful core components in /ClientApp/src/app/components and services
+      in /ClientApp/src/app/services that should remain as part of your
+      application.
+    </p>
+  </h6>
+  <div class="card">
+    <div class="card-header">Sample Charts Component</div>
+    <div class="card-body">
+      <h6 class="card-subtitle mb-2 text-muted">
+        This component uses the
+        <a href="https://swimlane.gitbook.io/ngx-charts" target="_blank"
+          >ngx-charts</a
+        >
+        library. This example demonstrates how to make an API call to get data
+        to bind to a chart. The ngx-charts library is a client-side Angular
+        charting framework that draws SVG charts that are reactive to data
+        binding updates. The charts use aria- attributes for accessibility
+        compliance.
+      </h6>
+      <hr />
+      <app-sample-charts></app-sample-charts>
+    </div>
+  </div>
+  <br />
   <div class="card">
     <div class="card-header">Sample Data Component</div>
     <div class="card-body">
@@ -9,8 +50,9 @@
         implement these features. Adding, updating, and deleting data is
         implemented via modal dialogs, and all validations are performed
         server-side. This component also demonstrates exporting the filtered
-        data to Excel, and using moment.js to calculate the age based on the
-        birthdate client-side.
+        data to Excel, and using
+        <a href="https://momentjs.com/" target="_blank">moment.js</a> to
+        calculate the age based on the birthdate client-side.
       </h6>
       <hr />
       <app-sample-data></app-sample-data>
@@ -24,7 +66,11 @@
         This component demonstrates the use of the email service to send an
         email to a selected user using the SendGrid API. The user is selected
         with the Staff Picker component that uses the Azure API Management FDOT
-        core services server-side.
+        core services
+        <a href="https://portal.test.arc.fdot.gov/" target="_blank"
+          >(Arculus)</a
+        >
+        server-side.
       </h6>
       <hr />
       <app-sample-email></app-sample-email>
@@ -37,7 +83,13 @@
       <h6 class="card-subtitle mb-2 text-muted">
         This component demonstrates the use of the BLOB storage service to store
         documents and files. The BLOB storage service uses Azure BLOB Storage
-        server-side.
+        server-side. You will need the
+        <a
+          href="https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator"
+          target="_blank"
+          >Azure Storage Emulator</a
+        >
+        for local development.
       </h6>
       <hr />
       <app-sample-documents></app-sample-documents>

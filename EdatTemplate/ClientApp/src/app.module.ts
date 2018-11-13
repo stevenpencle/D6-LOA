@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // routing
 import { AppRoutingModule } from './app-routing.module';
@@ -41,6 +43,7 @@ import { SampleStoreService } from './app/features/administration/sample/sample-
 import { SampleEmailComponent } from './app/features/administration/sample/sample-email.component';
 import { SampleDocumentsComponent } from './app/features/administration/sample/sample-documents.component';
 import { SampleDataComponent } from './app/features/administration/sample/sample-data.component';
+import { SampleChartsComponent } from './app/features/administration/sample/sample-charts.component';
 
 @NgModule({
   declarations: [
@@ -61,12 +64,15 @@ import { SampleDataComponent } from './app/features/administration/sample/sample
     SampleModalComponent,
     SampleEmailComponent,
     SampleDocumentsComponent,
-    SampleDataComponent
+    SampleDataComponent,
+    SampleChartsComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    NgxChartsModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     NgbModule.forRoot()
   ],
