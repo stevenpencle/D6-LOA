@@ -1,4 +1,12 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnInit,
+  EventEmitter,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IStaff } from '../../../model/model';
 import {
@@ -14,7 +22,7 @@ import { StaffService } from '../../../services/data/staff.service';
   selector: 'app-staff-picker',
   templateUrl: './staff-picker.component.html'
 })
-export class StaffPickerComponent<T> implements OnInit {
+export class StaffPickerComponent implements OnInit {
   @Output()
   selected = new EventEmitter<IStaff>();
   @Input()
@@ -23,6 +31,7 @@ export class StaffPickerComponent<T> implements OnInit {
   title: string;
   @Input()
   selectedStaff: IStaff;
+  @ViewChild('input') input: ElementRef;
   searching = false;
   searchFailed = false;
   searchStaff: (text$: Observable<string>) => Observable<IStaff | any>;
@@ -77,5 +86,9 @@ export class StaffPickerComponent<T> implements OnInit {
   onModelChange(staff: IStaff): void {
     this.selectedStaff = staff;
     this.selected.emit(staff);
+  }
+
+  clearInput(): void {
+    this.input.nativeElement.value = '';
   }
 }

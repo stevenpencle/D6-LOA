@@ -10,6 +10,7 @@ import { ISample, IStaff } from '../../../model/model';
 import { StatusCode } from '../../../model/model.enums';
 import * as moment from 'moment';
 import { StaffService } from '../../../services/data/staff.service';
+import { StaffPickerComponent } from 'src/app/components/common/staff-picker/staff-picker.component';
 
 @Component({
   selector: 'app-sample-modal',
@@ -18,6 +19,8 @@ import { StaffService } from '../../../services/data/staff.service';
 export class SampleModalComponent implements OnInit, OnDestroy {
   @ViewChild('closeBtn')
   closeBtn: ElementRef;
+  @ViewChild(StaffPickerComponent)
+  staffPickerComponent: StaffPickerComponent;
 
   hasErrors = false;
   errors = '';
@@ -66,6 +69,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
 
   setTempSample(sample: ISample): void {
     this.clearErrors();
+    this.staffPickerComponent.clearInput();
     if (sample.assignedStaffId != null && sample.assignedStaffId > 0) {
       this.staffService.get(sample.assignedStaffId, staff => {
         this.selectedStaff = staff;
