@@ -39,7 +39,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
 
-> An explaination of user secrets. Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
+> An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
 
 #### Download and Run the PowerShell Script to Create a New Application from the Template
 
@@ -69,7 +69,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Run As-Is Template
 
-> VS Code - Hit Play! VS Code will automatically execute the `dotnet restore` `dotnet build` `npm install` `ng build` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application.
+> VS Code - Hit Play! VS Code will automatically execute the `dotnet build` `npm install` `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application. Note: Images will not be available until after you run `npm run build` from `{your-project-name}\ClientApp` once to create the `{your-project-name}\ClientApp\dist\assets` folder.
 
 ---
 
@@ -92,9 +92,9 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 7. VS Code - Edit -> Replace in Files `EdatTemplate` with `{your-project-name]` and select "Replace All" (Ctrl + ALt + Enter)
 8. VS Code (optional) - Set the `UserSecretsId` in the .NET Core project to a new value (usually a GUID) and reload new secrets for your new application. All applications deployed on Azure will require their own unique secrets, but developers can use the ones provided by Randy for local development.
 9. VS Code - Hit Play! This will run these commands in order...
-   - From `{your-project-name}` run `dotnet build` -> This will restore NuGet packages, build the .NET Core app, and generate the TypeScript model definition files (model.d.ts)
-   - From `{your-project-name}\ClientApp` run `npm install` -> This will create the `node_modules` folder and install the NPM packages defined in the `package.json` file.
-   - From `{your-project-name}\ClientApp` run `ng serve` -> This build the client app and start the Angular-CLI server.
+   - From `{your-project-name}` it runs `dotnet build` -> This restores NuGet packages, builds the .NET Core app, and generates the TypeScript model definition files (model.d.ts)
+   - From `{your-project-name}\ClientApp` it runs `npm install` -> This creates the `node_modules` folder and installs the NPM packages defined in the `package.json` file.
+   - From `{your-project-name}\ClientApp` it runs `ng serve` -> This builds the client app and starts the Angular-CLI server.
 10. Images are served from the `{your-project-name}\ClientApp\dist\assets` folder. Running in VS Code will not create this folder since the Angular-CLI server serves files from in-memory. To get get the images for your application, run `npm run build` from inside the `{your-project-name}\ClientApp` folder at least once.
 
 ## Features
