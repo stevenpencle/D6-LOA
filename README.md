@@ -79,7 +79,7 @@ _**What about Visual Studio? Can I still use it?**_
 
 Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.
 
-**Caution:** If you use both Visual Studio and VS Code, be aware that debugging in Visual Studio will result in IIS Express blocking port 44376 until you manually exit it in your system tray. If you leave IIS Express running and then try to debug in VS Code, you will get an error.
+_Caution: If you use both Visual Studio and VS Code, be aware that debugging in Visual Studio will result in IIS Express blocking port 44376 until you manually exit it in your system tray. If you leave IIS Express running and then try to debug in VS Code, you will get an error._
 
 _**Where is the unit test project, and where are the client testing frameworks and configuration?**_
 
@@ -98,6 +98,12 @@ Commenting out the `_theme_office.scss` and uncommenting the `_theme_fdot.scss` 
 Please feel free to create your own themes, and please be sure to share with the rest of us. Currently, all themes must meet one of the approved [FDOT color palettes](http://www.fdot.gov/it/docs/standards/colorpalette-10252013.htm)
 
 [Font Awesome](https://fontawesome.com/icons?d=gallery) is included in the template as our glyph library.
+
+_**What do I need to know about the application configuration (appsettings.json) besides the user secrets already mentioned?**_
+
+Here's a cheat-sheet of the more important settings and what their purpose is.
+
+![alt text](Documentation/appsettings_help.png "appsettings help")
 
 ### Manual Steps to Create a New Application from the Template
 
