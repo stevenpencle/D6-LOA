@@ -73,11 +73,11 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 #### Questions
 
-_What about Visual Studio? Can I still use it?_
+_*What about Visual Studio? Can I still use it?*_
 
 Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.
 
-_Where is the unit test project, and where are the client testing frameworks and configuration?_
+_*Where is the unit test project, and where are the client testing frameworks and configuration?*_
 
 They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular.
 
