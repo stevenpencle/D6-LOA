@@ -2,6 +2,8 @@
 
 This is a template starter application with an Angular.io SPA front-end and .NET Core back-end.
 
+![alt text](Documentation/edat_template.png "EDAT Template")
+
 ## FAQ
 
 - Is this a low-code or no-code solution? - No. You must know how to code and be familiar with languages, frameworks and libraries like HTML, CSS, TypeScript, C# ASP.NET Core, Angular, Bootstrap, and Entity Framework Core.
