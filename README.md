@@ -41,9 +41,9 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 > An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
 
-#### Download and Run the PowerShell Script to Create a New Application from the Template
+#### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
 
-> Save the secrets.json file in the `EdatTemplate` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `EdatTemplate` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
+> Save the secrets.json file in the `{your-project-name}` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `{your-project-name}` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
 
 ---
 
@@ -67,7 +67,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
 
-### Run As-Is Template
+### Run Template
 
 > VS Code - Hit Play! VS Code will automatically execute the `dotnet build` `npm install` `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application. Note: Images will not be available until after you run `npm run build` from `{your-project-name}\ClientApp` once to create the `{your-project-name}\ClientApp\dist\assets` folder.
 
