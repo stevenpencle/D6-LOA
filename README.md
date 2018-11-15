@@ -21,51 +21,51 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Prerequisite Configuration - 1 Time Setup
 
-> VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
+VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
 
 ![alt text](Documentation/vscode_extensions.png "VS Code extensions")
 
-> VS Code or Command Terminal - Verify that you have the latest .NET Core SDK
+VS Code or Command Terminal - Verify that you have the latest .NET Core SDK
 
 ![alt text](Documentation/dotnet_config.png ".NET Core CLI Commands to verify SDK installation")
 
-> Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
+Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
 
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
 
-> An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
+An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
 
 ### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template. Thank you, Jim (if you have any issues, please contact Jim - james.quinn@dot.state.fl.us)
 
-> You will need to unblock the PowerShell script before you execute it!
+You will need to unblock the PowerShell script before you execute it!
 
 ![alt text](Documentation/powershell_security_setting.png "Allow the PowerShell script to execute")
 
 #### Warning
 
-> This will take several minutes to complete due to the NPM package installation.
+This will take several minutes to complete due to the NPM package installation.
 
 ![alt text](Documentation/powershell_script_run.png "PowerShell script execution end")
 
-> Save the secrets.json file in the `{your-project-name}` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `{your-project-name}` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
+Save the secrets.json file in the `{your-project-name}` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `{your-project-name}` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
 
 ![alt text](Documentation/vscode_project_structure.png "Project structure")
 
-> VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets.
+VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets.
 
 ![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets")
 
-> This will copy the secrets.json file to a folder in your profile's `AppData`
+This will copy the secrets.json file to a folder in your profile's `AppData`
 
 ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData")
 
-> The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the key in the project file.
+The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the key in the project file.
 
 ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
 
 ### Run Template
 
-> VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` and `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools.
+VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` and `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools.
 
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
