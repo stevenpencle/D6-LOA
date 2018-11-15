@@ -35,7 +35,9 @@ Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets
 
 An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
 
-### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template. Thank you, Jim (if you have any issues, please contact Jim - james.quinn@dot.state.fl.us)
+### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
+
+A special _Thank you!_ to Jim Quinn (if you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`)
 
 You will need to unblock the PowerShell script before you execute it!
 
