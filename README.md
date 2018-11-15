@@ -93,6 +93,8 @@ Commenting out the `_theme_office.scss` and uncommenting the `_theme_fdot.scss` 
 
 Please feel free to create your own themes, and please be sure to share with the rest of us. Currently, all themes must meet one of the approved [FDOT color palettes](http://www.fdot.gov/it/docs/standards/colorpalette-10252013.htm)
 
+[Font Awesome](https://fontawesome.com/icons?d=gallery) is included in the template as our glyph library.
+
 ### Manual Steps to Create a New Application from the Template
 
 1. Rename the extract folder to `{your-project-name}`
@@ -123,6 +125,7 @@ Please feel free to create your own themes, and please be sure to share with the
 - SRS (Staff) service and staff picker component to handle FDOT staff selections (with example)
 - Complete CRUD example for client and server architecture patterns
 - [Azure BLOB storage](https://azure.microsoft.com/en-us/services/storage/blobs/) service and component for document management (with example)
+- [ngx-charts](https://swimlane.github.io/ngx-charts/#/ngx-charts/bar-vertical) library is included for charts and graphs
 
 ## Where We're Heading
 
