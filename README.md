@@ -37,7 +37,7 @@ An explaination of user secrets... Using the Azure platform requires access to s
 
 ### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
 
-A special _Thank you!_ to Jim Quinn (if you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`)
+A special _Thank you!_ to Jim Quinn. If you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`
 
 You will need to unblock the PowerShell script before you execute it!
 
