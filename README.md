@@ -37,6 +37,10 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 #### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template. Thank you, Jim (if you have any issues, please contact Jim - james.quinn@dot.state.fl.us)
 
+> You will need to unblock the PowerShell script before you execute it!
+
+![alt text](Documentation/powershell_security_setting.png "Allow the powershell script to execute")
+
 > Save the secrets.json file in the `{your-project-name}` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `{your-project-name}` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
 
 ![alt text](Documentation/vscode_project_structure.png "Project structure")
