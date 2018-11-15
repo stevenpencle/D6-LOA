@@ -23,19 +23,13 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 > VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
 
----
-
 ![alt text](Documentation/vscode_extensions.png "VS Code extensions")
 
 > VS Code or Command Terminal - Verify that you have the latest .NET Core SDK
 
----
-
 ![alt text](Documentation/dotnet_config.png ".NET Core CLI Commands to verify SDK installation")
 
 > Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
-
----
 
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
 
@@ -45,41 +39,31 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 > Save the secrets.json file in the `{your-project-name}` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `{your-project-name}` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
 
----
-
 ![alt text](Documentation/vscode_project_structure.png "Project structure")
 
 > VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets.
-
----
 
 ![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets")
 
 > This will copy the secrets.json file to a folder in your profile's `AppData`
 
----
-
 ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData")
 
 > The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the key in the project file.
-
----
 
 ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
 
 ### Run Template
 
-> VS Code - Hit Play! VS Code will automatically execute the `dotnet build` `npm install` `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application. Note: Images will not be available until after you run `npm run build` from `{your-project-name}\ClientApp` once to create the `{your-project-name}\ClientApp\dist\assets` folder.
+> VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` `npm install` `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application. Note: Images will not be available until after you run `npm run build` from `{your-project-name}\ClientApp` once to create the `{your-project-name}\ClientApp\dist\assets` folder.
 
----
+#### Warning
+
+> This will take several minutes to complete. Chrome will launch and appear to do nothing. Eventually, Chrome will refresh and render your application. This delay is primarily due to the time needed to install the NPM packages. After the first launch, the start-up time will be much quicker.
 
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
-> _What about Visual Studio? Can I still use it?_ Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.
-
----
-
-> _Where is the unit test project, and where are the client testing frameworks and configuration?_ They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular.
+> _What about Visual Studio? Can I still use it?_ Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.<br/><br/>_Where is the unit test project, and where are the client testing frameworks and configuration?_ They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular. <
 
 ### Manual Steps to Create a New Application from the Template
 
