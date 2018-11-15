@@ -55,7 +55,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Run Template
 
-> VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` `npm install` `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools. Note: It may take a few minutes to run the project the first time with all of the package restoration that is needed. Chrome will eventually refresh the page to render the application. Note: Images will not be available until after you run `npm run build` from `{your-project-name}\ClientApp` once to create the `{your-project-name}\ClientApp\dist\assets` folder.
+> VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` `npm install` `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools.<br/><br/>Note: Images will not be available until after you run `npm run build` from `{your-project-name}\ClientApp` once to create the `{your-project-name}\ClientApp\dist\assets` folder.
 
 #### Warning
 
