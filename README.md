@@ -81,6 +81,18 @@ _**Where is the unit test project, and where are the client testing frameworks a
 
 They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular.
 
+_**I am so sick of the template theme. How do I change it?**_
+
+The EDAT Template supports [SASS styling](https://sass-lang.com/). the SASS files (.scss) are compiled to CSS as part of the build process. There are currently two built-in Bootstrap themes available, `office` (default) and `fdot`. You can change the theme in `{your-project-name}\ClientApp\src\styles\styles.scss`
+
+![alt text](Documentation/sass_themes.png "SASS themes")
+
+Commenting out the `_theme_office.scss` and uncommenting the `_theme_fdot.scss` changes the application theme to standard FDOT colors.
+
+![alt text](Documentation/_theme_fdot.png "SASS themes")
+
+Please feel free to create your own themes, and please be sure to share with the rest of us. Currently, all themes must meet one of the approved [FDOT color palettes](http://www.fdot.gov/it/docs/standards/colorpalette-10252013.htm)
+
 ### Manual Steps to Create a New Application from the Template
 
 1. Rename the extract folder to `{your-project-name}`
