@@ -18,7 +18,6 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
 4. Node.js and NPM: [https://nodejs.org/en/](https://nodejs.org/en/)
 5. SQL Server and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017)
-6. Download the repository code as a .zip file to your local drive and extract
 
 ### Prerequisite Configuration - 1 Time Setup
 
@@ -39,6 +38,10 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 ---
 
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
+
+> An explaination of user secrets. Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
+
+#### Download and Run the PowerShell Script to Create a New Application from the Template
 
 > Save the secrets.json file in the `EdatTemplate` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `EdatTemplate` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
 
@@ -78,7 +81,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 > _Where is the unit test project, and where are the client testing frameworks and configuration?_ They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular.
 
-### Create a New Application from the Template
+### Manual Steps to Create a New Application from the Template
 
 1. Rename the extract folder to `{your-project-name}`
 2. Rename the `EdatTemplate` folder to `{your-project-name}`
@@ -88,7 +91,11 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 6. VS Code - open the `{your-project-name}` folder
 7. VS Code - Edit -> Replace in Files `EdatTemplate` with `{your-project-name]` and select "Replace All" (Ctrl + ALt + Enter)
 8. VS Code (optional) - Set the `UserSecretsId` in the .NET Core project to a new value (usually a GUID) and reload new secrets for your new application. All applications deployed on Azure will require their own unique secrets, but developers can use the ones provided by Randy for local development.
-9. VS Code - Hit Play!
+9. VS Code - Hit Play! This will run these commands in order...
+   - From `{your-project-name}` run `dotnet build` -> This will restore NuGet packages, build the .NET Core app, and generate the TypeScript model definition files (model.d.ts)
+   - From `{your-project-name}\ClientApp` run `npm install` -> This will create the `node_modules` folder and install the NPM packages defined in the `package.json` file.
+   - From `{your-project-name}\ClientApp` run `ng serve` -> This build the client app and start the Angular-CLI server.
+10. Images are served from the `{your-project-name}\ClientApp\dist\assets` folder. Running in VS Code will not create this folder since the Angular-CLI server serves files from in-memory. To get get the images for your application, run `npm run build` from inside the `{your-project-name}\ClientApp` folder at least once.
 
 ## Features
 
