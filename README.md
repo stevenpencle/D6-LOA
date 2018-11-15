@@ -98,5 +98,4 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ## Where We're Heading
 
-- Installer (CLI) to eliminate the manual steps in "Create a New Application from the Template"
 - Full-stack Node.js architecture version (at some point, maybe...)
