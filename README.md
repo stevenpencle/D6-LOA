@@ -137,6 +137,11 @@ Here's a cheat-sheet of the more important settings and what their purpose is.
 - [Azure BLOB storage](https://azure.microsoft.com/en-us/services/storage/blobs/) service and component for document management (with example)
 - [ngx-charts](https://swimlane.github.io/ngx-charts/#/ngx-charts/bar-vertical) library is included for charts and graphs
 
+## TODO (difficulty 1 - 5)
+
+- Add support for field-level validation message display (2)
+- Standardize series and data-point models for all charts and add a chart wrapper component that automatically table-izes the chart data (4)
+
 ## Where We're Heading
 
 - Full-stack Node.js architecture version (at some point, maybe...)
