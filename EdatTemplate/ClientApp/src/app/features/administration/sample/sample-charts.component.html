@@ -1,46 +1,48 @@
-<div class="row">
-  <div class="col-lg-6 col-md-12" style="height: 400px;">
-    <ngx-charts-bar-vertical
-      [scheme]="options.colorScheme"
-      [results]="data"
-      [gradient]="true"
-      [xAxis]="true"
-      [yAxis]="true"
-      [legend]="true"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      [xAxisLabel]="options.xAxisLabel"
-      [yAxisLabel]="options.yAxisLabel"
-      (select)="onSelect($event)"
-    >
-    </ngx-charts-bar-vertical>
+<div *ngIf="data != null">
+  <div class="row">
+    <div class="col-lg-6 col-md-12" style="height: 400px;">
+      <ngx-charts-bar-vertical
+        [scheme]="options.colorScheme"
+        [results]="data.seriesData[0].dataPoints"
+        [gradient]="true"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="options.xAxisLabel"
+        [yAxisLabel]="options.yAxisLabel"
+        (select)="onSelect($event)"
+      >
+      </ngx-charts-bar-vertical>
+    </div>
+    <div class="col-lg-6 col-md-12" style="height: 400px;">
+      <ngx-charts-advanced-pie-chart
+        [scheme]="options.colorScheme"
+        [results]="data.seriesData[0].dataPoints"
+        [gradient]="true"
+        (select)="onSelect($event)"
+      >
+      </ngx-charts-advanced-pie-chart>
+    </div>
   </div>
-  <div class="col-lg-6 col-md-12" style="height: 400px;">
-    <ngx-charts-advanced-pie-chart
-      [scheme]="options.colorScheme"
-      [results]="data"
-      [gradient]="true"
-      (select)="onSelect($event)"
-    >
-    </ngx-charts-advanced-pie-chart>
-  </div>
-</div>
-<div *ngFor="let dataPoint of data" class="row">
-  <div class="col">
-    <div class="form-group">
-      <label for="{{'dp-' + dataPoint.name}}">
-        <strong>{{ dataPoint.name }}</strong>
-      </label>
-      <input
-        type="range"
-        class="form-control-range"
-        id="{{'dp-' + dataPoint.name}}"
-        [ngModel]="dataPoint.value"
-        (change)="updateData($event, dataPoint)"
-        min="1000000"
-        max="1000000000"
-        step="1000000"
-      />
+  <div *ngFor="let dataPoint of data.seriesData[0].dataPoints" class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="{{'dp-' + dataPoint.name}}">
+          <strong>{{ dataPoint.name }}</strong>
+        </label>
+        <input
+          type="range"
+          class="form-control-range"
+          id="{{'dp-' + dataPoint.name}}"
+          [ngModel]="dataPoint.value"
+          (change)="updateData($event, dataPoint)"
+          min="1000000"
+          max="1000000000"
+          step="1000000"
+        />
+      </div>
     </div>
   </div>
 </div>

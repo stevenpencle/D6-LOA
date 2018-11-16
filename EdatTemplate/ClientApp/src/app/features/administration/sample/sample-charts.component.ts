@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http/http.service';
-import { INameValuePair } from 'src/app/model/model';
+import { IGraphData, IGraphDataPoint } from 'src/app/model/model';
 import * as linq from 'linq';
 
 @Component({
@@ -8,7 +8,7 @@ import * as linq from 'linq';
   templateUrl: './sample-charts.component.html'
 })
 export class SampleChartsComponent implements OnInit {
-  data: INameValuePair[] = [];
+  data: IGraphData;
   options = {
     xAxisLabel: 'Country',
     yAxisLabel: 'Population',
@@ -20,25 +20,23 @@ export class SampleChartsComponent implements OnInit {
   constructor(private httpService: HttpService) {}
 
   ngOnInit(): void {
-    this.httpService.get<INameValuePair[]>(
-      'api/Sample/GetChartData',
-      result => {
-        this.data = linq
-          .from(result)
-          .orderBy(x => x.name)
-          .toArray();
-      }
-    );
+    this.httpService.get<IGraphData>('api/Sample/GetChartData', result => {
+      this.data = result;
+      this.data.seriesData[0].dataPoints = linq
+        .from(this.data.seriesData[0].dataPoints)
+        .orderBy(x => x.name)
+        .toArray();
+    });
   }
 
-  updateData(event: any, dataPoint: INameValuePair) {
+  updateData(event: any, dataPoint: IGraphDataPoint) {
     dataPoint.value = Number.parseInt(event.target.value);
     let dataPoints = linq
-      .from(this.data)
+      .from(this.data.seriesData[0].dataPoints)
       .where(x => x.name !== dataPoint.name)
       .toArray();
     dataPoints = [...dataPoints, dataPoint];
-    this.data = linq
+    this.data.seriesData[0].dataPoints = linq
       .from(dataPoints)
       .orderBy(x => x.name)
       .toArray();

@@ -93,13 +93,23 @@ namespace EdatTemplate.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public IEnumerable<NameValuePair> GetChartData()
+        public GraphData GetChartData()
         {
-            return new List<NameValuePair>
+            return new GraphData
             {
-                new NameValuePair {Name = "Germany", Value = 8940000},
-                new NameValuePair {Name = "USA", Value = 5000000},
-                new NameValuePair {Name = "France", Value = 7200000}
+                SeriesData = new List<GraphSeries>
+                {
+                    new GraphSeries
+                    {
+                        Label = "Population by Country",
+                        DataPoints = new List<GraphDataPoint>
+                        {
+                            new GraphDataPoint {Name = "Germany", Value = 8940000},
+                            new GraphDataPoint {Name = "USA", Value = 5000000},
+                            new GraphDataPoint {Name = "France", Value = 7200000}
+                        }
+                    }
+                }
             };
         }
     }

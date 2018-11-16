@@ -29,7 +29,9 @@ namespace EdatTemplate
                 typeof(EdatFooter),
                 typeof(DocumentMetadata),
                 typeof(EmailMessage),
-                typeof(NameValuePair)
+                typeof(GraphDataPoint),
+                typeof(GraphSeries),
+                typeof(GraphData)
             }, c => c.WithPublicProperties(p => p.ForceNullable()).ExportTo("model.d.ts"));
             builder.ExportAsInterface<ApplicationRoles>().WithPublicFields(f => f.Constant()).ExportTo("model.d.ts");
             builder.ExportAsEnums(new[]
@@ -44,7 +46,8 @@ namespace EdatTemplate
             builder.Substitute(typeof(DateTime?), new RtSimpleTypeName("Date"));
 
             // global settings
-            builder.Global(x => {
+            builder.Global(x =>
+            {
                 x.CamelCaseForProperties();
                 x.UseModules();
                 x.ExportPureTypings();
