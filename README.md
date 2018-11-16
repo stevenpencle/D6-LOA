@@ -141,6 +141,7 @@ Here's a cheat-sheet of the more important settings and what their purpose is.
 
 - Add support for field-level validation message display (2)
 - Standardize series and data-point models for all charts and add a chart wrapper component that automatically table-izes the chart data (4)
+- Consider switching the current Staff API to a cached StaffJson API in-memory data set to reduce cold-start lag on the staff service (2)
 
 ## Where We're Heading
 
