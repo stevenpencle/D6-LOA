@@ -21,6 +21,7 @@ import { NotAuthorizedComponent } from './app/components/not-authorized/not-auth
 import { ServerErrorComponent } from './app/components/server-error/server-error.component';
 import { StaffPickerComponent } from './app/components/common/staff-picker/staff-picker.component';
 import { FileUploadComponent } from './app/components/common/file-upload/file-upload.component';
+import { ChartToTableComponent } from './app/components/common/chart-to-table/chart-to-table.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -58,6 +59,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     HomeComponent,
     NotAuthorizedComponent,
     ServerErrorComponent,
+    ChartToTableComponent,
     // features
     // ** administration
     SampleComponent,

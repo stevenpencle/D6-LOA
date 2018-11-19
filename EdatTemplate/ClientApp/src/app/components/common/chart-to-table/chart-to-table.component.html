@@ -1,0 +1,48 @@
+<div class="float-left">{{ data.title }}</div>
+<div class="float-right text-right">
+  <button
+    *ngIf="showChart"
+    type="button"
+    class="btn btn-sm btn-outline-default"
+    title="show tabular data"
+    (click)="toggleTable()"
+  >
+    <i class="fas fa-table"></i>
+  </button>
+  <button
+    *ngIf="!showChart"
+    type="button"
+    class="btn btn-sm btn-outline-default"
+    title="show chart"
+    (click)="toggleChart()"
+  >
+    <i class="fas fa-chart-bar"></i>
+  </button>
+</div>
+<div class="float-none"></div>
+<br />
+<div>
+  <div *ngIf="showChart"><ng-content></ng-content></div>
+  <div *ngFor="let series of data.seriesData">
+    <br />
+    <div *ngIf="!showChart" class="table-responsive">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr class="table-primary">
+            <th colspan="2">{{ series.name }}</th>
+          </tr>
+          <tr class="table-secondary">
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dataPoint of series.series">
+            <td>{{ dataPoint.name }}</td>
+            <td>{{ dataPoint.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

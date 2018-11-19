@@ -93,20 +93,99 @@ namespace EdatTemplate.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public GraphData GetChartData()
+        public GraphData GetPopulationChartData()
         {
             return new GraphData
             {
+                Title = "Population by Country",
                 SeriesData = new List<GraphSeries>
                 {
                     new GraphSeries
                     {
-                        Label = "Population by Country",
-                        DataPoints = new List<GraphDataPoint>
+                        Name = "Series 1",
+                        Series = new List<GraphDataPoint>
                         {
                             new GraphDataPoint {Name = "Germany", Value = 8940000},
                             new GraphDataPoint {Name = "USA", Value = 5000000},
                             new GraphDataPoint {Name = "France", Value = 7200000}
+                        }
+                    }
+                }
+            };
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public GraphData GetGdpChartData()
+        {
+            var date1 = new DateTime(2014, 9, 1);
+            var date2 = new DateTime(2015, 9, 1);
+            var date3 = new DateTime(2016, 9, 1);
+            var date4 = new DateTime(2017, 9, 1);
+            var date5 = new DateTime(2018, 9, 1);
+            return new GraphData
+            {
+                Title = "GDP Per Capita",
+                SeriesData = new List<GraphSeries>
+                {
+                    new GraphSeries
+                    {
+                        Name = "San Marino",
+                        Series = new List<GraphDataPoint>
+                        {
+                            new GraphDataPoint {Name = date1.ToShortDateString(), Value = 2809},
+                            new GraphDataPoint {Name = date2.ToShortDateString(), Value = 2325},
+                            new GraphDataPoint {Name = date3.ToShortDateString(), Value = 3340},
+                            new GraphDataPoint {Name = date4.ToShortDateString(), Value = 5319},
+                            new GraphDataPoint {Name = date5.ToShortDateString(), Value = 6285}
+                        }
+                    },
+                    new GraphSeries
+                    {
+                        Name = "British Indian Ocean Territory",
+                        Series = new List<GraphDataPoint>
+                        {
+                            new GraphDataPoint {Name = date1.ToShortDateString(), Value = 6037},
+                            new GraphDataPoint {Name = date2.ToShortDateString(), Value = 6823},
+                            new GraphDataPoint {Name = date3.ToShortDateString(), Value = 4817},
+                            new GraphDataPoint {Name = date4.ToShortDateString(), Value = 4262},
+                            new GraphDataPoint {Name = date5.ToShortDateString(), Value = 5610}
+                        }
+                    },
+                    new GraphSeries
+                    {
+                        Name = "Nicaragua",
+                        Series = new List<GraphDataPoint>
+                        {
+                            new GraphDataPoint {Name = date1.ToShortDateString(), Value = 5426},
+                            new GraphDataPoint {Name = date2.ToShortDateString(), Value = 2429},
+                            new GraphDataPoint {Name = date3.ToShortDateString(), Value = 3037},
+                            new GraphDataPoint {Name = date4.ToShortDateString(), Value = 5742},
+                            new GraphDataPoint {Name = date5.ToShortDateString(), Value = 5577}
+                        }
+                    },
+                    new GraphSeries
+                    {
+                        Name = "Kyrgyzstan",
+                        Series = new List<GraphDataPoint>
+                        {
+                            new GraphDataPoint {Name = date1.ToShortDateString(), Value = 6271},
+                            new GraphDataPoint {Name = date2.ToShortDateString(), Value = 5149},
+                            new GraphDataPoint {Name = date3.ToShortDateString(), Value = 2237},
+                            new GraphDataPoint {Name = date4.ToShortDateString(), Value = 2717},
+                            new GraphDataPoint {Name = date5.ToShortDateString(), Value = 4085}
+                        }
+                    },
+                    new GraphSeries
+                    {
+                        Name = "Bermuda",
+                        Series = new List<GraphDataPoint>
+                        {
+                            new GraphDataPoint {Name = date1.ToShortDateString(), Value = 2507},
+                            new GraphDataPoint {Name = date2.ToShortDateString(), Value = 6634},
+                            new GraphDataPoint {Name = date3.ToShortDateString(), Value = 3324},
+                            new GraphDataPoint {Name = date4.ToShortDateString(), Value = 2368},
+                            new GraphDataPoint {Name = date5.ToShortDateString(), Value = 5932}
                         }
                     }
                 }

@@ -16,27 +16,41 @@ export class SampleChartsComponent implements OnInit {
       domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
     }
   };
+  lineData: IGraphData;
+  lineOptions = {
+    xAxisLabel: 'Census Date',
+    yAxisLabel: 'GDP Per Capita',
+    colorScheme: {
+      domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    }
+  };
 
   constructor(private httpService: HttpService) {}
 
   ngOnInit(): void {
-    this.httpService.get<IGraphData>('api/Sample/GetChartData', result => {
-      this.data = result;
-      this.data.seriesData[0].dataPoints = linq
-        .from(this.data.seriesData[0].dataPoints)
-        .orderBy(x => x.name)
-        .toArray();
+    this.httpService.get<IGraphData>(
+      'api/Sample/GetPopulationChartData',
+      result => {
+        this.data = result;
+        this.data.seriesData[0].series = linq
+          .from(this.data.seriesData[0].series)
+          .orderBy(x => x.name)
+          .toArray();
+      }
+    );
+    this.httpService.get<IGraphData>('api/Sample/GetGdpChartData', result => {
+      this.lineData = result;
     });
   }
 
   updateData(event: any, dataPoint: IGraphDataPoint) {
     dataPoint.value = Number.parseInt(event.target.value);
     let dataPoints = linq
-      .from(this.data.seriesData[0].dataPoints)
+      .from(this.data.seriesData[0].series)
       .where(x => x.name !== dataPoint.name)
       .toArray();
     dataPoints = [...dataPoints, dataPoint];
-    this.data.seriesData[0].dataPoints = linq
+    this.data.seriesData[0].series = linq
       .from(dataPoints)
       .orderBy(x => x.name)
       .toArray();
