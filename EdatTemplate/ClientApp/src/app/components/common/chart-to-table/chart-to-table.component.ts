@@ -3,7 +3,9 @@ import {
   Input,
   ContentChildren,
   QueryList,
-  AfterContentInit
+  AfterContentInit,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { IGraphData } from 'src/app/model/model';
 import { BaseChartComponent } from '@swimlane/ngx-charts';
@@ -15,6 +17,7 @@ import { BaseChartComponent } from '@swimlane/ngx-charts';
 export class ChartToTableComponent implements AfterContentInit {
   @Input() data: IGraphData;
   @ContentChildren('chart') charts: QueryList<BaseChartComponent>;
+  @Output() tableDataDisplayed = new EventEmitter<boolean>();
   showChart = true;
 
   constructor() {}
@@ -22,10 +25,12 @@ export class ChartToTableComponent implements AfterContentInit {
   toggleChart(): void {
     this.showChart = true;
     this.ngAfterContentInit();
+    this.tableDataDisplayed.emit(false);
   }
 
   toggleTable(): void {
     this.showChart = false;
+    this.tableDataDisplayed.emit(true);
   }
 
   ngAfterContentInit(): void {

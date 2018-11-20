@@ -24,6 +24,7 @@ export class SampleChartsComponent implements OnInit {
       domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
     }
   };
+  showPopulationCharts = true;
 
   constructor(private httpService: HttpService) {}
 
@@ -55,6 +56,10 @@ export class SampleChartsComponent implements OnInit {
       .orderBy(x => x.name)
       .toArray();
     console.log(dataPoint);
+  }
+
+  togglePieChart(tableDataDisplayed: boolean): void {
+    this.showPopulationCharts = !tableDataDisplayed;
   }
 
   onSelect(event) {
