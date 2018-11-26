@@ -106,7 +106,9 @@ Here's a cheat-sheet of the more important settings and what their purpose is.
 
 ![alt text](Documentation/appsettings_help.png "appsettings help")
 
-The `OpenIdConnectB2EOptions:Roles` setting is where you define the roles your application will use for network users. In the template application the `Admin` role will be assigned to any authenticated network user that belongs to any of the security groups listed in the array. You will need to use the Azure Portal to determine the Object IDs for the security groups you are using as your application roles.
+_**What do I need to know about the application's security model and how does it work?**_
+
+The `OpenIdConnectB2EOptions:Roles` setting (appsettings.json) is where you define the roles your application will use for network users. In the template application the `Admin` role will be assigned to any authenticated network user that belongs to any of the security groups listed in the array. You will need to use the Azure Portal to determine the Object IDs for the security groups you are using as your application roles.
 
 ![alt text](Documentation/security_group.png "Azure AD security groups")
 
@@ -114,7 +116,19 @@ In `B2EOpenIdConnectEvents.cs` the principal's role claim will be assigned the a
 
 ![alt text](Documentation/role_assignment_code.png "Role assignment code")
 
-Roles for B2C users should be handled via a custom user/role management implementation in your application.
+_IMPORTANT:_ You should use the standard `Authorize()` attribute to decorate your .NET API controllers/methods that are secured (access restricted). This is the primary security layer within the application.
+
+![alt text](Documentation/authorize_attribute.png "Authorize attribute")
+
+In the Angular `app-routing.module.ts` you should use the `RouteGuard` to restrict access to routes by user role. This is not a security aspect in that roles can be spoofed on the client browser by tech-savvy people, but it helps make the security intentions within the application clearer and helps prevents users from accessing routes that will result in an unauthorized (403) response code when an API call is made.
+
+It is also the developer's responsibility to render only the application menu options that are accessible by the current user's role. This is handled by subscribing to the `SecurityService` (security.service.ts) in the `ngOnInit` lifecycle event of your component. See the example below from the `nav-menu.component.(ts|html)`.
+
+![alt text](Documentation/security_service_component.png "Security service use in a component")
+
+![alt text](Documentation/ngif_role_eval_in_template.png "Evaluating the role in the template with *ngIf")
+
+Role assignment for B2C users must be handled via a custom user/role management implementation in your application since these users are not in AD.
 
 ### Manual Steps to Create a New Application from the Template
 
