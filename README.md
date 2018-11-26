@@ -122,9 +122,11 @@ _IMPORTANT:_ You should use the standard `Authorize()` attribute to decorate you
 
 In the Angular `app-routing.module.ts` you should use the `RouteGuard` to restrict access to routes by user role. This is not a security aspect in that roles can be spoofed on the client browser by tech-savvy people, but it helps make the security intentions within the application clearer and helps prevents users from accessing routes that will result in an unauthorized (403) response code when an API call is made.
 
+![alt text](Documentation/route_guard.png "RouteGuard")
+
 It is also the developer's responsibility to render only the application menu options that are accessible by the current user's role. This is handled by subscribing to the `SecurityService` (security.service.ts) in the `ngOnInit` lifecycle event of your component. See the example below from the `nav-menu.component.(ts|html)`.
 
-![alt text](Documentation/security_service_component.png "Security service use in a component")
+![alt text](Documentation/security_service_component.png "SecurityService use in a component")
 
 ![alt text](Documentation/ngif_role_eval_in_template.png "Evaluating the role in the template with *ngIf")
 
