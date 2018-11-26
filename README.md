@@ -15,11 +15,12 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Install the Following Tools
 
-1. [.NET Core SDK](https://www.microsoft.com/net/download)
+1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 2.1
 2. [VS Code](https://code.visualstudio.com/)
 3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
 4. Node.js and NPM: [https://nodejs.org/en/](https://nodejs.org/en/)
 5. SQL Server and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017)
+6. Visual Studio 2017 (optional, but provides better server-side debugging) - make sure all updates are installed
 
 ### Prerequisite Configuration - 1 Time Setup
 
@@ -104,6 +105,16 @@ _**What do I need to know about the application configuration (appsettings.json)
 Here's a cheat-sheet of the more important settings and what their purpose is.
 
 ![alt text](Documentation/appsettings_help.png "appsettings help")
+
+The `OpenIdConnectB2EOptions:Roles` setting is where you define the roles your application will use for network users. In the template application the `Admin` role will be assigned to any authenticated network user that belongs to any of the security groups listed in the array. You will need to use the Azure Portal to determine the Object IDs for the security groups you are using as your application roles.
+
+![alt text](Documentation/security_group.png "Azure AD security groups")
+
+In `B2EOpenIdConnectEvents.cs` the principal's role claim will be assigned the admin role (i.e. `Admin`) if the user is a member of the AS-EDAT security group (i.e. `d13a3eb1-9867-4796-8ae5-7fd75e724613`).
+
+![alt text](Documentation/role_assignment_code.png "Role assignment code")
+
+Roles for B2C users should be handled via a custom user/role management implementation in your application.
 
 ### Manual Steps to Create a New Application from the Template
 
