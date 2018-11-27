@@ -184,9 +184,36 @@ The _main.ts_ is the client entry point and bootstraps the _app.module_.
 
 The _app.module_ imports the component declarations, other module imports (including _app-routing.module_), and service providers, and then bootstraps the entry component _app.component_. Any time you add a new component or service, it must be added to the _app.module_.
 
-##### Client app-routing.module
+##### Client: app-routing.module
 
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
+
+##### Client: services
+
+The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). The Template Architecture only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is typically what you want, but there may be cases when you want a component to have its own instance of a service.
+
+###### data
+
+- **blob**
+- **data-marshaler**
+- **data-navigation**
+- **email**
+- **excel-export**
+- **ngbMomentDatePickerAdapter**
+- **staff**
+
+###### environment
+
+###### http
+
+###### security
+
+- **route-gaurd**
+- **security**
+
+##### Client: components
+
+##### Client: features
 
 ### Questions
 
