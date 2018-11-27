@@ -78,7 +78,17 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ![alt text](Documentation/SPA_architecture.jpg "Template architecture")
 
-#### Questions
+#### General Overview
+
+We need to think of development using the template as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is client services making requests to server API controllers. The following will be a summarized breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+
+#### Model
+
+#### .NET Core Server Application
+
+#### Angular Client Application
+
+### Questions
 
 _**What about Visual Studio? Can I still use it?**_
 
