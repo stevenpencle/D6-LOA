@@ -76,7 +76,7 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ### Architecture
 
-![alt text](Documentation/template_architecture.jpg "Template architecture")
+![alt text](Documentation/template_architecture.jpg "Template Architecture")
 
 #### General Overview
 
@@ -88,18 +88,27 @@ The model can be thought of as "glue" code in that it represents the structure o
 
 ##### Domain
 
-The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not database table.
+The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
 
-**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers that state must be maintained in an application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developr's responsibility to have only a single represenation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronzed between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
+**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developr's responsibility to have only a single represenation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronzed between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
 
 ##### Security
 
-The _Security_ namespace is where we define types that represent the security context and current principal of the application to be shared with the client application. These types are:
+The _Security_ namespace is where we define types that represent the security context and current principal of the application to be shared with the client application. These types include:
 
-- **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication.
-- **ClientToken** Describes the current user and his roles so the client application understands what functions the user is authorized to perform.
+- **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication. The is a singleton type that is deserialized from _appsettings.json_.
+- **ClientToken** Describes the current user and his roles so the client application understands what functions the user is authorized to perform. The _ClientToken_ is transported to the client application in plain text and is not tamper-proof, but this is okay. Its only purpose is to provide the information necessary for the client application to evaluate how it should render menu options and what routes should be available. All security checks will be performed in the server application's API controllers against the current principal that is deserialized from the encrypted authentication token obtained from Azure AD / B2C.
 
 ##### View
+
+The _View_ namespace is where we define types that represent transient state messages between client and server. These types include:
+
+- **DocumentMetadata** Describes the information about a BLOB stored with the _StorageController_.
+- **EdatFooter** Describes the image resources and links for the standard FDOT application footer. The is a singleton type that is deserialized from _appsettings.json_.
+- **EdatHeader** Describes the image resources and links for the standard FDOT application header. The is a singleton type that is deserialized from _appsettings.json_.
+- **EmailMessage** Describes the structure of an email message for use with the _EmailController_.
+- **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
+- **StringRequest and StringReponse** Represents any string data payload between client and server.
 
 #### .NET Core Server Application
 
