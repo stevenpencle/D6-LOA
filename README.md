@@ -96,7 +96,7 @@ The _Domain_ namespace is where entities that represent the business domain are 
 
 The _Security_ namespace is where we define types that represent the security context and current principal of the application to be shared with the client application. These types include:
 
-- **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication. The is a singleton type that is deserialized from _appsettings.json_.
+- **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication. This is a singleton type that is deserialized from _appsettings.json_.
 - **ClientToken** Describes the current user and his roles so the client application understands what functions the user is authorized to perform. The _ClientToken_ is transported to the client application in plain text and is not tamper-proof, but this is okay. Its only purpose is to provide the information necessary for the client application to evaluate how it should render menu options and what routes should be available. All security checks will be performed in the server application's API controllers against the current principal that is deserialized from the encrypted authentication token obtained from Azure AD / B2C.
 
 ##### View
@@ -104,8 +104,8 @@ The _Security_ namespace is where we define types that represent the security co
 The _View_ namespace is where we define types that represent transient state messages between client and server. These types include:
 
 - **DocumentMetadata** Describes the information about a BLOB stored with the _StorageController_.
-- **EdatFooter** Describes the image resources and links for the standard FDOT application footer. The is a singleton type that is deserialized from _appsettings.json_.
-- **EdatHeader** Describes the image resources and links for the standard FDOT application header. The is a singleton type that is deserialized from _appsettings.json_.
+- **EdatFooter** Describes the image resources and links for the standard FDOT application footer. This is a singleton type that is deserialized from _appsettings.json_.
+- **EdatHeader** Describes the image resources and links for the standard FDOT application header. This is a singleton type that is deserialized from _appsettings.json_.
 - **EmailMessage** Describes the structure of an email message for use with the _EmailController_.
 - **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
 - **StringRequest and StringReponse** Represents any string data payload between client and server.
