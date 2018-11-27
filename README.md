@@ -138,6 +138,10 @@ The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, conf
 - **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distict commands. This is a singleton type that is deserialized from _appsettings.json_.
 - **NLogSqlInterceptor** This is the logging class for _NLog_ that we use to generate a log of database commands with parameters that is formatted for execution in _SQL Server Management Studio_. This is the log that should be provided to your DBA for the SQL review.
 
+**A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accomodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
+
+**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the transaction in the query.
+
 ##### Server: Infrastructure
 
 The _Infrastructure_ namespace is where we implement the services that communicate with other services that are not contained within the application but that the application depends on. You should create services here that interface with Azure PaaS services or other enterprise services. These services should never be instantiated directly, but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
