@@ -128,7 +128,7 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 
 ##### Server: ORM
 
-The _ORM_ namespace is where we house the _Entity Framework_ DbContext, configuration, and helpers.
+The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, configuration, and helpers.
 
 - **EntityContext** This is the DbContext class that defines how our _Domain_ model entity types should be serialized to the data store.
 - **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distict commands. This is a singleton type that is deserialized from _appsettings.json_.
@@ -143,7 +143,25 @@ The _Infrastructure_ namespace is where we implement the services that communica
 - **EmailService** Service implementation for interfacing with the SendGrid service on Azure.
 - **FdotCoreApis** Describes the Arculus service endpoints and client configuration for accessing the FDOT enterprise services. This is a singleton type that is deserialized from _appsettings.json_.
 - **SendGridConfig** Describes the connection details for using the SendGrid service on Azure. This is a singleton type that is deserialized from _appsettings.json_.
-- **StaffService** Service implementation for interfacing with the Staff service on Arculus. The _FdotCoreApis_ configuration also defines endpoints for the _OrgCodes_ and _DotCodes_ services on Arculus, but you will need to implement your own application service if you need to use those. Only the _StaffService_ was implemented since it is so commonly used in applications.
+- **StaffService** Service implementation for interfacing with the Staff service on Arculus. The _FdotCoreApis_ configuration also defines endpoints for the _OrgCodes_ and _DotCodes_ services on Arculus, but you will need to implement your own application services if you need to use those. Only the _StaffService_ was implemented since it is so commonly used in applications.
+
+##### Server: Services
+
+The _Services_ namespace is where we implement the interface contracts that describe the _Infrastructure_ service implementations.
+
+- **IBlobStorageProvider** Interface for _Infrastructure BlobStorageProvider_.
+- **IEmailService** Interface for _Infrastructure EmailService_.
+- **IStaffService** Interface for _Infrastructure StaffService_.
+
+##### Server: Controllers
+
+The _Controllers_ namespace is where we implement the APIs for the endpoints exposed by the server application. Controllers have the sole responsibility for enforcing security concerns within the application.
+
+- **Email** API for sending an email via the _IEmailService_.
+- **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
+- **Site** API for retrieving global site data like header and footer resources.
+- **Staff** API for accessing the _IStaffService_.
+- **Storage** API for accessing the _IBlobStorageProvider_.
 
 #### Angular Client Application
 
