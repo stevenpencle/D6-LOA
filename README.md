@@ -80,7 +80,7 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 #### General Overview
 
-We need to think of development using the Template Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is client services making requests to server API controllers. The following is a summarized breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+We need to think of development using the Template Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 #### Model
 
@@ -175,6 +175,18 @@ The _Controllers_ namespace is where we implement the APIs for the endpoints exp
 #### Angular Client Application
 
 The Angular Client Application is responsible for rendering the user interface of the application appropriately based on the user context and data state (workflow), handling all user interactions, managing the state of the application data in scope, and interfacing with the server application's APIs . The client application uses _NPM_ as the standard package management service.
+
+##### Client: Bootstrapper
+
+The _main.ts_ is the client entry point and bootstraps the _app.module.ts_.
+
+##### Client: app.module
+
+The _app.module.ts_ imports the component declarations, other module imports (including _app-routing.module.ts_), and service providers, and then bootstraps the entry component _AppComponent_. Any time you add a new component or service, it must be added to the _app.module.ts_.
+
+##### Client app-routing.module
+
+The _app-routing.module.ts_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
 ### Questions
 
