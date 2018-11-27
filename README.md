@@ -80,9 +80,11 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 #### General Overview
 
-We need to think of development using the template as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is client services making requests to server API controllers. The following will be a summarized breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+We need to think of development using the template as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is client services making requests to server API controllers. The following is a summarized breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 #### Model
+
+The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications, and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further catagorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate TypeScript definition files (\*.d.ts) for each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
 #### .NET Core Server Application
 
