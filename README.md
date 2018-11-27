@@ -74,6 +74,10 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
+### Architecture
+
+![alt text](Documentation/SPA_architecture.jpg "Template architecture")
+
 #### Questions
 
 _**What about Visual Studio? Can I still use it?**_
