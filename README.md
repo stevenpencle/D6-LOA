@@ -128,6 +128,23 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 
 ##### Server: ORM
 
+The _ORM_ namespace is where we house the _Entity Framework_ DbContext, configuration, and helpers.
+
+- **EntityContext** This is the DbContext class that defines how our _Domain_ model entity types should be serialized to the data store.
+- **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distict commands. This is a singleton type that is deserialized from _appsettings.json_.
+- **NLogSqlInterceptor** This is the logging class for _NLog_ that we use to generate a log of database commands with parameters that is formatted for execution in _SQL Server Management Studio_. This is the log that should be provided to your DBA for the SQL review.
+
+##### Server: Infrastructure
+
+The _Infrastructure_ namespace is where we implement the services that communicate with other services that are not contained within the application but that the application depends on. You should create services here that interface with Azure PaaS services or other enterprise services. These services should never be instantiated directly, but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
+
+- **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
+- **BlobStorageProvider** Service implementation for interfacing with Azure Storage.
+- **EmailService** Service implementation for interfacing with the SendGrid service on Azure.
+- **FdotCoreApis** Describes the Arculus service endpoints and client configuration for accessing the FDOT enterprise services. This is a singleton type that is deserialized from _appsettings.json_.
+- **SendGridConfig** Describes the connection details for using the SendGrid service on Azure. This is a singleton type that is deserialized from _appsettings.json_.
+- **StaffService** Service implementation for interfacing with the Staff service on Arculus. The _FdotCoreApis_ configuration also defines endpoints for the _OrgCodes_ and _DotCodes_ services on Arculus, but you will need to implement your own application service if you need to use those. Only the _StaffService_ was implemented since it is so commonly used in applications.
+
 #### Angular Client Application
 
 ### Questions
@@ -223,7 +240,6 @@ Role assignment for B2C users must be handled via a custom user/role management 
 ## TODO (difficulty 1 - 5)
 
 - Add support for field-level validation message display (2)
-- Standardize series and data-point models for all charts and add a chart wrapper component that automatically table-izes the chart data (4)
 - Consider switching the current Staff API to a cached StaffJson API in-memory data set to reduce cold-start lag on the staff service (2)
 
 ## Where We're Heading
