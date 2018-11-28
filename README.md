@@ -115,7 +115,7 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ### General Overview
 
-We need to think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services (and sometimes controllers) making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+Think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services (and sometimes controllers) making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 ### Model
 
