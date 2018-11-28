@@ -125,24 +125,24 @@ The model can be thought of as "glue" code in that it represents the structure o
 
 #### Model - Domain
 
-The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
+The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Application Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
 
 - **Entity** The base class for other entities.
 - **Staff** The object type returned by the _StaffService_.
 - **{Your Entities}** Entities that represent the business domain of your application.
 
-**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developer's responsibility to have only a single representation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
+**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in a distributed application, the data store (Azure SQL), the application server (NET Core application), and the client (Angular application). Since these are separate state representations, it is the developer's responsibility to have only a single representation of state in each tier and to manage their synchronization. The _Domain_ model is the representation of the state structure across all application tiers, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
 
 #### Model - Security
 
-The _Security_ namespace is where we define types that represent the security context and current principal of the application to be shared with the client application. These types include:
+The _Security_ namespace is where types that represent the security context and current principal of the application (to be shared with the client application) are located. These types include:
 
 - **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication. This is a singleton type that is deserialized from _appsettings.json_.
 - **ClientToken** Describes the current user and his roles so the client application understands what functions the user is authorized to perform. The _ClientToken_ is transported to the client application in plain text and is not tamper-proof, but this is okay. Its only purpose is to provide the information necessary for the client application to evaluate how it should render menu options and what routes should be available. All security checks will be performed in the server application's API controllers against the current principal that is deserialized from the encrypted authentication token obtained from Azure AD / B2C.
 
 #### Model - View
 
-The _View_ namespace is where we define types that represent transient state messages between client and server. These types include:
+The _View_ namespace is where types that represent transient state messages between client and server are located. These types include:
 
 - **DocumentMetadata** Describes the information about a BLOB stored with the _StorageController_.
 - **EdatFooter** Describes the image resources and links for the standard FDOT application footer. This is a singleton type that is deserialized from _appsettings.json_.
@@ -163,7 +163,7 @@ The _Program_ class handles pre-start host configuration and creates an instance
 
 ![alt text](Documentation/template_architecture_security.jpg "Security")
 
-The _Security_ namespace is where we define constants for roles, claims, and authentication types, describe options for using the Azure identity providers, and implement event handlers for those identity providers. These types include:
+The _Security_ namespace is where constants for roles, claims, and authentication types, and the Azure identity provider configurations and event handlers are located. These types include:
 
 - **ApplicationAuthenticationType, ApplicationClaims, and ApplicationsRoles** Constant value classes to ensure the integrity of security-related string keys used in the application.
 - **B2COpenIdConnectEvents and B2EOpenIdConnectEvents** Event handlers for authentication success and failure conditions for the identity providers.
@@ -173,7 +173,7 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 
 ![alt text](Documentation/template_architecture_orm.jpg "ORM")
 
-The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, configuration, and helpers.
+The _ORM_ namespace is where the _Entity Framework_ configuration, DbContext, and helpers are located.
 
 - **EntityContext** This is the DbContext class that defines how our _Domain_ model entity types should be serialized to the data store.
 - **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distinct commands. This is a singleton type that is deserialized from _appsettings.json_.
@@ -181,13 +181,13 @@ The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, conf
 
 **A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accommodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
 
-**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the transaction in the query.
+**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the request in the query.
 
 #### Server - Infrastructure
 
 ![alt text](Documentation/template_architecture_infrastructure.jpg "Infrastructure")
 
-The _Infrastructure_ namespace is where we implement the services that communicate with other services that are not contained within the application but that the application depends on. You should create services here that interface with Azure PaaS services or other enterprise services. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
+The _Infrastructure_ namespace is where the services that communicate with other services not contained within the application are located. You should place services that interface with Azure PaaS services or other enterprise services here. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
 
 - **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
 - **BlobStorageProvider** Service implementation for interfacing with Azure Storage.
@@ -200,7 +200,7 @@ The _Infrastructure_ namespace is where we implement the services that communica
 
 ![alt text](Documentation/template_architecture_services.jpg "Services")
 
-The _Services_ namespace is where we implement the interface contracts that describe the _Infrastructure_ service implementations.
+The _Services_ namespace is where the interface contracts that describe the _Infrastructure_ service implementations are located.
 
 - **IBlobStorageProvider** Interface for _Infrastructure BlobStorageProvider_.
 - **IEmailService** Interface for _Infrastructure EmailService_.
@@ -210,7 +210,7 @@ The _Services_ namespace is where we implement the interface contracts that desc
 
 ![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
 
-The _Controllers_ namespace is where we implement the APIs for the endpoints exposed by the server application. Controllers have the sole responsibility for enforcing security concerns within the application.
+The _Controllers_ namespace is the APIs for the endpoints exposed by the server application are located. Controllers have the sole responsibility for enforcing security concerns within the application.
 
 - **Email** API for sending an email via the _IEmailService_.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
@@ -221,7 +221,7 @@ The _Controllers_ namespace is where we implement the APIs for the endpoints exp
 
 ### Angular Client Application
 
-The Angular Client Application is responsible for rendering the user interface of the application appropriately based on the user context and data state (workflow), handling all user interactions, managing the state of the application data in scope, and interfacing with the server application's APIs . The client application uses _NPM_ as the standard package management service.
+The Angular Client Application is responsible for rendering the user interface of the application appropriately based on the user context and data state (workflow), handling all user interactions, managing the state of the application data in scope, and interfacing with the server application's APIs. The client application uses _NPM_ as the standard package management service.
 
 #### Client - Bootstrapper
 
