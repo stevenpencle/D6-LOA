@@ -10,8 +10,23 @@
 3. [Template Application Architecture](#template-application-architecture)
    - [Overview](#general-overview)
    - [Model](#model)
+     - [Domain](#model---domain)
+     - [Security](#model---security)
+     - [View](#model---view)
    - [NET Core Server Application](#net-core-server-application)
+   - [Bootstrapper](#server---bootstapper)
+     - [Security](#server---security)
+     - [ORM](#server---orm)
+     - [Infrastructure](#server---infrastructure)
+     - [Services](#server---services)
+     - [Controllers](#server---controllers)
    - [Angular Client Application](#angular-client-application)
+     - [Bootstrapper](#client---bootstrapper)
+     - [app.module](#client---app.module)
+     - [app-routing.module](#client---app-routing.module)
+     - [services](#client---services)
+     - [components](#client---components)
+     - [features](#client---features)
 4. [Questions](#questions)
 5. [Manual New Application Steps](#manual-steps-to-create-a-new-application-from-the-template)
 6. [Features](#features)
@@ -108,7 +123,7 @@ We need to think of development using the Template Application Architecture as c
 
 The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript definition file (\*.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
-#### Model: Domain
+#### Model - Domain
 
 The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
 
@@ -116,16 +131,16 @@ The _Domain_ namespace is where entities that represent the business domain are 
 - **Staff** The object type returned by the _StaffService_.
 - **{Your Entities}** Entities that represent the business domain of your application.
 
-**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developer's responsibility to have only a single representation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
+**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developer's responsibility to have only a single representation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
 
-#### Model: Security
+#### Model - Security
 
 The _Security_ namespace is where we define types that represent the security context and current principal of the application to be shared with the client application. These types include:
 
 - **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication. This is a singleton type that is deserialized from _appsettings.json_.
 - **ClientToken** Describes the current user and his roles so the client application understands what functions the user is authorized to perform. The _ClientToken_ is transported to the client application in plain text and is not tamper-proof, but this is okay. Its only purpose is to provide the information necessary for the client application to evaluate how it should render menu options and what routes should be available. All security checks will be performed in the server application's API controllers against the current principal that is deserialized from the encrypted authentication token obtained from Azure AD / B2C.
 
-#### Model: View
+#### Model - View
 
 The _View_ namespace is where we define types that represent transient state messages between client and server. These types include:
 
@@ -140,11 +155,11 @@ The _View_ namespace is where we define types that represent transient state mes
 
 The .NET Core Server Application is responsible for handling requests from the client application, evaluating security concerns for those requests, validating that entity state changes adhere to business rules, synchronizing state changes with the data store, and managing access to Azure PaaS services. The server application uses _NuGet_ as the standard package management service.
 
-#### Server: Bootstapper
+#### Server - Bootstapper
 
 The _Program_ class handles pre-start host configuration and creates an instance of the _Startup_ class to configure application aspects like _Entity Framework_, _Open ID_ identity providers, and service dependency injection.
 
-#### Server: Security
+#### Server - Security
 
 ![alt text](Documentation/template_architecture_security.jpg "Security")
 
@@ -154,7 +169,7 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 - **B2COpenIdConnectEvents and B2EOpenIdConnectEvents** Event handlers for authentication success and failure conditions for the identity providers.
 - **OpenIdConnectB2COptions, OpenIdConnectB2EOptions, and OpenIdConnectOptions** Describes the configuration to be used for the identity providers in startup. These are singleton types that are deserialized from _appsettings.json_.
 
-#### Server: ORM
+#### Server - ORM
 
 ![alt text](Documentation/template_architecture_orm.jpg "ORM")
 
@@ -168,7 +183,7 @@ The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, conf
 
 **A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the transaction in the query.
 
-#### Server: Infrastructure
+#### Server - Infrastructure
 
 ![alt text](Documentation/template_architecture_infrastructure.jpg "Infrastructure")
 
@@ -181,7 +196,7 @@ The _Infrastructure_ namespace is where we implement the services that communica
 - **SendGridConfig** Describes the connection details for using the SendGrid service on Azure. This is a singleton type that is deserialized from _appsettings.json_.
 - **StaffService** Service implementation for interfacing with the Staff service on Arculus. The _FdotCoreApis_ configuration also defines endpoints for the _OrgCodes_ and _DotCodes_ services on Arculus, but you will need to implement your own application services if you need to use those. Only the _StaffService_ was implemented since it is so commonly used in applications.
 
-#### Server: Services
+#### Server - Services
 
 ![alt text](Documentation/template_architecture_services.jpg "Services")
 
@@ -191,7 +206,7 @@ The _Services_ namespace is where we implement the interface contracts that desc
 - **IEmailService** Interface for _Infrastructure EmailService_.
 - **IStaffService** Interface for _Infrastructure StaffService_.
 
-#### Server: Controllers
+#### Server - Controllers
 
 ![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
 
@@ -208,19 +223,19 @@ The _Controllers_ namespace is where we implement the APIs for the endpoints exp
 
 The Angular Client Application is responsible for rendering the user interface of the application appropriately based on the user context and data state (workflow), handling all user interactions, managing the state of the application data in scope, and interfacing with the server application's APIs . The client application uses _NPM_ as the standard package management service.
 
-#### Client: Bootstrapper
+#### Client - Bootstrapper
 
 The _main.ts_ is the client entry point and bootstraps the _app.module_.
 
-#### Client: app.module
+#### Client - app.module
 
 The _app.module_ imports the component declarations, other module imports (including _app-routing.module_), and service providers, and then bootstraps the entry component _app.component_. Any time you add a new component or service, it must be added to the _app.module_.
 
-#### Client: app-routing.module
+#### Client - app-routing.module
 
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
-#### Client: services
+#### Client - services
 
 ![alt text](Documentation/template_architecture_client_services.jpg "Services")
 
@@ -259,7 +274,7 @@ Store services extend the _subscriberService_ and use the _subscriberHelper_ to 
 
 **A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an observable and observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject. You should always unsubscribe to any store services in the _ngOnDestroy_ method. Failure to do this will result in a memory leak in the client application.
 
-#### Client: components
+#### Client - components
 
 ![alt text](Documentation/template_architecture_client_components.jpg "Components")
 
@@ -309,7 +324,7 @@ The _server-error_ component's sole purpose is to render the detailed .NET Core 
 
 Your components that represent the functions and views of your application should be placed in the _features_ folder.
 
-#### Client: features
+#### Client - features
 
 The _features_ folder is where should place the components and store services that represent the business domain of your application. You should break up features by 'areas' that represent distinct sections or functionality within your application.
 
