@@ -229,7 +229,33 @@ The _components_ folder is where all client general use components are located. 
 
 **A note about component state:** Components only mange their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject, and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (typically global).
 
+###### app
+
+###### common
+
+- **chart-to-table**
+- **file-upload**
+- **filter-field**
+- **sort-button**
+- **staff-picker**
+
+###### footer
+
+###### header
+
+###### home
+
+###### nav-menu
+
+###### not-authorized
+
+###### server-error
+
+###### {Your Components}
+
 ##### Client: features
+
+###### {Your Areas}
 
 ### Questions
 
