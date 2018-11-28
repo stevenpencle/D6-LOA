@@ -74,7 +74,7 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
-### Template Architecture
+### Template Application Architecture
 
 ![alt text](Documentation/template_architecture.jpg "Template Architecture")
 
@@ -84,7 +84,7 @@ We need to think of development using the Template Architecture as creating two 
 
 #### Model
 
-The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications, and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further catagorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate TypeScript definition files (\*.d.ts) for each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
+The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications, and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further catagorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript definition file (\*.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
 ##### Model: Domain
 
@@ -194,22 +194,34 @@ The _services_ folder is where all client services are located (except stores). 
 
 ###### data
 
-- **blob**
-- **data-marshaler**
-- **data-navigation**
-- **email**
-- **excel-export**
-- **ngbMomentDatePickerAdapter**
-- **staff**
+- **blob** Provides access to the server's _Storage_ controller. This service does not maintain any state.
+- **data-marshaler** Provides a means to pass string data from one component to another. This service maintains a string payload state.
+- **data-navigation** Provides a means to sort, filter, and page through a data array. This service does not maintain any state.
+- **email** Provides access to the server's _Email_ controller. This service does not maintain any state.
+- **excel-export** Provides a means to export a JSON data array to a Microsoft Excel file. This service does not maintain any state.
+- **ngbMomentDatePickerAdapter** Extension service for the ng-bootstrap date picker component to use moment.js objects instead of the proprietary structure.
+- **staff** Provides access to the server's _Staff_ contoller. This service does not maintain any state.
 
 ###### environment
 
+The _environment_ service provides a means for the Angular router to compose URLs by specifiying the application root path ('/' is the default). This service does not maintain any state.
+
 ###### http
+
+The _http_ service is a wrapper around Angular's http service that has been extended to handle _ModelState_ error and unauthorized responses. This is the http service your services and stores should use. This service does not maintain any state.
 
 ###### security
 
-- **route-gaurd**
-- **security**
+- **route-gaurd** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
+- **security** Provides a means to access the principal's _ClientToken_. This service maintains the state of the _ClientToken_ and is a subscription (store) service.
+
+###### {Your Store Services}
+
+Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is the means by which you will manage your model state in the client application, and this is the most typical type of custom services you will implement.
+
+Store services extend the _subscriberService_ and use the _subscriberHelper_ to manage the subscribers (observers) of the subject they manage. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
+
+**A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an observable and observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject. You should always unsubscribe to any store services in the _ngOnDestroy_ method. Failure to do this will result in a memory leak in the client application.
 
 ##### Client: components
 
