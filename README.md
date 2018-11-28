@@ -3,7 +3,7 @@
 1. [Introduction](#introduction)
    - [FAQ](#faq)
 2. [Getting Started](#getting-started)
-   - [Install the Tools](#installtools)
+   - [Install the Tools](#install-the-following-tools)
    - [Prerequisite Configuration](#prerequisiteconfiguration)
    - [PowerShell Installer](#powershellinstaller)
    - [Run the Template Application](#runapplication)
