@@ -217,13 +217,17 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 
 ###### {Your Store Services}
 
-Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is the means by which you will manage your model state in the client application, and this is the most typical type of custom services you will implement.
+Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is the means by which you will manage your model state in the client application, and this is the most typical type of custom service you will implement.
 
 Store services extend the _subscriberService_ and use the _subscriberHelper_ to manage the subscribers (observers) of the subject they manage. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
 
 **A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an observable and observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject. You should always unsubscribe to any store services in the _ngOnDestroy_ method. Failure to do this will result in a memory leak in the client application.
 
 ##### Client: components
+
+The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_, or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. So any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
+
+**A note about component state:** Components only mange their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject, and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (typically global).
 
 ##### Client: features
 
