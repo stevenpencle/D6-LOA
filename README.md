@@ -5,7 +5,7 @@
 2. [Getting Started](#getting-started)
    - [Install the Tools](#install-the-following-tools)
    - [Prerequisite Configuration](#prerequisite-configuration---1-time-setup)
-   - [PowerShell Installer](<#download-and-run-the-%5Bpowershell-script%5D(https%3A%2F%2Ffdot.visualstudio.com%2Fedat%2F_git%2Fclonetemplate%3Fpath%3D%252fopenedat_template.ps1%26version%3Dgbmaster%26_a%3Dcontents)-to-create-a-new-application-from-the-template>)
+   - [PowerShell Installer](#powershell-installer)
    - [Run the Template Application](#run-template)
 3. [Template Application Architecture](#template-application-architecture)
    - [Overview](#general-overview)
@@ -56,7 +56,9 @@ Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets
 
 An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
 
-### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
+### PowerShell Installer
+
+#### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
 
 A special _Thank you!_ to Jim Quinn. If you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`
 
