@@ -1,8 +1,8 @@
 # Table of Contents
 
-1. [Introduction](#introduction)
-   - [FAQ](#faq)
-2. [Getting Started](#gettingstarted)
+1. [Introduction](#Introduction)
+   - [FAQ](#FAQ)
+2. [Getting Started](#Getting Started)
    - [Install the Tools](#installtools)
    - [Prerequisite Configuration](#prerequisiteconfiguration)
    - [PowerShell Installer](#powershellinstaller)
@@ -44,11 +44,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 - Why have this template available? - We want to have a standard approach so that when we build applications we are doing it the same way. When somebody leaves and the new person comes in, we pick it up and understand what’s going on.
 - When will we start implementing this solution/approach? - Immediately
 
-<a name="gettingstarted"></a>
-
 ## Getting Started
-
-<a name="installtools"></a>
 
 ### Install the Following Tools
 
@@ -58,8 +54,6 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 4. Node.js and NPM: [https://nodejs.org/en/](https://nodejs.org/en/)
 5. SQL Server and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017)
 6. Visual Studio 2017 (optional, but provides better server-side debugging) - make sure all updates are installed
-
-<a name="prerequisiteconfiguration"></a>
 
 ### Prerequisite Configuration - 1 Time Setup
 
@@ -76,8 +70,6 @@ Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
 
 An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
-
-<a name="powershellinstaller"></a>
 
 ### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
 
@@ -108,8 +100,6 @@ This will copy the secrets.json file to a folder in your profile's `AppData`
 The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the key in the project file.
 
 ![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
-
-<a name="runapplication"></a>
 
 ### Run Template
 
