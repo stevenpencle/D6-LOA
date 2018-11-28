@@ -80,9 +80,11 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 #### General Overview
 
-We need to think of development using the Template Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+We need to think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 #### Model
+
+![alt text](Documentation/template_architecture_model.jpg "Model")
 
 The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript definition file (\*.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
@@ -124,6 +126,8 @@ The _Program_ class handles pre-start host configuration and creates an instance
 
 ##### Server: Security
 
+![alt text](Documentation/template_architecture_services.jpg "Security")
+
 The _Security_ namespace is where we define constants for roles, claims, and authentication types, describe options for using the Azure identity providers, and implement event handlers for those identity providers. These types include:
 
 - **ApplicationAuthenticationType, ApplicationClaims, and ApplicationsRoles** Constant value classes to ensure the integrity of security-related string keys used in the application.
@@ -131,6 +135,8 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 - **OpenIdConnectB2COptions, OpenIdConnectB2EOptions, and OpenIdConnectOptions** Describes the configuration to be used for the identity providers in startup. These are singleton types that are deserialized from _appsettings.json_.
 
 ##### Server: ORM
+
+![alt text](Documentation/template_architecture_orm.jpg "ORM")
 
 The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, configuration, and helpers.
 
@@ -144,6 +150,8 @@ The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, conf
 
 ##### Server: Infrastructure
 
+![alt text](Documentation/template_architecture_infrastructure.jpg "Infrastructure")
+
 The _Infrastructure_ namespace is where we implement the services that communicate with other services that are not contained within the application but that the application depends on. You should create services here that interface with Azure PaaS services or other enterprise services. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
 
 - **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
@@ -155,6 +163,8 @@ The _Infrastructure_ namespace is where we implement the services that communica
 
 ##### Server: Services
 
+![alt text](Documentation/template_architecture_services.jpg "Services")
+
 The _Services_ namespace is where we implement the interface contracts that describe the _Infrastructure_ service implementations.
 
 - **IBlobStorageProvider** Interface for _Infrastructure BlobStorageProvider_.
@@ -162,6 +172,8 @@ The _Services_ namespace is where we implement the interface contracts that desc
 - **IStaffService** Interface for _Infrastructure StaffService_.
 
 ##### Server: Controllers
+
+![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
 
 The _Controllers_ namespace is where we implement the APIs for the endpoints exposed by the server application. Controllers have the sole responsibility for enforcing security concerns within the application.
 
@@ -189,6 +201,8 @@ The _app.module_ imports the component declarations, other module imports (inclu
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
 ##### Client: services
+
+![alt text](Documentation/template_architecture_client_services.jpg "Services")
 
 The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). The Template Architecture only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is typically what you want, but there may be cases when you want a component to have its own instance of a service.
 
@@ -226,6 +240,8 @@ Store services extend the _subscriberService_ and use the _subscriberHelper_ to 
 **A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an observable and observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject. You should always unsubscribe to any store services in the _ngOnDestroy_ method. Failure to do this will result in a memory leak in the client application.
 
 ##### Client: components
+
+![alt text](Documentation/template_architecture_client_components.jpg "Components")
 
 The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_ or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. Any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
 
