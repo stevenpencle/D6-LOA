@@ -126,7 +126,7 @@ The _Program_ class handles pre-start host configuration and creates an instance
 
 ##### Server: Security
 
-![alt text](Documentation/template_architecture_services.jpg "Security")
+![alt text](Documentation/template_architecture_security.jpg "Security")
 
 The _Security_ namespace is where we define constants for roles, claims, and authentication types, describe options for using the Azure identity providers, and implement event handlers for those identity providers. These types include:
 
