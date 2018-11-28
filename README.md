@@ -1,8 +1,8 @@
 # Table of Contents
 
 1. [Introduction](#Introduction)
-   - [FAQ](#FAQ)
-2. [Getting Started](#Getting Started)
+   - [FAQ](#faq)
+2. [Getting Started](#Getting-Started)
    - [Install the Tools](#installtools)
    - [Prerequisite Configuration](#prerequisiteconfiguration)
    - [PowerShell Installer](#powershellinstaller)
