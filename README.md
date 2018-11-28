@@ -217,6 +217,8 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 
 ###### {Your Store Services}
 
+Your store services that represent the state management of your application's data should be placed in the _features_ folder.
+
 Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model's state in the client application, and this is the most typical type of custom service you will implement. Your application model entities should always be managed by store services, and the same entity type should never be the subject of more than one store service (directly or indirectly). This is how we ensure a single source of truth in the client application.
 
 Store services extend the _subscriberService_ and use the _subscriberHelper_ to manage the subscribers (observers) of the subject they manage. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
@@ -269,9 +271,11 @@ The _server-error_ component's sole purpose is to render the detailed .NET Core 
 
 ###### {Your Components}
 
+Your components that represent the functions and views of your application should be placed in the _features_ folder.
+
 ##### Client: features
 
-###### {Your Areas}
+The _features_ folder is where should place the components and store services that represent the business domain of your application. You should break up features by 'areas' that represent distinct sections or functionality within your application.
 
 ### Questions
 
