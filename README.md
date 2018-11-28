@@ -177,17 +177,17 @@ The _ORM_ namespace is where the _Entity Framework_ configuration, DbContext, an
 
 - **EntityContext** This is the DbContext class that defines how our _Domain_ model entity types should be serialized to the data store.
 - **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distinct commands. This is a singleton type that is deserialized from _appsettings.json_.
-- **NLogSqlInterceptor** This is the logging class for _NLog_ that we use to generate a log of database commands with parameters that is formatted for execution in _SQL Server Management Studio_. This is the log that should be provided to your DBA for the SQL review.
+- **NLogSqlInterceptor** This is the logging class for _NLog_ that is used to generate a log of database commands with parameters and is formatted for execution in _SQL Server Management Studio_. This is the log that should be provided to your DBA for the SQL review.
 
 **A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accommodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
 
-**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the request in the query.
+**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application Architecture has it disabled by default. Always eager load the data you need for the request in the query.
 
 #### Server - Infrastructure
 
 ![alt text](Documentation/template_architecture_infrastructure.jpg "Infrastructure")
 
-The _Infrastructure_ namespace is where the services that communicate with other services not contained within the application are located. You should place services that interface with Azure PaaS services or other enterprise services here. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
+The _Infrastructure_ namespace is where the services that communicate with other services external to the application are located. You should place services that interface with Azure PaaS services or other enterprise services here. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
 
 - **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
 - **BlobStorageProvider** Service implementation for interfacing with Azure Storage.
@@ -210,14 +210,14 @@ The _Services_ namespace is where the interface contracts that describe the _Inf
 
 ![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
 
-The _Controllers_ namespace is the APIs for the endpoints exposed by the server application are located. Controllers have the sole responsibility for enforcing security concerns within the application.
+The _Controllers_ namespace contains the APIs for the endpoints exposed by the server application. Controllers have the sole responsibility for enforcing security concerns within the application.
 
 - **Email** API for sending an email via the _IEmailService_.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
 - **Site** API for retrieving global site data like header and footer resources.
 - **Staff** API for accessing the _IStaffService_.
 - **Storage** API for accessing the _IBlobStorageProvider_.
-- **{Your Controllers}** APIs that you create for your application will manage the implementation of state changes to your entities. Again, please make sure you use the _Authorize()_ attribute appropriately to enforce security on your APIs. A good pattern for entity data validation is to validate any business rules that span over a set of entities within the controller. Validation rules that pertain only to the entity instance should be implemented within the entity itself using _DataAnnotations_ and the _IValidatableObject.Validate()_ method. Using this approach allows you to return a _BadRequest(ModelState) IActionResult_ and the client application's _http service_ will expose the list of validation errors to the client store service which in turn can be handed off to the calling component for processing.
+- **{Your Controllers}** APIs that you create for your application will manage the implementation of state changes to your entities. Again, please make sure you use the _Authorize()_ attribute appropriately to enforce security on your APIs. A good pattern for entity data validation is to validate any business rules that span over a set of entities within the controller. Validation rules that pertain only to the entity instance should be implemented within the entity itself using _DataAnnotations_ and the _IValidatableObject.Validate()_ method. Using this approach allows you to return a _BadRequest(ModelState) IActionResult_ and the client application's _http service_ will expose the list of validation errors to the client _store service_ which in turn can be handed off to the calling _component_ for processing.
 
 ### Angular Client Application
 
@@ -229,17 +229,17 @@ The _main.ts_ is the client entry point and bootstraps the _app.module_.
 
 #### Client - app module
 
-The _app.module_ imports the component declarations, other module imports (including _app-routing.module_), and service providers, and then bootstraps the entry component _app.component_. Any time you add a new component or service, it must be added to the _app.module_.
+The _app.module_ imports the component declarations, other module imports (including _app-routing.module_), and service providers, and then bootstraps the entry component _app_. Any time you add a new component or service, it must be added to the _app.module_.
 
 #### Client - app-routing module
 
-The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
+The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a _RouteData_ object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
 #### Client - services
 
 ![alt text](Documentation/template_architecture_client_services.jpg "Services")
 
-The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). The Template Architecture only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is typically what you want, but there may be cases when you want a component to have its own instance of a service.
+The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). The Template Application Architecture only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is generally the service scope you want, but there may be cases when you want a component to have its own instance of a service.
 
 ##### data
 
@@ -270,7 +270,7 @@ Your store services that represent the state management of your application's da
 
 Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model's state in the client application, and this is the most typical type of custom service you will implement. Your application model entities should always be managed by store services, and the same entity type should never be the subject of more than one store service (directly or indirectly). This is how we ensure a single source of truth in the client application.
 
-Store services extend the _subscriberService_ and use the _subscriberHelper_ to manage the subscribers (observers) of the subject they manage. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
+Store services extend the _SubscriberService_ and use the _SubscriberHelper_ to manage the subscribers (observers) of their subject. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
 
 **A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an observable and observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject. You should always unsubscribe to any store services in the _ngOnDestroy_ method. Failure to do this will result in a memory leak in the client application.
 
@@ -280,7 +280,7 @@ Store services extend the _subscriberService_ and use the _subscriberHelper_ to 
 
 The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_ or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. Any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
 
-**A note about component state:** Components only manage their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (typically global).
+**A note about component state:** Components only manage their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (usually global).
 
 ##### app
 
@@ -290,9 +290,9 @@ The _app_ component is the main component of the client application and is the '
 
 Common components are utility components that serve very specific technical puposes unrelated the business domain of the application.
 
-- **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data for accessibility requirements.
+- **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data to meet accessibility requirements.
 - **file-upload** Provides a view for selecting and uploading files.
-- **filter-field** Provides a view for entering string data to applied as a filter to a property in a set of data.
+- **filter-field** Provides a view for entering string data to be applied as a filter to a property in an object array.
 - **sort-button** Provides a view for sorting data ascending or descending.
 - **staff-picker** Provides a type-ahead select for FDOT staff (SRS).
 
@@ -310,7 +310,7 @@ The _home_ component is the 'landing page' of your application. You will need to
 
 ##### nav-menu
 
-The _nav-menu_ component is the menu for your application. It already contains the 'home' link and authentication links for Azure AD and B2C. You will need to modify this component to reflect the navigation structure of your application.
+The _nav-menu_ component is the menu for your application. It already contains the 'home' link and authentication links for Azure AD and B2C. You will need to modify this component to reflect the navigation structure of your application. Also, you will usually need to evaluate the _ClientToken_ to hide or show menu items based on the current principal's role.
 
 ##### not-authorized
 
