@@ -22,8 +22,8 @@
      - [Controllers](#server---controllers)
    - [Angular Client Application](#angular-client-application)
      - [Bootstrapper](#client---bootstrapper)
-     - [app.module](#client---app.module)
-     - [app-routing.module](#client---app-routing.module)
+     - [app module](#client---app-module)
+     - [app-routing module](#client---app-routing-module)
      - [services](#client---services)
      - [components](#client---components)
      - [features](#client---features)
@@ -227,11 +227,11 @@ The Angular Client Application is responsible for rendering the user interface o
 
 The _main.ts_ is the client entry point and bootstraps the _app.module_.
 
-#### Client - app.module
+#### Client - app module
 
 The _app.module_ imports the component declarations, other module imports (including _app-routing.module_), and service providers, and then bootstraps the entry component _app.component_. Any time you add a new component or service, it must be added to the _app.module_.
 
-#### Client - app-routing.module
+#### Client - app-routing module
 
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
