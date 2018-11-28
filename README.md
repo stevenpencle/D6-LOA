@@ -84,7 +84,7 @@ We need to think of development using the Template Architecture as creating two 
 
 #### Model
 
-The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications, and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further catagorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript definition file (\*.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
+The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript definition file (\*.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
 ##### Model: Domain
 
@@ -94,7 +94,7 @@ The _Domain_ namespace is where entities that represent the business domain are 
 - **Staff** The object type returned by the _StaffService_.
 - **{Your Entities}** Entities that represent the business domain of your application.
 
-**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developr's responsibility to have only a single represenation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronzed between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
+**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developer's responsibility to have only a single representation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
 
 ##### Model: Security
 
@@ -135,16 +135,16 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, configuration, and helpers.
 
 - **EntityContext** This is the DbContext class that defines how our _Domain_ model entity types should be serialized to the data store.
-- **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distict commands. This is a singleton type that is deserialized from _appsettings.json_.
+- **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distinct commands. This is a singleton type that is deserialized from _appsettings.json_.
 - **NLogSqlInterceptor** This is the logging class for _NLog_ that we use to generate a log of database commands with parameters that is formatted for execution in _SQL Server Management Studio_. This is the log that should be provided to your DBA for the SQL review.
 
-**A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accomodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
+**A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accommodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
 
 **A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the transaction in the query.
 
 ##### Server: Infrastructure
 
-The _Infrastructure_ namespace is where we implement the services that communicate with other services that are not contained within the application but that the application depends on. You should create services here that interface with Azure PaaS services or other enterprise services. These services should never be instantiated directly, but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
+The _Infrastructure_ namespace is where we implement the services that communicate with other services that are not contained within the application but that the application depends on. You should create services here that interface with Azure PaaS services or other enterprise services. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
 
 - **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
 - **BlobStorageProvider** Service implementation for interfacing with Azure Storage.
@@ -200,11 +200,11 @@ The _services_ folder is where all client services are located (except stores). 
 - **email** Provides access to the server's _Email_ controller. This service does not maintain any state.
 - **excel-export** Provides a means to export a JSON data array to a Microsoft Excel file. This service does not maintain any state.
 - **ngbMomentDatePickerAdapter** Extension service for the ng-bootstrap date picker component to use moment.js objects instead of the proprietary structure.
-- **staff** Provides access to the server's _Staff_ contoller. This service does not maintain any state.
+- **staff** Provides access to the server's _Staff_ controller. This service does not maintain any state.
 
 ###### environment
 
-The _environment_ service provides a means for the Angular router to compose URLs by specifiying the application root path ('/' is the default). This service does not maintain any state.
+The _environment_ service provides a means for the Angular router to compose URLs by specifying the application root path ('/' is the default). This service does not maintain any state.
 
 ###### http
 
@@ -212,12 +212,12 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 
 ###### security
 
-- **route-gaurd** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
+- **route-guard** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
 - **security** Provides a means to access the principal's _ClientToken_. This service maintains the state of the _ClientToken_ and is a subscription (store) service.
 
 ###### {Your Store Services}
 
-Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is the means by which you will manage your model state in the client application, and this is the most typical type of custom service you will implement.
+Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model state in the client application, and this is the most typical type of custom service you will implement.
 
 Store services extend the _subscriberService_ and use the _subscriberHelper_ to manage the subscribers (observers) of the subject they manage. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
 
@@ -225,9 +225,9 @@ Store services extend the _subscriberService_ and use the _subscriberHelper_ to 
 
 ##### Client: components
 
-The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_, or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. So any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
+The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_ or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. Any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
 
-**A note about component state:** Components only mange their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject, and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (typically global).
+**A note about component state:** Components only manage their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (typically global).
 
 ###### app
 
