@@ -213,11 +213,11 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 ###### security
 
 - **route-guard** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
-- **security** Provides a means to access the principal's _ClientToken_. This service maintains the state of the _ClientToken_ and is a subscription (store) service.
+- **security** Provides a means to access the principal's _ClientToken_ from the _Security_ controller. This service maintains the client application's state of the _ClientToken_ and is a subscription (store) service.
 
 ###### {Your Store Services}
 
-Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model state in the client application, and this is the most typical type of custom service you will implement.
+Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model's state in the client application, and this is the most typical type of custom service you will implement. Your application model entities should always be managed by store services, and the same entity type should never be the subject of more than one store service (directly or indirectly). This is how we ensure a single source of truth in the client application.
 
 Store services extend the _subscriberService_ and use the _subscriberHelper_ to manage the subscribers (observers) of the subject they manage. The subject can be any object, object graph, or array of objects. It is up to you to decide how you will compose your stores based on the model and workflow of your application.
 
@@ -231,25 +231,41 @@ The _components_ folder is where all client general use components are located. 
 
 ###### app
 
+The _app_ component is the main component of the client application and is the 'root' of the application's component tree. The most important aspect of this component is that it contains the Angular _router-outlet_ component which has the responsibility of injecting the component associated with the current route (URL) into the component tree. It also has a custom 'fast route' implementation that will re-route the user to the deep link URL they requested after authentication if that link is access restricted. This scenario is typical of a URL sent in an email that is restricted to a specific role or roles.
+
 ###### common
 
-- **chart-to-table**
-- **file-upload**
-- **filter-field**
-- **sort-button**
-- **staff-picker**
+Common components are utility components that serve very specific technical puposes unrelated the business domain of the application.
+
+- **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data for accessibility requirements.
+- **file-upload** Provides a view for selecting and uploading files.
+- **filter-field** Provides a view for entering string data to applied as a filter to a property in a set of data.
+- **sort-button** Provides a view for sorting data ascending or descending.
+- **staff-picker** Provides a type-ahead select for FDOT staff (SRS).
 
 ###### footer
 
+The _footer_ component renders the standard FDOT footer in an accessible and responsive format. This component does bend the rule about making a direct http call to the _Site_ controller, but this is mitigated by the fact that this is a one-time call for static data.
+
 ###### header
+
+The _header_ component renders the standard FDOT header in an accessible and responsive format. This component does bend the rule about making a direct http call to the _Site_ controller, but this is mitigated by the fact that this is a one-time call for static data.
 
 ###### home
 
+The _home_ component is the 'landing page' of your application. You will need to modify this component's template to provide the introduction and purpose of your application.
+
 ###### nav-menu
+
+The _nav-menu_ component is the menu for your application. It already contains the 'home' link and authentication links for Azure AD and B2C. You will need to modify this component to reflect the navigation structure of your application.
 
 ###### not-authorized
 
+The _not-authorized_ component is where the _http_ service re-routes a user when they receive a 403 (unauthorized) response from a server application API call. This should not happen if you use the _route-guard_ for restricting route access to appropriate roles and the _security_ service to subscribe to the _ClientToken_ for evaluating whether or not a user is allowed to make the API call (in other words, don't render actions that the user is not authorized to perform).
+
 ###### server-error
+
+The _server-error_ component's sole purpose is to render the detailed .NET Core error page in an iframe for debugging. This is a development-only component.
 
 ###### {Your Components}
 
