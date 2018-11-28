@@ -31,17 +31,13 @@
 5. [Manual New Application Steps](#manualsteps)
 6. [Features](#features)
 
-<a name="introduction"></a>
-
-# Introduction
+## Introduction
 
 This is a template starter application with an Angular.io SPA front-end and .NET Core back-end.
 
 ![alt text](Documentation/edat_template.png "EDAT Template")
 
-<a name="faq"></a>
-
-## FAQ
+### FAQ
 
 - Is this a low-code or no-code solution? - No. You must know how to code and be familiar with languages, frameworks and libraries like HTML, CSS, TypeScript, C# ASP.NET Core, Angular, Bootstrap, and Entity Framework Core.
 - Is this a framework? - No. This is an application architecture that is composed of other frameworks to demonstrate specific patterns and techniques for quickly building business applications at the FDOT.
@@ -50,11 +46,11 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 <a name="gettingstarted"></a>
 
-# Getting Started
+## Getting Started
 
 <a name="installtools"></a>
 
-## Install the Following Tools
+### Install the Following Tools
 
 1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 2.1
 2. [VS Code](https://code.visualstudio.com/)
@@ -65,7 +61,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 <a name="prerequisiteconfiguration"></a>
 
-## Prerequisite Configuration - 1 Time Setup
+### Prerequisite Configuration - 1 Time Setup
 
 VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
 
@@ -83,7 +79,7 @@ An explaination of user secrets... Using the Azure platform requires access to s
 
 <a name="powershellinstaller"></a>
 
-## Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
+### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
 
 A special _Thank you!_ to Jim Quinn. If you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`
 
@@ -91,7 +87,7 @@ You will need to unblock the PowerShell script before you execute it!
 
 ![alt text](Documentation/powershell_security_setting.png "Allow the PowerShell script to execute")
 
-### Warning
+#### Warning
 
 This will take several minutes to complete due to the NPM package installation.
 
@@ -115,27 +111,27 @@ The .NET Core compiler will look for these secrets and combine them with the pro
 
 <a name="runapplication"></a>
 
-## Run Template
+### Run Template
 
 VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` and `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools.
 
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
-# Template Application Architecture
+## Template Application Architecture
 
 ![alt text](Documentation/template_architecture.jpg "Template Architecture")
 
-## General Overview
+### General Overview
 
 We need to think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
-## Model
+### Model
 
 ![alt text](Documentation/template_architecture_model.jpg "Model")
 
 The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript definition file (\*.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
-### Model: Domain
+#### Model: Domain
 
 The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
 
@@ -145,14 +141,14 @@ The _Domain_ namespace is where entities that represent the business domain are 
 
 **A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in an application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations in distributed applications, it is the developer's responsibility to have only a single representation of state in each tier and to keep them synchronized. The _Domain_ model is the representation of state for the application, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
 
-### Model: Security
+#### Model: Security
 
 The _Security_ namespace is where we define types that represent the security context and current principal of the application to be shared with the client application. These types include:
 
 - **AuthProviderConfig** Describes the security context of the application such as whether role impersonation is allowed for development/testing and if the application supports Azure B2C authentication. This is a singleton type that is deserialized from _appsettings.json_.
 - **ClientToken** Describes the current user and his roles so the client application understands what functions the user is authorized to perform. The _ClientToken_ is transported to the client application in plain text and is not tamper-proof, but this is okay. Its only purpose is to provide the information necessary for the client application to evaluate how it should render menu options and what routes should be available. All security checks will be performed in the server application's API controllers against the current principal that is deserialized from the encrypted authentication token obtained from Azure AD / B2C.
 
-### Model: View
+#### Model: View
 
 The _View_ namespace is where we define types that represent transient state messages between client and server. These types include:
 
@@ -163,15 +159,15 @@ The _View_ namespace is where we define types that represent transient state mes
 - **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
 - **StringRequest and StringReponse** Represents any string data payload between client and server.
 
-## .NET Core Server Application
+### .NET Core Server Application
 
 The .NET Core Server Application is responsible for handling requests from the client application, evaluating security concerns for those requests, validating that entity state changes adhere to business rules, synchronizing state changes with the data store, and managing access to Azure PaaS services. The server application uses _NuGet_ as the standard package management service.
 
-### Server: Bootstapper
+#### Server: Bootstapper
 
 The _Program_ class handles pre-start host configuration and creates an instance of the _Startup_ class to configure application aspects like _Entity Framework_, _Open ID_ identity providers, and service dependency injection.
 
-### Server: Security
+#### Server: Security
 
 ![alt text](Documentation/template_architecture_security.jpg "Security")
 
@@ -181,7 +177,7 @@ The _Security_ namespace is where we define constants for roles, claims, and aut
 - **B2COpenIdConnectEvents and B2EOpenIdConnectEvents** Event handlers for authentication success and failure conditions for the identity providers.
 - **OpenIdConnectB2COptions, OpenIdConnectB2EOptions, and OpenIdConnectOptions** Describes the configuration to be used for the identity providers in startup. These are singleton types that are deserialized from _appsettings.json_.
 
-### Server: ORM
+#### Server: ORM
 
 ![alt text](Documentation/template_architecture_orm.jpg "ORM")
 
@@ -195,7 +191,7 @@ The _ORM_ namespace is where we implement the _Entity Framework_ DbContext, conf
 
 **A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application has it disabled by default. Always eager load the data you need for the transaction in the query.
 
-### Server: Infrastructure
+#### Server: Infrastructure
 
 ![alt text](Documentation/template_architecture_infrastructure.jpg "Infrastructure")
 
@@ -208,7 +204,7 @@ The _Infrastructure_ namespace is where we implement the services that communica
 - **SendGridConfig** Describes the connection details for using the SendGrid service on Azure. This is a singleton type that is deserialized from _appsettings.json_.
 - **StaffService** Service implementation for interfacing with the Staff service on Arculus. The _FdotCoreApis_ configuration also defines endpoints for the _OrgCodes_ and _DotCodes_ services on Arculus, but you will need to implement your own application services if you need to use those. Only the _StaffService_ was implemented since it is so commonly used in applications.
 
-### Server: Services
+#### Server: Services
 
 ![alt text](Documentation/template_architecture_services.jpg "Services")
 
@@ -218,7 +214,7 @@ The _Services_ namespace is where we implement the interface contracts that desc
 - **IEmailService** Interface for _Infrastructure EmailService_.
 - **IStaffService** Interface for _Infrastructure StaffService_.
 
-### Server: Controllers
+#### Server: Controllers
 
 ![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
 
@@ -231,29 +227,29 @@ The _Controllers_ namespace is where we implement the APIs for the endpoints exp
 - **Storage** API for accessing the _IBlobStorageProvider_.
 - **{Your Controllers}** APIs that you create for your application will manage the implementation of state changes to your entities. Again, please make sure you use the _Authorize()_ attribute appropriately to enforce security on your APIs. A good pattern for entity data validation is to validate any business rules that span over a set of entities within the controller. Validation rules that pertain only to the entity instance should be implemented within the entity itself using _DataAnnotations_ and the _IValidatableObject.Validate()_ method. Using this approach allows you to return a _BadRequest(ModelState) IActionResult_ and the client application's _http service_ will expose the list of validation errors to the client store service which in turn can be handed off to the calling component for processing.
 
-## Angular Client Application
+### Angular Client Application
 
 The Angular Client Application is responsible for rendering the user interface of the application appropriately based on the user context and data state (workflow), handling all user interactions, managing the state of the application data in scope, and interfacing with the server application's APIs . The client application uses _NPM_ as the standard package management service.
 
-### Client: Bootstrapper
+#### Client: Bootstrapper
 
 The _main.ts_ is the client entry point and bootstraps the _app.module_.
 
-### Client: app.module
+#### Client: app.module
 
 The _app.module_ imports the component declarations, other module imports (including _app-routing.module_), and service providers, and then bootstraps the entry component _app.component_. Any time you add a new component or service, it must be added to the _app.module_.
 
-### Client: app-routing.module
+#### Client: app-routing.module
 
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a data object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
-### Client: services
+#### Client: services
 
 ![alt text](Documentation/template_architecture_client_services.jpg "Services")
 
 The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). The Template Architecture only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is typically what you want, but there may be cases when you want a component to have its own instance of a service.
 
-#### data
+##### data
 
 - **blob** Provides access to the server's _Storage_ controller. This service does not maintain any state.
 - **data-marshaler** Provides a means to pass string data from one component to another. This service maintains a string payload state.
@@ -263,20 +259,20 @@ The _services_ folder is where all client services are located (except stores). 
 - **ngbMomentDatePickerAdapter** Extension service for the ng-bootstrap date picker component to use moment.js objects instead of the proprietary structure.
 - **staff** Provides access to the server's _Staff_ controller. This service does not maintain any state.
 
-#### environment
+##### environment
 
 The _environment_ service provides a means for the Angular router to compose URLs by specifying the application root path ('/' is the default). This service does not maintain any state.
 
-#### http
+##### http
 
 The _http_ service is a wrapper around Angular's http service that has been extended to handle _ModelState_ error and unauthorized responses. This is the http service your services and stores should use. This service does not maintain any state.
 
-#### security
+##### security
 
 - **route-guard** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
 - **security** Provides a means to access the principal's _ClientToken_ from the _Security_ controller. This service maintains the client application's state of the _ClientToken_ and is a subscription (store) service.
 
-#### {Your Store Services}
+##### {Your Store Services}
 
 Your store services that represent the state management of your application's data should be placed in the _features_ folder.
 
@@ -286,7 +282,7 @@ Store services extend the _subscriberService_ and use the _subscriberHelper_ to 
 
 **A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an observable and observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject. You should always unsubscribe to any store services in the _ngOnDestroy_ method. Failure to do this will result in a memory leak in the client application.
 
-### Client: components
+#### Client: components
 
 ![alt text](Documentation/template_architecture_client_components.jpg "Components")
 
@@ -294,11 +290,11 @@ The _components_ folder is where all client general use components are located. 
 
 **A note about component state:** Components only manage their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (typically global).
 
-#### app
+##### app
 
 The _app_ component is the main component of the client application and is the 'root' of the application's component tree. The most important aspect of this component is that it contains the Angular _router-outlet_ component which has the responsibility of injecting the component associated with the current route (URL) into the component tree. It also has a custom 'fast route' implementation that will re-route the user to the deep link URL they requested after authentication if that link is access restricted. This scenario is typical of a URL sent in an email that is restricted to a specific role or roles.
 
-#### common
+##### common
 
 Common components are utility components that serve very specific technical puposes unrelated the business domain of the application.
 
@@ -308,39 +304,39 @@ Common components are utility components that serve very specific technical pupo
 - **sort-button** Provides a view for sorting data ascending or descending.
 - **staff-picker** Provides a type-ahead select for FDOT staff (SRS).
 
-#### footer
+##### footer
 
 The _footer_ component renders the standard FDOT footer in an accessible and responsive format. This component does bend the rule about making a direct http call to the _Site_ controller, but this is mitigated by the fact that this is a one-time call for static data.
 
-#### header
+##### header
 
 The _header_ component renders the standard FDOT header in an accessible and responsive format. This component does bend the rule about making a direct http call to the _Site_ controller, but this is mitigated by the fact that this is a one-time call for static data.
 
-#### home
+##### home
 
 The _home_ component is the 'landing page' of your application. You will need to modify this component's template to provide the introduction and purpose of your application.
 
-#### nav-menu
+##### nav-menu
 
 The _nav-menu_ component is the menu for your application. It already contains the 'home' link and authentication links for Azure AD and B2C. You will need to modify this component to reflect the navigation structure of your application.
 
-#### not-authorized
+##### not-authorized
 
 The _not-authorized_ component is where the _http_ service re-routes a user when they receive a 403 (unauthorized) response from a server application API call. This should not happen if you use the _route-guard_ for restricting route access to appropriate roles and the _security_ service to subscribe to the _ClientToken_ for evaluating whether or not a user is allowed to make the API call (in other words, don't render actions that the user is not authorized to perform).
 
-#### server-error
+##### server-error
 
 The _server-error_ component's sole purpose is to render the detailed .NET Core error page in an iframe for debugging. This is a development-only component.
 
-#### {Your Components}
+##### {Your Components}
 
 Your components that represent the functions and views of your application should be placed in the _features_ folder.
 
-### Client: features
+#### Client: features
 
 The _features_ folder is where should place the components and store services that represent the business domain of your application. You should break up features by 'areas' that represent distinct sections or functionality within your application.
 
-# Questions
+## Questions
 
 _**What about Visual Studio? Can I still use it?**_
 
@@ -398,7 +394,7 @@ It is also the developer's responsibility to render only the application menu op
 
 Role assignment for B2C users must be handled via a custom user/role management implementation in your application since these users are not in AD.
 
-# Manual Steps to Create a New Application from the Template
+## Manual Steps to Create a New Application from the Template
 
 1. Rename the extract folder to `{your-project-name}`
 2. Rename the `EdatTemplate` folder to `{your-project-name}`
@@ -414,7 +410,7 @@ Role assignment for B2C users must be handled via a custom user/role management 
    - From `{your-project-name}\ClientApp` it runs `ng serve` -> This builds the client app and starts the Angular-CLI server.
 10. Images are served from the `{your-project-name}\ClientApp\dist\assets` folder. Running in VS Code will not create this folder since the Angular-CLI server serves files from in-memory. To get get the images for your application, run `npm run build` from inside the `{your-project-name}\ClientApp` folder at least once.
 
-# Features
+## Features
 
 - Azure AD-B2C identity providers
 - Unified client and server model. Synchronization handled with ReinforcedTypings on `dotnet build`
@@ -430,11 +426,11 @@ Role assignment for B2C users must be handled via a custom user/role management 
 - [Azure BLOB storage](https://azure.microsoft.com/en-us/services/storage/blobs/) service and component for document management (with example)
 - [ngx-charts](https://swimlane.github.io/ngx-charts/#/ngx-charts/bar-vertical) library is included for charts and graphs
 
-## TODO (difficulty 1 - 5)
+### TODO (difficulty 1 - 5)
 
 - Add support for field-level validation message display (2)
 - Consider switching the current Staff API to a cached StaffJson API in-memory data set to reduce cold-start lag on the staff service (2)
 
-## Where We're Heading
+### Where We're Heading
 
 - Full-stack Node.js architecture version (at some point, maybe...)
