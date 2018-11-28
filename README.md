@@ -13,7 +13,7 @@
      - [Domain](#model%3A-domain)
      - [Security](#model%3A-security)
      - [View](#model%3A-view)
-   - [.NET Core Server Application](#.net-core-server-application)
+   - [.NET Core Server Application](#asp.net-core-server-application)
      - [Bootstrapper](#server%3A-bootstapper)
      - [Security](#server%3A-security)
      - [ORM](#server%3A-orm)
@@ -149,7 +149,7 @@ The _View_ namespace is where we define types that represent transient state mes
 - **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
 - **StringRequest and StringReponse** Represents any string data payload between client and server.
 
-### .NET Core Server Application
+### ASP.NET Core Server Application
 
 The .NET Core Server Application is responsible for handling requests from the client application, evaluating security concerns for those requests, validating that entity state changes adhere to business rules, synchronizing state changes with the data store, and managing access to Azure PaaS services. The server application uses _NuGet_ as the standard package management service.
 
