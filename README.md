@@ -115,7 +115,7 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ### General Overview
 
-Think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services (and sometimes controllers) making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+Think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services or controllers making requests to server API controllers. The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 ### Model
 
@@ -257,7 +257,12 @@ The _environment_ service provides a means for the Angular router to compose URL
 
 ##### http
 
-The _http_ service is a wrapper around Angular's http service that has been extended to handle _ModelState_ error and unauthorized responses. This is the http service your services and stores should use. This service does not maintain any state.
+The _http_ service is a wrapper around Angular's http service that has been extended to handle _ModelState_ error and unauthorized responses. This is the http service your components, services and stores should use. This service does not maintain any state.
+
+**A note about the http service:** The http service should be injected into a component or service for use in calling the server application's APIs. There are two rules that should be followed to determine if the http service can be used directly in a component, or whether a service should be created to encapsulate the HTTP calls.
+
+1. If the data is static to the client (data that doesn't need to be observed for changes on the client), using the http service in a component is allowed. If the data needs to be observed for changes on the client, a store service should be used to encapsulate the HTTP calls.
+2. If the data is static to the client, but the same HTTP call is needed by multiple components (via service injection), a service should be used to encapsulate the HTTP calls.
 
 ##### security
 
