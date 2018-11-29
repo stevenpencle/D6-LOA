@@ -123,7 +123,7 @@ Think of development using the Template Application Architecture as creating two
 
 The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Application Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript declaration file (\model.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
-**A note about enums:** Enums need to be placed in a regular TypeScript file (\model.enums.ts) instead of declaration files to be treated as constant values. There are other methods to achieve this, but this is the implementation used by the Template Application Architecture. The _ReinforcedTypingsConfiguration.cs_ is already configured to generate enums this way, but make sure you add enums in the _builder.ExportAsEnums()_ method.
+**A note about enums:** Enums need to be placed in a regular TypeScript file (\model.enums.ts) instead of a declaration file to be treated as constant values. There are other methods to achieve this, but this is the implementation used by the Template Application Architecture. The _ReinforcedTypingsConfiguration.cs_ is already configured to generate enums this way, but make sure you add enums in the _builder.ExportAsEnums()_ method.
 
 #### Model - Domain
 
@@ -212,7 +212,9 @@ The _Services_ namespace is where the interface contracts that describe the _Inf
 
 ![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
 
-The _Controllers_ namespace contains the APIs for the endpoints exposed by the server application. Controllers have the sole responsibility for enforcing security concerns within the application.
+The _Controllers_ namespace contains the APIs for the endpoints exposed by the server application.
+
+**FIREWALL** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
 
 - **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
