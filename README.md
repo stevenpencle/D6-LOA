@@ -7,6 +7,7 @@
    - [Prerequisite Configuration](#prerequisite-configuration---1-time-setup)
    - [PowerShell Installer](#powershell-installer)
    - [Run the Template Application](#run-template)
+   - [Removing the Sample Code](#removing-the-sample-code)
 3. [Manual New Application Steps](#manual-steps-to-create-a-new-application-from-the-template)
 4. [Features](#features)
 5. [Template Application Architecture](#template-application-architecture)
