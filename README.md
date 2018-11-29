@@ -7,7 +7,9 @@
    - [Prerequisite Configuration](#prerequisite-configuration---1-time-setup)
    - [PowerShell Installer](#powershell-installer)
    - [Run the Template Application](#run-template)
-3. [Template Application Architecture](#template-application-architecture)
+3. [Manual New Application Steps](#manual-steps-to-create-a-new-application-from-the-template)
+4. [Features](#features)
+5. [Template Application Architecture](#template-application-architecture)
    - [Overview](#general-overview)
    - [Model](#model)
      - [Domain](#model---domain)
@@ -27,9 +29,7 @@
      - [services](#client---services)
      - [components](#client---components)
      - [features](#client---features)
-4. [Questions](#questions)
-5. [Manual New Application Steps](#manual-steps-to-create-a-new-application-from-the-template)
-6. [Features](#features)
+6. [Questions](#questions)
 
 ## Introduction
 
@@ -75,7 +75,7 @@ An explaination of user secrets... Using the Azure platform requires access to s
 
 #### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT/_git/CloneTemplate?path=%2FopenEDAT_Template.ps1&version=GBmaster&_a=contents) to Create a New Application from the Template
 
-A special _Thank you!_ to Jim Quinn. If you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`
+A special _Thank you!_ to Jim Quinn. There are instructions for how to use the script in the repository **README**. If you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`
 
 You will need to unblock the PowerShell script before you execute it!
 
@@ -109,6 +109,56 @@ VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` 
 
 ![alt text](Documentation/vscode_debug.png "Run in VS Code")
 
+### Removing the Sample Code
+
+At some point during development, or maybe even immediately after creating your application, you will probably want to remove the sample code. This can be done by following these steps:
+
+1. Navigate to the project directory.
+2. Delete the /Controllers/SampleController.cs file.
+3. Delete the /Models/Domain/Sample.cs file.
+4. Delete the /Models/Domain/Enums/StatusCode.cs file.
+5. Build the .NET Core app (dotnet build) and fix the errors by removing references to the types in the deleted files.
+6. Navigate to the project/ClientApp directory.
+7. Delete the /src/app/features/administration/sample folder.
+8. Remove the link to the Sample component in src/app/components/nav-menu.html.
+9. Build the client app (npm run build) and fix the errors by removing the imports and routes in app.module.ts and app-routing.module.ts.
+10. Delete the Documentation folder.
+11. Delete or update the contents of the README.md file.
+
+OPTIONAL: You may want to remove any of the core architecture features that your application doesn't require. For example, if you're not using Azure BLOB storage, you can remove the API controller, client storage service, file-upload.component, etc.
+
+## Manual Steps to Create a New Application from the Template
+
+1. Rename the extract folder to `{your-project-name}`
+2. Rename the `EdatTemplate` folder to `{your-project-name}`
+3. Rename the `EdatTemplate.sln` file to `{your-project-name}.sln`
+4. Open the `{your-project-name}` folder
+5. Rename the `EdatTemplate.csproj` file to `{your-project-name}.csproj`
+6. VS Code - open the `{your-project-name}` folder
+7. VS Code - Edit -> Replace in Files `EdatTemplate` with `{your-project-name]` and select "Replace All" (Ctrl + ALt + Enter)
+8. VS Code (optional) - Set the `UserSecretsId` in the .NET Core project to a new value (usually a GUID) and reload new secrets for your new application. All applications deployed on Azure will require their own unique secrets, but developers can use the ones provided by Randy for local development.
+9. VS Code - Hit Play! This will run these commands in order...
+   - From `{your-project-name}` it runs `dotnet build` -> This restores NuGet packages, builds the .NET Core app, and generates the TypeScript model definition files (model.d.ts)
+   - From `{your-project-name}\ClientApp` it runs `npm install` -> This creates the `node_modules` folder and installs the NPM packages defined in the `package.json` file.
+   - From `{your-project-name}\ClientApp` it runs `ng serve` -> This builds the client app and starts the Angular-CLI server.
+10. Images are served from the `{your-project-name}\ClientApp\dist\assets` folder. Running in VS Code will not create this folder since the Angular-CLI server serves files from in-memory. To get get the images for your application, run `npm run build` from inside the `{your-project-name}\ClientApp` folder at least once.
+
+## Features
+
+- Azure AD-B2C identity providers
+- Unified client and server model. Synchronization handled with ReinforcedTypings on `dotnet build`
+- Themed, 508 compliant, and responsive design (Bootstrap 4) for FDOT standards
+- Role impersonation to assist with testing multiple application roles
+- Components for header, footer, and navigation
+- Service for async http request and response handling
+- Security service and route guard
+- Base service for subsription based (observable) services (data stores)
+- Data navigation service with helper components to handle sorting, filtering, and paging through large data sets
+- SRS (Staff) service and staff picker component to handle FDOT staff selections (with example)
+- Complete CRUD example for client and server architecture patterns
+- [Azure BLOB storage](https://azure.microsoft.com/en-us/services/storage/blobs/) service and component for document management (with example)
+- [ngx-charts](https://swimlane.github.io/ngx-charts/#/ngx-charts/bar-vertical) library is included for charts and graphs
+
 ## Template Application Architecture
 
 ![alt text](Documentation/template_architecture.jpg "Template Architecture")
@@ -121,7 +171,7 @@ Think of development using the Template Application Architecture as creating two
 
 ![alt text](Documentation/template_architecture_model.jpg "Model")
 
-The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain ole C# objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Application Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript declaration file (\model.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
+The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain old CLR/Core objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Application Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript declaration file (\model.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
 **A note about enums:** Enums need to be placed in a regular TypeScript file (\model.enums.ts) instead of a declaration file to be treated as constant values. There are other methods to achieve this, but this is the implementation used by the Template Application Architecture. The _ReinforcedTypingsConfiguration.cs_ is already configured to generate enums this way, but make sure you add enums in the _builder.ExportAsEnums()_ method.
 
@@ -394,38 +444,6 @@ It is also the developer's responsibility to render only the application menu op
 ![alt text](Documentation/ngif_role_eval_in_template.png "Evaluating the role in the template with *ngIf")
 
 Role assignment for B2C users must be handled via a custom user/role management implementation in your application since these users are not in AD.
-
-## Manual Steps to Create a New Application from the Template
-
-1. Rename the extract folder to `{your-project-name}`
-2. Rename the `EdatTemplate` folder to `{your-project-name}`
-3. Rename the `EdatTemplate.sln` file to `{your-project-name}.sln`
-4. Open the `{your-project-name}` folder
-5. Rename the `EdatTemplate.csproj` file to `{your-project-name}.csproj`
-6. VS Code - open the `{your-project-name}` folder
-7. VS Code - Edit -> Replace in Files `EdatTemplate` with `{your-project-name]` and select "Replace All" (Ctrl + ALt + Enter)
-8. VS Code (optional) - Set the `UserSecretsId` in the .NET Core project to a new value (usually a GUID) and reload new secrets for your new application. All applications deployed on Azure will require their own unique secrets, but developers can use the ones provided by Randy for local development.
-9. VS Code - Hit Play! This will run these commands in order...
-   - From `{your-project-name}` it runs `dotnet build` -> This restores NuGet packages, builds the .NET Core app, and generates the TypeScript model definition files (model.d.ts)
-   - From `{your-project-name}\ClientApp` it runs `npm install` -> This creates the `node_modules` folder and installs the NPM packages defined in the `package.json` file.
-   - From `{your-project-name}\ClientApp` it runs `ng serve` -> This builds the client app and starts the Angular-CLI server.
-10. Images are served from the `{your-project-name}\ClientApp\dist\assets` folder. Running in VS Code will not create this folder since the Angular-CLI server serves files from in-memory. To get get the images for your application, run `npm run build` from inside the `{your-project-name}\ClientApp` folder at least once.
-
-## Features
-
-- Azure AD-B2C identity providers
-- Unified client and server model. Synchronization handled with ReinforcedTypings on `dotnet build`
-- Themed, 508 compliant, and responsive design (Bootstrap 4) for FDOT standards
-- Role impersonation to assist with testing multiple application roles
-- Components for header, footer, and navigation
-- Service for async http request and response handling
-- Security service and route guard
-- Base service for subsription based (observable) services (data stores)
-- Data navigation service with helper components to handle sorting, filtering, and paging through large data sets
-- SRS (Staff) service and staff picker component to handle FDOT staff selections (with example)
-- Complete CRUD example for client and server architecture patterns
-- [Azure BLOB storage](https://azure.microsoft.com/en-us/services/storage/blobs/) service and component for document management (with example)
-- [ngx-charts](https://swimlane.github.io/ngx-charts/#/ngx-charts/bar-vertical) library is included for charts and graphs
 
 ### TODO (difficulty 1 - 5)
 
