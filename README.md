@@ -269,7 +269,7 @@ The _Controllers_ namespace contains the APIs for the endpoints exposed by the s
 
 **FIREWALL** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
 
-- **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage.
+- **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage. You will probably not use this contoller if you just send emails from the server application (other controllers or business services). In that case, just inject the IEmailService and use it directly.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
 - **Site** API for retrieving global site data like header and footer resources.
 - **Staff** API for accessing the _IStaffService_.
@@ -303,7 +303,7 @@ The _services_ folder is where all client services are located (except stores). 
 - **blob** Provides access to the server's _Storage_ controller. This service does not maintain any state.
 - **data-marshaler** Provides a means to pass string data from one component to another. This service maintains a string payload state.
 - **data-navigation** Provides a means to sort, filter, and page through a data array. This service does not maintain any state.
-- **email** Provides access to the server's _Email_ controller. This service does not maintain any state.
+- **email** Provides access to the server's _Email_ controller. This service does not maintain any state. You will probably not use this service if you only need to send emails from the server application. In that case, just inject the IEmailService into the server controller or business service and use it directly.
 - **excel-export** Provides a means to export a JSON data array to a Microsoft Excel file. This service does not maintain any state.
 - **ngbMomentDatePickerAdapter** Extension service for the ng-bootstrap date picker component to use moment.js objects instead of the proprietary structure.
 - **staff** Provides access to the server's _Staff_ controller. This service does not maintain any state.
