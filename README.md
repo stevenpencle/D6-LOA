@@ -176,6 +176,8 @@ The model can be thought of as "glue" code in that it represents the structure o
 
 **A note about enums:** Enums need to be placed in a regular TypeScript file (\model.enums.ts) instead of a declaration file to be treated as constant values. There are other methods to achieve this, but this is the implementation used by the Template Application Architecture. The _ReinforcedTypingsConfiguration.cs_ is already configured to generate enums this way, but make sure you add enums in the _builder.ExportAsEnums()_ method.
 
+**A note about ReinforcedTypings code generation failing to fire in the build process:** If _ReinforcedTypings_ stops generating the _Model_ types during the build, run `dotnet clean` in the .NET Core project. Then your _Model_ types should be generated on the next `dotnet build`.
+
 #### Model - Domain
 
 The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Application Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
