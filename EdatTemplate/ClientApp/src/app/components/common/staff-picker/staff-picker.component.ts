@@ -44,11 +44,11 @@ export class StaffPickerComponent implements OnInit {
       text$: Observable<string>
     ): Observable<IStaff | any> => {
       return text$.pipe(
-        debounceTime(1000),
+        debounceTime(300),
         distinctUntilChanged(),
         tap(() => (this.searching = true)),
         switchMap(term => {
-          if (term == null || term.length == null || term.length < 4) {
+          if (term == null || term.length == null || term.length < 3) {
             return of([]);
           }
           return this.staffService.search(term).pipe(
