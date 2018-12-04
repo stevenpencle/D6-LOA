@@ -44,10 +44,19 @@ namespace EdatTemplate.Security
                 }
                 claimsIdentity.AddClaim(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
                 claimsIdentity.AddClaim(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
-                //Custom logic to examine group claims and “transform” them into application specific claims. 
+                //Custom logic to examine group claims and “transform” them into application specific claims.
+                //Roles should be placed in appsettings in the hierarchical order of most important to least important because the standard behavior is
+                //to break the loop on the first successful match 
                 var hasRole = false;
                 foreach (var role in openIdConnectB2EOptions.Roles)
                 {
+                    //TODO: remove this is you support a single user having multiple roles
+                    if (hasRole)
+                    {
+                        //first role matched, so break out
+                        break;
+                    }
+                    //END
                     foreach (var group in role.Value)
                     {
                         if (ctx.Principal.HasClaim(p => p.Type.Equals("groups") && p.Value.ToUpper().Trim() == group.ToUpper().Trim()))
