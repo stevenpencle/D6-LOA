@@ -37,7 +37,7 @@ namespace EdatTemplate.Infrastructure
             {
                 emailMessage.Subject = $" ** {_environment.EnvironmentName} ** {emailMessage.Subject}";
                 emailMessage.Body = $" <strong>**<p>In Production, this email would be sent to: {string.Join(",", emailMessage.Tos)}</p>**</strong><p>{emailMessage.Body}</p>";
-                var hasEmailClaim = _httpContextAccessor.HttpContext.User.HasClaim(c => c.Type == _sendGridConfig.DeveloperEmailAddressClaim);
+                var hasEmailClaim = _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.HasClaim(c => c.Type == _sendGridConfig.DeveloperEmailAddressClaim);
                 if (hasOverrideEmailAddresses)
                 {
                     emailMessage.Tos = _sendGridConfig.OverrideToEmailAddresses.ToList();
