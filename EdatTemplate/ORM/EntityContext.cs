@@ -13,6 +13,7 @@ namespace EdatTemplate.ORM
     {
         private IHostingEnvironment _environment;
         private EntityFrameworkConfig _entityFrameworkConfig;
+        private DiagnosticListener _listener;
 
         public EntityContext(IHostingEnvironment environment, EntityFrameworkConfig entityFrameworkConfig)
         {
@@ -31,11 +32,17 @@ namespace EdatTemplate.ORM
             ConfigureLogging();
         }
 
+        public override void Dispose()
+        {
+            _listener?.Dispose();
+            base.Dispose();
+        }
+
         private void ConfigureLogging()
         {
             if (!_environment.IsDevelopment()) return;
-            var listener = this.GetService<DiagnosticSource>();
-            (listener as DiagnosticListener).SubscribeWithAdapter(new NLogSqlInterceptor(_entityFrameworkConfig));
+            _listener = (DiagnosticListener)this.GetService<DiagnosticSource>();
+            _listener.SubscribeWithAdapter(new NLogSqlInterceptor(_entityFrameworkConfig));
         }
 
         public virtual DbSet<Sample> Samples { get; set; }
@@ -73,13 +80,6 @@ namespace EdatTemplate.ORM
             }
             // add any additional constraints
             modelBuilder.Entity<Sample>().HasIndex(e => e.Name).IsUnique().HasName("IX_Sample_Name");
-
-            // cascade delete configuration example
-            //modelBuilder.Entity<Parent>()
-            //    .HasMany(p => p.Children)
-            //    .WithRequired()
-            //    .WillCascadeOnDelete();
-
         }
     }
 }
