@@ -32,7 +32,7 @@ namespace EdatTemplate.Controllers
         public async Task<IActionResult> AddOrUpdateSample([FromBody] Sample sample)
         {
             //set server-side entity data
-            sample.LastUpdated = DateTime.Now;
+            sample.LastUpdated = DateTime.UtcNow;
             sample.LastUpdatedBy = User.Identity.Name;
             var staffClaim = ((ClaimsIdentity)User.Identity).FindFirst(ApplicationClaims.StaffId);
             sample.LastUpdatedByStaffId = staffClaim == null ? 0 : int.Parse(staffClaim.Value);
