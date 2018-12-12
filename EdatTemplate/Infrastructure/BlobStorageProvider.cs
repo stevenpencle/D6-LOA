@@ -37,7 +37,7 @@ namespace EdatTemplate.Infrastructure
                 blobReference = _container.GetBlockBlobReference(blobName);
             }
             var length = stream.Length;
-            var uploaded = DateTime.Now;
+            var uploaded = DateTime.UtcNow;
             blobReference.Metadata.Add("filename", fileName);
             blobReference.Metadata.Add("user", user);
             blobReference.Metadata.Add("filesize", length.ToString());
@@ -83,7 +83,7 @@ namespace EdatTemplate.Infrastructure
                 FileName = ((CloudBlockBlob)x).Metadata["filename"],
                 User = ((CloudBlockBlob)x).Metadata["user"],
                 FileSize = long.Parse(((CloudBlockBlob)x).Metadata["filesize"]),
-                Uploaded = DateTime.Parse(((CloudBlockBlob)x).Metadata["uploaded"])
+                Uploaded = DateTime.SpecifyKind(DateTime.Parse(((CloudBlockBlob)x).Metadata["uploaded"]), DateTimeKind.Utc)
             }).OrderByDescending(x => x.Uploaded);
         }
 
