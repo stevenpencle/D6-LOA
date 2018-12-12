@@ -38,6 +38,7 @@ import { BlobService } from './app/services/data/blob.service';
 
 // features
 // ** administration
+// ** SAMPLE START
 import { SampleComponent } from './app/features/administration/sample/sample.component';
 import { SampleModalComponent } from './app/features/administration/sample/sample-modal.component';
 import { SampleStoreService } from './app/features/administration/sample/sample-store.service';
@@ -45,6 +46,7 @@ import { SampleEmailComponent } from './app/features/administration/sample/sampl
 import { SampleDocumentsComponent } from './app/features/administration/sample/sample-documents.component';
 import { SampleDataComponent } from './app/features/administration/sample/sample-data.component';
 import { SampleChartsComponent } from './app/features/administration/sample/sample-charts.component';
+// ** SAMPLE END
 
 @NgModule({
   declarations: [
@@ -62,12 +64,14 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     ChartToTableComponent,
     // features
     // ** administration
+    // ** SAMPLE START
     SampleComponent,
     SampleModalComponent,
     SampleEmailComponent,
     SampleDocumentsComponent,
     SampleDataComponent,
     SampleChartsComponent
+    // ** SAMPLE END
   ],
   imports: [
     BrowserModule,
@@ -91,7 +95,9 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     RouteGuard,
     // stores
     // ** administration
+    // ** SAMPLE START
     SampleStoreService,
+    // ** SAMPLE END
     { provide: NgbDateAdapter, useClass: NgbMomentDatePickerAdapter }
   ],
   bootstrap: [AppComponent]
