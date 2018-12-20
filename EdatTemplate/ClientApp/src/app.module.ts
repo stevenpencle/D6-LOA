@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxMaskModule } from 'ngx-mask';
 
 // routing
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +23,7 @@ import { ServerErrorComponent } from './app/components/server-error/server-error
 import { StaffPickerComponent } from './app/components/common/staff-picker/staff-picker.component';
 import { FileUploadComponent } from './app/components/common/file-upload/file-upload.component';
 import { ChartToTableComponent } from './app/components/common/chart-to-table/chart-to-table.component';
+import { DateFieldComponent } from './app/components/common/date-field/date-field.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -58,6 +60,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     SortButtonComponent,
     StaffPickerComponent,
     FileUploadComponent,
+    DateFieldComponent,
     HomeComponent,
     NotAuthorizedComponent,
     ServerErrorComponent,
@@ -80,6 +83,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     NgxChartsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    NgxMaskModule.forRoot(),
     NgbModule.forRoot()
   ],
   providers: [

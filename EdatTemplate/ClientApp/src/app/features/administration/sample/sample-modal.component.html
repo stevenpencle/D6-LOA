@@ -7,7 +7,7 @@
   aria-labelledby="sampleModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header text-white bg-secondary">
         <h4 class="modal-title" id="sampleModalLabel">
@@ -70,9 +70,9 @@
                 aria-label="Status"
                 title="Status"
               >
-                <option value="{{statusCode.New}}">New</option>
-                <option value="{{statusCode.Pending}}">Pending</option>
-                <option value="{{statusCode.Approved}}">Approved</option>
+                <option value="{{ statusCode.New }}">New</option>
+                <option value="{{ statusCode.Pending }}">Pending</option>
+                <option value="{{ statusCode.Approved }}">Approved</option>
               </select>
             </div>
           </div>
@@ -87,11 +87,12 @@
                   class="form-control"
                   placement="top-left"
                   [firstDayOfWeek]="7"
-                  placeholder="yyyy-mm-dd"
+                  placeholder="YYYY-MM-DD"
                   name="dp"
                   [(ngModel)]="birthDate"
                   ngbDatepicker
                   #d="ngbDatepicker"
+                  style="max-width: 150px;"
                 />
                 <div class="input-group-append">
                   <button
@@ -103,6 +104,20 @@
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label" for="sampleBirthDateAlt"
+                >Birth Date (Alternate Date Field)</label
+              >
+              <app-date-field
+                [(moment)]="birthDate"
+                id="sampleBirthDateAlt"
+                title="Alternate Date Field"
+              ></app-date-field>
             </div>
           </div>
         </div>
