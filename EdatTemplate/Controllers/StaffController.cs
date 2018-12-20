@@ -1,6 +1,7 @@
 ﻿using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.View;
 using EdatTemplate.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace EdatTemplate.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class StaffController : Controller
     {
         private readonly IStaffService _staffService;

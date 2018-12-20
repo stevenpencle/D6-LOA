@@ -16,7 +16,7 @@ namespace EdatTemplate.Controllers
         private readonly AuthProviderConfig _authProviderConfig;
         private readonly OpenIdConnectB2EOptions _openIdConnectB2EOptions;
         private readonly OpenIdConnectB2COptions _openIdConnectB2COptions;
-        
+
         public SecurityController
         (
             AuthProviderConfig authProviderConfig,
@@ -33,12 +33,12 @@ namespace EdatTemplate.Controllers
         public ClientToken GetToken()
         {
             if (!User.Identity.IsAuthenticated) return null;
-            var claimsUser = (ClaimsIdentity) User.Identity;
+            var claimsUser = (ClaimsIdentity)User.Identity;
             var token = new ClientToken
             {
                 FullName = claimsUser.Name,
-                UserId = claimsUser.HasClaim(x => x.Type == ApplicationClaims.UserId) 
-                    ? claimsUser.FindFirst(x => x.Type == ApplicationClaims.UserId).Value 
+                UserId = claimsUser.HasClaim(x => x.Type == ApplicationClaims.UserId)
+                    ? claimsUser.FindFirst(x => x.Type == ApplicationClaims.UserId).Value
                     : string.Empty,
                 AuthMode = claimsUser.HasClaim(x => x.Type == ApplicationClaims.AuthenticationTypeClaim)
                     ? claimsUser.FindFirst(x => x.Type == ApplicationClaims.AuthenticationTypeClaim).Value
@@ -47,7 +47,8 @@ namespace EdatTemplate.Controllers
             if (claimsUser.HasClaim(x => x.Type == ApplicationClaims.RoleClaim))
             {
                 token.Roles = claimsUser.FindAll(x => x.Type == ApplicationClaims.RoleClaim).Select(x => x.Value).ToArray();
-            } else
+            }
+            else
             {
                 token.Roles = new List<string>();
             }
@@ -89,7 +90,7 @@ namespace EdatTemplate.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = ApplicationRoles.B2CUser)]
+        [Authorize(Roles = ApplicationRoles.B2CUser, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult B2CProfile()
         {
             var properties = new AuthenticationProperties { RedirectUri = "/" };
@@ -98,7 +99,7 @@ namespace EdatTemplate.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Logout()
         {
             return User.Claims.First(c => c.Type == ApplicationClaims.AuthenticationTypeClaim).Value == ApplicationAuthenticationType.Ad
@@ -107,7 +108,7 @@ namespace EdatTemplate.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Impersonate(string id)
         {
             if (!_authProviderConfig.AllowImpersonation || !(User.Identity is ClaimsIdentity identity))

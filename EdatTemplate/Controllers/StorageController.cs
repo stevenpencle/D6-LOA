@@ -1,6 +1,7 @@
 ﻿using EdatTemplate.Models.View;
 using EdatTemplate.Security;
 using EdatTemplate.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EdatTemplate.Controllers
 {
-    [Authorize(Roles = ApplicationRoles.Admin)]
+    [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class StorageController : Controller
     {
@@ -21,7 +22,7 @@ namespace EdatTemplate.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IEnumerable<DocumentMetadata>> UploadFiles()
         {
             var i = 0;
@@ -42,7 +43,7 @@ namespace EdatTemplate.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IEnumerable<DocumentMetadata>> GetFileList(string directory)
         {
             return await _blobStorageProvider.ListBlobs(directory);
@@ -50,7 +51,7 @@ namespace EdatTemplate.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetFile(string id)
         {
             var blob = await _blobStorageProvider.GetBlob(id);
@@ -63,7 +64,7 @@ namespace EdatTemplate.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<StringResponse> RemoveFiles([FromBody] StringRequest request)
         {
             var l = await _blobStorageProvider.ListBlobs(request.Data);
@@ -76,7 +77,7 @@ namespace EdatTemplate.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<StringResponse> RemoveFile([FromBody] StringRequest request)
         {
             await _blobStorageProvider.DeleteBlob(request.Data);

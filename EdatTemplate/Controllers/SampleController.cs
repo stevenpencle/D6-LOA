@@ -2,6 +2,7 @@ using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.View;
 using EdatTemplate.ORM;
 using EdatTemplate.Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace EdatTemplate.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class SampleController : Controller
     {
@@ -26,7 +27,7 @@ namespace EdatTemplate.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> AddOrUpdateSample([FromBody] Sample sample)
@@ -67,7 +68,7 @@ namespace EdatTemplate.Controllers
             return new ObjectResult(tracker.Entity);
         }
 
-        [Authorize(Roles = ApplicationRoles.Admin)]
+        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("[action]")]
         public async Task<StringResponse> RemoveSample([FromBody] Sample sample)
