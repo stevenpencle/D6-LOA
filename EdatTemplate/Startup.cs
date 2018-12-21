@@ -1,3 +1,4 @@
+using EdatTemplate.Automation;
 using EdatTemplate.Infrastructure;
 using EdatTemplate.Models.Security;
 using EdatTemplate.Models.View;
@@ -113,6 +114,13 @@ namespace EdatTemplate
                     : "DbConnection";
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString(connectionString));
             });
+            //configure Hosted Srvices
+            var automationConfig = Configuration.GetSection("AutomationConfig").Get<AutomationConfig>();
+            services.AddSingleton(automationConfig);
+            if (automationConfig.RunTasks)
+            {
+                services.AddHostedService<SampleHostedService>();
+            }
             //configure MVC
             services
                 .AddMvc()
