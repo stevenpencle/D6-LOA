@@ -278,6 +278,15 @@ The _Controllers_ namespace contains the APIs for the endpoints exposed by the s
 - **Storage** API for accessing the _IBlobStorageProvider_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage.
 - **{Your Controllers}** APIs that you create for your application will manage the implementation of state changes to your entities. Again, please make sure you use the _Authorize()_ attribute appropriately to enforce security on your APIs. A good pattern for entity data validation is to validate any business rules that span over a set of entities within the controller. Validation rules that pertain only to the entity instance should be implemented within the entity itself using _DataAnnotations_ and the _IValidatableObject.Validate()_ method. Using this approach allows you to return a _BadRequest(ModelState) IActionResult_ and the client application's _http service_ will expose the list of validation errors to the client _store service_ which in turn can be handed off to the calling _component_ for processing.
 
+#### Server - Automation
+
+![alt text](Documentation/template_architecture_automation.jpg "Automation")
+
+The _Automation_ namespace contains the hosted services needed by an application. Hosted services run in the background and are not context bound to an HTTP request. The purpose of hosted services is to perform some automated task needed by the application, and to repeat that task based on some time interval. Examples of this are cleaning up temporary BLOB storage every hour or auto-expiring permits beyond their expiration date daily. A lot of functions that traditionally have been implemented as separate batch jobs can probably fit nicely as a hosted service. In fact, it is best to think of hosted services as batch jobs that run inside the application. Because hosted services execute on threads not bound to an HTTP request, there is no notion of a current principal. However, hosted services can use injected dependencies like a DbContext for data access and other services.
+
+- **AutomationConfig** Describes the configuration needed by hosted services. This is a singleton type that is deserialized from _appsettings.json_.
+- **HostedService** The abstract base class that all custom hosted services should extend from. This class ensures the proper pattern is used for implementing the custom task the service is responsible for performing.
+
 ### Angular Client Application
 
 The Angular Client Application is responsible for rendering the user interface of the application appropriately based on the user context and data state (workflow), handling all user interactions, managing the state of the application data in scope, and interfacing with the server application's APIs. The client application uses _NPM_ as the standard package management service.
@@ -355,7 +364,7 @@ The _app_ component is the main component of the client application and is the '
 Common components are utility components that serve very specific technical puposes unrelated the business domain of the application.
 
 - **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data to meet accessibility requirements.
-- **date-field** An alternate component to the _ng-Bootstrap_ datepicker. This component is a normal textbox with a date format mask that binds to a _momentjs_ object.
+- **date-field** An alternate component to the _ng-Bootstrap_ datepicker. This component is a standard textbox with a date format mask that binds to a _momentjs_ object.
 - **file-upload** Provides a view for selecting and uploading files.
 - **filter-field** Provides a view for entering string data to be applied as a filter to a property in an object array.
 - **sort-button** Provides a view for sorting data ascending or descending.
