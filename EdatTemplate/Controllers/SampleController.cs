@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EdatTemplate.Controllers
@@ -32,11 +31,6 @@ namespace EdatTemplate.Controllers
         [Route("[action]")]
         public async Task<IActionResult> AddOrUpdateSample([FromBody] Sample sample)
         {
-            //set server-side entity data
-            sample.LastUpdated = DateTime.UtcNow;
-            sample.LastUpdatedBy = User.Identity.Name;
-            var staffClaim = ((ClaimsIdentity)User.Identity).FindFirst(ApplicationClaims.StaffId);
-            sample.LastUpdatedByStaffId = staffClaim == null ? 0 : int.Parse(staffClaim.Value);
             //clear model state
             ModelState.Clear();
             //validate entity level validations - entity data annotations and entity validate() method

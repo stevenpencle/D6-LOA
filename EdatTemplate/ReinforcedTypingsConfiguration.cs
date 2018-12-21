@@ -17,7 +17,6 @@ namespace EdatTemplate
             builder.ExportAsInterfaces(new[] {
                 // domain entity models
                 typeof(Staff),
-                typeof(Entity),
                 typeof(Sample),
                 // security models
                 typeof(ClientToken),
