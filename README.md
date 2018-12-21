@@ -180,9 +180,9 @@ The model can be thought of as "glue" code in that it represents the structure o
 
 #### Model - Domain
 
-The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. The Template Application Architecture defines the _Entity_ class to be used as a base class for other entities. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
+The _Domain_ namespace is where entities that represent the business domain are located. These are typically the _Entity Framework_ classes that represent the Azure SQL (or local SQL Server) database objects. Other business domain representations can also be defined here, like the _Staff_ entity which is the payload type for the _StaffService_ and not represented by a database table.
 
-- **Entity** The base class for other entities.
+- **IAuditedEntity** The interface that entities that require last update audit fields should implement.
 - **Staff** The object type returned by the _StaffService_.
 - **{Your Entities}** Entities that represent the business domain of your application.
 
@@ -230,8 +230,10 @@ The _Security_ namespace is where constants for roles, claims, and authenticatio
 
 The _ORM_ namespace is where the _Entity Framework_ configuration, DbContext, and helpers are located.
 
+- **ChangeTrackerExtensions** This class augments the normal _Entity Framework_ change tracking behavior by automatically setting last updated audit fields for any entity that implements the _IAuditedEntity_ interface.
 - **EntityContext** This is the DbContext class that defines how our _Domain_ model entity types should be serialized to the data store.
 - **EntityFrameworkConfig** Describes the runtime context for _Entity Framework_ such as whether to drop and create the database during development and if the SQL command logger should only log distinct commands. This is a singleton type that is deserialized from _appsettings.json_.
+- **ModelBuilderExtensions** This class configures the _IAuditedEntity_ fields and associated database columns so that it is not necessary to decorate the properties on each entity that implements _IAuditedEntity_.
 - **NLogSqlInterceptor** This is the logging class for _NLog_ that is used to generate a log of database commands with parameters and is formatted for execution in _SQL Server Management Studio_. This is the log that should be provided to your DBA for the SQL review.
 
 **A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accommodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
@@ -353,6 +355,7 @@ The _app_ component is the main component of the client application and is the '
 Common components are utility components that serve very specific technical puposes unrelated the business domain of the application.
 
 - **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data to meet accessibility requirements.
+- **date-field** An alternate component to the _ng-Bootstrap_ datepicker. This component is a normal textbox with a date format mask that binds to a _momentjs_ object.
 - **file-upload** Provides a view for selecting and uploading files.
 - **filter-field** Provides a view for entering string data to be applied as a filter to a property in an object array.
 - **sort-button** Provides a view for sorting data ascending or descending.
@@ -451,7 +454,6 @@ Role assignment for B2C users must be handled via a custom user/role management 
 ### TODO (difficulty 1 - 5)
 
 - Add support for field-level validation message display (2)
-- Consider switching the current Staff API to a cached StaffJson API in-memory data set to reduce cold-start lag on the staff service (2)
 
 ### Where We're Heading
 
