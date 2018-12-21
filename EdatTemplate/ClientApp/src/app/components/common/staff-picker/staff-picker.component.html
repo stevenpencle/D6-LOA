@@ -1,5 +1,5 @@
 ﻿<input
-  id="{{id}}"
+  id="{{ id }}"
   type="text"
   class="form-control form-control-sm"
   [resultFormatter]="searchStaffResultFormatter"
@@ -8,6 +8,7 @@
   [ngbTypeahead]="searchStaff"
   [editable]="false"
   [inputFormatter]="searchStaffResultFormatter"
-  title="{{title}}"
+  title="{{ title }}"
+  (blur)="onBlur()"
   #input
 />

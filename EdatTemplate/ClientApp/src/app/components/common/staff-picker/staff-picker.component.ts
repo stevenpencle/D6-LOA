@@ -83,6 +83,12 @@ export class StaffPickerComponent implements OnInit {
     };
   }
 
+  onBlur(): void {
+    if (this.selectedStaff == null) {
+      this.clearInput();
+    }
+  }
+
   onModelChange(staff: IStaff): void {
     this.selectedStaff = staff;
     this.selected.emit(staff);
