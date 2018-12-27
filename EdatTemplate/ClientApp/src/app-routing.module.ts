@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // services
-import { RouteGuard } from './app/services/security/route-guard';
+import { RouteGuard } from './app/services/security/route.guard';
 
 // components
 import { HomeComponent } from './app/components/home/home.component';
