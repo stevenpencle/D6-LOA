@@ -18,7 +18,7 @@ export class DateFieldComponent {
     if (value == null || !moment.isMoment(value) || !value.isValid()) {
       this.stringDate = '';
     } else {
-      this.stringDate = value.format('MM-DD-YYYY');
+      this.stringDate = value.startOf('day').format('MM-DD-YYYY');
     }
   }
 
@@ -34,6 +34,6 @@ export class DateFieldComponent {
       this.momentChange.emit(null);
       return;
     }
-    this.momentChange.emit(m);
+    this.momentChange.emit(m.startOf('day'));
   }
 }
