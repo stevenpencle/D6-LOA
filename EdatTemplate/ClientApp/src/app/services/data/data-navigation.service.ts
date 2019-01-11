@@ -84,15 +84,17 @@ export class DataNavigationService {
   }
 
   private doSort<T>(data: DataNavigation<T>, field: string): void {
-    data.sortedFilteredData = data.sortedFilteredData.sort((a: any, b: any) => {
-      if (a[field] < b[field]) {
-        return data.currentSortDirection === 'ascending' ? -1 : 1;
-      } else if (a[field] > b[field]) {
-        return data.currentSortDirection === 'ascending' ? 1 : -1;
-      } else {
-        return 0;
-      }
-    });
+    if (data.currentSortDirection === 'ascending') {
+      data.sortedFilteredData = linq
+        .from(data.sortedFilteredData)
+        .orderBy(x => (x[field] == null ? '' : x[field]))
+        .toArray();
+    } else {
+      data.sortedFilteredData = linq
+        .from(data.sortedFilteredData)
+        .orderByDescending(x => (x[field] == null ? '' : x[field]))
+        .toArray();
+    }
     if (data.pageSize > 0) {
       data.pageData = linq
         .from(data.sortedFilteredData)
