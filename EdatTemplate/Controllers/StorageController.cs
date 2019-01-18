@@ -33,9 +33,12 @@ namespace EdatTemplate.Controllers
                 foreach (var file in files)
                 {
                     var folder = file.Name.Trim().ToUpper();
-                    var metadata = await _blobStorageProvider.UploadBlob(files[i].OpenReadStream(), folder, file.FileName, User.Identity.Name);
-                    metadatas.Add(metadata);
-                    i++;
+                    using (var stream = files[i].OpenReadStream())
+                    {
+                        var metadata = await _blobStorageProvider.UploadBlob(stream, folder, file.FileName, User.Identity.Name);
+                        metadatas.Add(metadata);
+                        i++;
+                    }
                 }
             }
             return metadatas;
