@@ -41,7 +41,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         this.canImpersonate = result.allowImpersonation;
       }
     );
-    this.securityService.subscribe(this, token => {
+    this.securityService.safeSubscribe(this, token => {
       if (token == null) {
         this.isAuthenticated = false;
         this.isAdmin = false;
@@ -72,11 +72,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         this.isB2CAuthenticated = token.authMode === 'B2C';
       }
     });
+    this.securityService.getToken();
   }
 
-  ngOnDestroy(): void {
-    this.securityService.unsubscribe(this);
-  }
+  ngOnDestroy(): void {}
 
   skipNavigation(): void {
     this.skipnav.nativeElement.focus();

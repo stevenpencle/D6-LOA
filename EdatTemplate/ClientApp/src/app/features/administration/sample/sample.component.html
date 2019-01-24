@@ -95,7 +95,42 @@
         calculate the age based on the birthdate client-side.
       </h6>
       <hr />
-      <app-sample-data></app-sample-data>
+      <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+          <div class="form-group">
+            <label for="observableFilter"
+              >Observe only samples that start with:</label
+            >
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="observableFilter"
+              name="observableFilter"
+              [ngModel]="observableFilter"
+              placeholder="Enter the name pattern to observe"
+              aria-placeholder="Enter the name pattern to observe"
+              (ngModelChange)="observableFilterChange($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="applyFilter()"
+            aria-label="Apply Filter"
+            title="Apply Filter"
+          >
+            <i class="fas fa-filter"></i> Apply Filter
+          </button>
+        </div>
+      </div>
+      <app-sample-data
+        *ngIf="initSampleDataComponent"
+        [observableFilter]="observableFilter"
+      ></app-sample-data>
     </div>
   </div>
   <br />

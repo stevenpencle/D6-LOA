@@ -3,7 +3,8 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  ElementRef
+  ElementRef,
+  Input
 } from '@angular/core';
 import { SampleStoreService } from './sample-store.service';
 import {
@@ -34,6 +35,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   statusCode = StatusCode;
   data: DataNavigation<ISample>;
   filters: Array<FilterEvent> = [];
+  @Input('observableFilter') observableFilter: string;
 
   constructor(
     private securityService: SecurityService,
@@ -43,8 +45,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('security service - component init subscription');
-    this.securityService.subscribe(this, token => {
+    this.securityService.safeSubscribe(this, token => {
       if (token == null) {
         this.userId = '';
       } else {
@@ -56,24 +57,39 @@ export class SampleDataComponent implements OnInit, OnDestroy {
         }
       }
     });
-    console.log('sample store - component init subscription');
-    this.sampleStoreService.subscribe(this, samples => {
-      if (this.data == null) {
-        this.data = this.dataNavigationService.init(samples, 'name', 3);
-      } else {
-        const resetPaging = this.data.sourceData.length > samples.length;
-        this.data.sourceData = samples;
-        this.dataNavigationService.filter(this.data, this.filters, resetPaging);
-      }
-    });
+    this.securityService.getToken();
+    if (this.observableFilter == null || this.observableFilter.trim() === '') {
+      this.sampleStoreService.safeSubscribe(this, samples => {
+        this.dataChanged(samples);
+      });
+    } else {
+      this.sampleStoreService.safeSubscribeMap(
+        this,
+        samples => {
+          return linq
+            .from(samples)
+            .where(x => x.name.startsWith(this.observableFilter))
+            .toArray();
+        },
+        samples => {
+          this.dataChanged(samples);
+        }
+      );
+    }
+    this.sampleStoreService.load();
   }
 
-  ngOnDestroy(): void {
-    console.log('sample store - component destroy unsubscribe');
-    this.sampleStoreService.unsubscribe(this);
-    console.log('security service - component destroy unsubscribe');
-    this.securityService.unsubscribe(this);
+  dataChanged(samples: ISample[]) {
+    if (this.data == null) {
+      this.data = this.dataNavigationService.init(samples, 'name', 3);
+    } else {
+      const resetPaging = this.data.sourceData.length > samples.length;
+      this.data.sourceData = samples;
+      this.dataNavigationService.filter(this.data, this.filters, resetPaging);
+    }
   }
+
+  ngOnDestroy(): void {}
 
   clearCheckUserId(): void {
     this.checkUserId = '';

@@ -24,19 +24,18 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.currentYear = moment()
       .year()
       .toString();
-    this.securityService.subscribe(this, token => {
+    this.securityService.safeSubscribe(this, token => {
       if (token == null) {
         this.isAuthenticated = false;
       } else {
         this.isAuthenticated = true;
       }
     });
+    this.securityService.getToken();
     this.httpService.get<IEdatFooter>('api/site/GetFooter', result => {
       this.footer = result;
     });
   }
 
-  ngOnDestroy(): void {
-    this.securityService.unsubscribe(this);
-  }
+  ngOnDestroy(): void {}
 }

@@ -17,14 +17,13 @@ export class HttpService implements OnDestroy {
     private dataMarshalerService: DataMarshalerService,
     private router: Router
   ) {
-    this.securityService.subscribe(this, token => {
+    this.securityService.safeSubscribe(this, token => {
       this.token = token;
     });
+    this.securityService.getToken();
   }
 
-  ngOnDestroy(): void {
-    this.securityService.unsubscribe(this);
-  }
+  ngOnDestroy(): void {}
 
   get<TResult>(
     api: string,
