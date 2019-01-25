@@ -44,7 +44,7 @@ export class SampleChartsComponent implements OnInit {
     });
   }
 
-  updateData(event: any, dataPoint: IGraphDataPoint) {
+  updateData(event: any, dataPoint: IGraphDataPoint): void {
     dataPoint.value = Number.parseInt(event.target.value);
     let dataPoints = linq
       .from(this.data.seriesData[0].series)
@@ -62,7 +62,7 @@ export class SampleChartsComponent implements OnInit {
     this.showPopulationCharts = !tableDataDisplayed;
   }
 
-  onSelect(event) {
+  onSelect(event: any): void {
     console.log(event);
   }
 }

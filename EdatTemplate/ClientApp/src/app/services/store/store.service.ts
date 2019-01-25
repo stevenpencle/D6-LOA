@@ -21,11 +21,12 @@ export class Store<T> {
    * @param changeCallback The function to call when the observed part of the state of the store changes
    */
 
-  safeSubscribeMap<M>(
+  safeSubscribeMap<P>(
     ref: OnDestroy,
-    projection: (value: T) => M,
-    changeCallback: (state: M) => void
-  ) {
+    projection: (value: T) => P,
+    changeCallback: (state: P) => void
+  ): void {
+    console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
     const subscription = this.state$
       .pipe(
         distinctUntilChanged(),
@@ -33,10 +34,10 @@ export class Store<T> {
           return projection(p);
         })
       )
-      .subscribe((state: M) => {
+      .subscribe((state: P) => {
         console.log(
           this._storeName +
-            ' subscribed / observer count = ' +
+            ' change notification / total observer count = ' +
             this._state$.observers.length
         );
         changeCallback(state);
@@ -47,7 +48,9 @@ export class Store<T> {
       destroy.apply(ref);
       console.log(
         this._storeName +
-          ' unsubscribed / observer count = ' +
+          ' ' +
+          ref.constructor.name +
+          ' unsubscribed / total observer count = ' +
           this._state$.observers.length
       );
     };
@@ -59,11 +62,12 @@ export class Store<T> {
    * @param ref The object (typically a component) that must implement OnDestroy
    * @param changeCallback The function to call when the state of the store changes
    */
-  safeSubscribe(ref: OnDestroy, changeCallback: (state: T) => void) {
+  safeSubscribe(ref: OnDestroy, changeCallback: (state: T) => void): void {
+    console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
     const subscription = this.state$.subscribe((state: T) => {
       console.log(
         this._storeName +
-          ' subscribed / observer count = ' +
+          ' change notification / total observer count = ' +
           this._state$.observers.length
       );
       changeCallback(state);
@@ -74,7 +78,9 @@ export class Store<T> {
       destroy.apply(ref);
       console.log(
         this._storeName +
-          ' unsubscribed / observer count = ' +
+          ' ' +
+          ref.constructor.name +
+          ' unsubscribed / total observer count = ' +
           this._state$.observers.length
       );
     };

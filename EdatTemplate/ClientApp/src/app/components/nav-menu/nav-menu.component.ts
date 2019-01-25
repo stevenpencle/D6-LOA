@@ -82,7 +82,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   notAuthorized(): void {
-    this.httpService.get('api/security/notauthorized', result => {});
+    this.httpService.get('api/security/notauthorized', () => {});
   }
 
   changeRole(role: string): void {

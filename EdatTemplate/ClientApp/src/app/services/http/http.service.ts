@@ -87,7 +87,7 @@ export class HttpService implements OnDestroy {
     let modelStateErrors = '';
     if (httpErrorResponse.status === 400) {
       for (const property in httpErrorResponse.error) {
-        httpErrorResponse.error[property].forEach(error => {
+        httpErrorResponse.error[property].forEach((error: string) => {
           modelStateErrorsConsole += error + '\n';
           modelStateErrors += '<li>' + error + '</li>';
         });
@@ -99,7 +99,7 @@ export class HttpService implements OnDestroy {
     }
     if (httpErrorResponse.status === 403) {
       if (this.token == null) {
-        window.location.replace('home/login');
+        window.location.replace('security/adlogin');
       } else {
         this.router.navigateByUrl('/not-authorized');
       }

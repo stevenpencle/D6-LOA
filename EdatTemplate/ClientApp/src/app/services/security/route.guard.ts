@@ -1,17 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as linq from 'linq';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IClientToken } from '../../model/model';
+import { SecurityService } from './security.service';
 
 @Injectable()
-export class RouteGuard implements CanActivate {
-  constructor(private router: Router, private httpClient: HttpClient) {}
+export class RouteGuard implements CanActivate, OnDestroy {
+  token$: Observable<IClientToken>;
+
+  constructor(
+    private router: Router,
+    private httpClient: HttpClient,
+    securityService: SecurityService
+  ) {
+    securityService.safeSubscribe(this, () => {
+      this.token$ = securityService.token$;
+    });
+  }
+
+  ngOnDestroy(): void {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    return this.httpClient.get<IClientToken>('api/security/gettoken').pipe(
+    const tokenObservable =
+      this.token$ !== undefined
+        ? this.token$
+        : this.httpClient.get<IClientToken>('api/security/gettoken');
+    return tokenObservable.pipe(
       map(result => {
         if (result != null) {
           const routeData = route.data as RouteData;
@@ -54,7 +71,7 @@ export class RouteGuard implements CanActivate {
               })
             );
           }
-          window.location.replace('home/login');
+          window.location.replace('security/adlogin');
           return false;
         }
       })

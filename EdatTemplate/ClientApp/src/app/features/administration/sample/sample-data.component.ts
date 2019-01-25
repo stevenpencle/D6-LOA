@@ -79,7 +79,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
     this.sampleStoreService.load();
   }
 
-  dataChanged(samples: ISample[]) {
+  dataChanged(samples: ISample[]): void {
     if (this.data == null) {
       this.data = this.dataNavigationService.init(samples, 'name', 3);
     } else {

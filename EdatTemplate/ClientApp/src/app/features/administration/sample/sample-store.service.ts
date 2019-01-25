@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../../../services/http/http.service';
 import * as linq from 'linq';
 import { ISample, IStringResponse } from '../../../model/model';
-import { Store } from 'src/app/services/store.service';
+import { Store } from 'src/app/services/store/store.service';
 
 @Injectable()
 export class SampleStoreService extends Store<ISample[]> {
@@ -10,7 +10,7 @@ export class SampleStoreService extends Store<ISample[]> {
     super('SampleStoreService', new Array<ISample>());
   }
 
-  load(callback?: () => void, errorCallback?: (errors: string) => void) {
+  load(callback?: () => void, errorCallback?: (errors: string) => void): void {
     this.httpService.get<ISample[]>(
       'api/Sample/GetSamples',
       result => {
