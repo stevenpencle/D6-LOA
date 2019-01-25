@@ -335,7 +335,11 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 ##### security
 
 - **route-guard** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
-- **security** Provides a means to access the principal's _ClientToken_ from the _Security_ controller. This service maintains the client application's state of the _ClientToken_ and is a subscription (store) service.
+- **security** Provides a means to access the principal's _ClientToken_ from the _Security_ controller. This service maintains the client application's state of the _ClientToken_ and is a observable store service.
+
+##### store
+
+- **store** Abstract class that all observable store services should extend from. This service provides access to an Observable for services that extend from it, and it provides a safe subscribe method for components to receive state change notification about the Observable.
 
 ##### {Your Store Services}
 
