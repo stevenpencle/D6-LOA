@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -27,23 +28,25 @@ namespace EdatTemplate.Security
                 var claimsIdentity = new ClaimsIdentity(ctx.Principal.Identity, null,
                     ctx.Principal.Identity.AuthenticationType, ApplicationClaims.NameClaim,
                     ApplicationClaims.RoleClaim);
-                //Set auth type claim
-                claimsIdentity.AddClaim(new Claim(ApplicationClaims.AuthenticationTypeClaim,
-                    ApplicationAuthenticationType.Ad));
+                var identityClaims = new List<Claim>
+                {
+                    //Set auth type claim
+                    new Claim(ApplicationClaims.AuthenticationTypeClaim, ApplicationAuthenticationType.Ad)
+                };
                 //Set object (user) unique ID claim
                 var sid = ctx.Principal.Claims.First(x =>
                     x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
-                claimsIdentity.AddClaim(new Claim(ApplicationClaims.UserSid, sid));
+                identityClaims.Add(new Claim(ApplicationClaims.UserSid, sid));
                 //Set name claim
-                claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, name));
+                identityClaims.Add(new Claim(claimsIdentity.NameClaimType, name));
                 //Get staff object
                 var staff = await staffService.GetByEmail(email);
                 if (staff == null)
                 {
                     throw new InvalidOperationException($"Staff not found for email {email}");
                 }
-                claimsIdentity.AddClaim(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
-                claimsIdentity.AddClaim(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
+                identityClaims.Add(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
+                identityClaims.Add(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
                 //Custom logic to examine group claims and “transform” them into application specific claims.
                 //Roles should be placed in appsettings in the hierarchical order of most important to least important because the standard behavior is
                 //to break the loop on the first successful match 
@@ -61,7 +64,7 @@ namespace EdatTemplate.Security
                     {
                         if (ctx.Principal.HasClaim(p => p.Type.Equals("groups") && p.Value.ToUpper().Trim() == group.ToUpper().Trim()))
                         {
-                            claimsIdentity.AddClaim(new Claim(ApplicationClaims.RoleClaim, role.Key));
+                            identityClaims.Add(new Claim(ApplicationClaims.RoleClaim, role.Key));
                             hasRole = true;
                             break;
                         }
@@ -69,8 +72,19 @@ namespace EdatTemplate.Security
                 }
                 if (!hasRole)
                 {
-                    claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType,
-                        ApplicationRoles.NotAuthorized));
+                    identityClaims.Add(new Claim(claimsIdentity.RoleClaimType, ApplicationRoles.NotAuthorized));
+                }
+                if (openIdConnectB2EOptions.RemoveUnusedClaims)
+                {
+                    var currentClaims = claimsIdentity.Claims.ToArray();
+                    foreach (var claim in currentClaims)
+                    {
+                        claimsIdentity.RemoveClaim(claim);
+                    }
+                }
+                foreach (var claim in identityClaims)
+                {
+                    claimsIdentity.AddClaim(claim);   
                 }
                 ctx.Principal = new ClaimsPrincipal(claimsIdentity);
                 await Task.FromResult(0);
