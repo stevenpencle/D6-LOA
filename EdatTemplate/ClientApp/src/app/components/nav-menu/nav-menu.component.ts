@@ -41,38 +41,43 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         this.canImpersonate = result.allowImpersonation;
       }
     );
-    this.securityService.safeSubscribe(this, token => {
-      if (token == null) {
-        this.isAuthenticated = false;
-        this.isAdmin = false;
-        this.isB2CUser = false;
-        this.userId = '';
-        this.userName = '';
-        this.role = 'NotAuthorized';
-        this.isB2CAuthenticated = false;
-      } else {
-        this.isAuthenticated = true;
-        this.isAdmin =
-          token.roles != null &&
-          isArray(token.roles) &&
-          linq.from(token.roles).any(x => x === 'Admin');
-        this.isB2CUser =
-          token.roles != null &&
-          isArray(token.roles) &&
-          linq.from(token.roles).any(x => x === 'B2CUser');
-        if (this.isAdmin) {
-          this.role = 'Admin';
-        } else if (this.isB2CUser) {
-          this.role = 'B2CUser';
-        } else {
+    this.securityService.safeSubscribe(
+      this,
+      token => {
+        if (token == null) {
+          this.isAuthenticated = false;
+          this.isAdmin = false;
+          this.isB2CUser = false;
+          this.userId = '';
+          this.userName = '';
           this.role = 'NotAuthorized';
+          this.isB2CAuthenticated = false;
+        } else {
+          this.isAuthenticated = true;
+          this.isAdmin =
+            token.roles != null &&
+            isArray(token.roles) &&
+            linq.from(token.roles).any(x => x === 'Admin');
+          this.isB2CUser =
+            token.roles != null &&
+            isArray(token.roles) &&
+            linq.from(token.roles).any(x => x === 'B2CUser');
+          if (this.isAdmin) {
+            this.role = 'Admin';
+          } else if (this.isB2CUser) {
+            this.role = 'B2CUser';
+          } else {
+            this.role = 'NotAuthorized';
+          }
+          this.userId = token.userId;
+          this.userName = token.fullName;
+          this.isB2CAuthenticated = token.authMode === 'B2C';
         }
-        this.userId = token.userId;
-        this.userName = token.fullName;
-        this.isB2CAuthenticated = token.authMode === 'B2C';
+      },
+      () => {
+        this.securityService.getToken();
       }
-    });
-    this.securityService.getToken();
+    );
   }
 
   ngOnDestroy(): void {}

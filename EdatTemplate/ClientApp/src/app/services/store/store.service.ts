@@ -19,14 +19,20 @@ export class Store<T> {
    * @param ref The object (typically a component) that must implement OnDestroy
    * @param projection The projection expression that narrows what part of the store to observe
    * @param changeCallback The function to call when the observed part of the state of the store changes
+   * @param initializeStoreWith The optional function to load state into the store before the initial change callback is fired - typically this is another method on the store
    */
 
   safeSubscribeMap<P>(
     ref: OnDestroy,
     projection: (value: T) => P,
-    changeCallback: (state: P) => void
+    changeCallback: (state: P) => void,
+    initializeStoreWith?: () => void
   ): void {
     console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
+    if (initializeStoreWith != null) {
+      console.log(this._storeName + ' initializing... ');
+      initializeStoreWith();
+    }
     const subscription = this.state$
       .pipe(
         distinctUntilChanged(),
@@ -61,9 +67,18 @@ export class Store<T> {
    *
    * @param ref The object (typically a component) that must implement OnDestroy
    * @param changeCallback The function to call when the state of the store changes
+   * @param initializeStoreWith The optional function to load state into the store before the initial change callback is fired - typically this is another method on the store
    */
-  safeSubscribe(ref: OnDestroy, changeCallback: (state: T) => void): void {
+  safeSubscribe(
+    ref: OnDestroy,
+    changeCallback: (state: T) => void,
+    initializeStoreWith?: () => void
+  ): void {
     console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
+    if (initializeStoreWith != null) {
+      console.log(this._storeName + ' initializing... ');
+      initializeStoreWith();
+    }
     const subscription = this.state$.subscribe((state: T) => {
       console.log(
         this._storeName +

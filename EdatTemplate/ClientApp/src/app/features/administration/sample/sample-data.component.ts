@@ -45,23 +45,34 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.securityService.safeSubscribe(this, token => {
-      if (token == null) {
-        this.userId = '';
-      } else {
-        const userIdParts = token.userId.split('\\');
-        if (userIdParts.length === 2) {
-          this.userId = userIdParts[1];
-        } else {
+    this.securityService.safeSubscribe(
+      this,
+      token => {
+        if (token == null) {
           this.userId = '';
+        } else {
+          const userIdParts = token.userId.split('\\');
+          if (userIdParts.length === 2) {
+            this.userId = userIdParts[1];
+          } else {
+            this.userId = '';
+          }
         }
+      },
+      () => {
+        this.securityService.getToken();
       }
-    });
-    this.securityService.getToken();
+    );
     if (this.observableFilter == null || this.observableFilter.trim() === '') {
-      this.sampleStoreService.safeSubscribe(this, samples => {
-        this.dataChanged(samples);
-      });
+      this.sampleStoreService.safeSubscribe(
+        this,
+        samples => {
+          this.dataChanged(samples);
+        },
+        () => {
+          this.sampleStoreService.load();
+        }
+      );
     } else {
       this.sampleStoreService.safeSubscribeMap(
         this,
@@ -73,10 +84,12 @@ export class SampleDataComponent implements OnInit, OnDestroy {
         },
         samples => {
           this.dataChanged(samples);
+        },
+        () => {
+          this.sampleStoreService.load();
         }
       );
     }
-    this.sampleStoreService.load();
   }
 
   dataChanged(samples: ISample[]): void {
