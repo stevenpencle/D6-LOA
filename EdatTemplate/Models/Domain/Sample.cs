@@ -16,7 +16,6 @@ namespace EdatTemplate.Models.Domain
         [Required(ErrorMessage = "Sample Name is required.")]
         [MinLength(3, ErrorMessage = "Sample Name must have a minimum length of 3 characters.")]
         [MaxLength(50, ErrorMessage = "Sample Name allows a maximum length of 50 characters.")]
-
         [Column(TypeName = "varchar(50)")]
         public string Name { get; set; }
 

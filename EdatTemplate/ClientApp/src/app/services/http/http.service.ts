@@ -33,7 +33,7 @@ export class HttpService implements OnDestroy {
   get<TResult>(
     api: string,
     callback: (result: TResult) => void,
-    modelStateErrorCallback?: (errors: string) => void
+    modelStateErrorCallback?: (errors: ModelStateValidations) => void
   ): void {
     this.httpClient
       .get<TResult>(this.environmentService.baseUrl + api, {
@@ -58,7 +58,7 @@ export class HttpService implements OnDestroy {
     api: string,
     payload: TPayload,
     callback: (result: TResult) => void,
-    modelStateErrorCallback?: (errors: string) => void
+    modelStateErrorCallback?: (errors: ModelStateValidations) => void
   ): void {
     this.httpClient
       .post<TResult>(this.environmentService.baseUrl + api, payload, {
@@ -79,7 +79,9 @@ export class HttpService implements OnDestroy {
       );
   }
 
-  private handleError(httpErrorResponse: HttpErrorResponse): string {
+  private handleError(
+    httpErrorResponse: HttpErrorResponse
+  ): ModelStateValidations {
     const applicationError = httpErrorResponse.headers.get('Application-Error');
     if (applicationError) {
       throw applicationError;
@@ -89,13 +91,18 @@ export class HttpService implements OnDestroy {
       this.router.navigateByUrl('/server-error');
     }
     let modelStateErrorsConsole = '';
-    let modelStateErrors = '';
+    let modelStateValidations: ModelStateValidations = new ModelStateValidations();
     if (httpErrorResponse.status === 400) {
       for (const property in httpErrorResponse.error) {
+        let modelStateValidation: ModelStateValidation = {
+          property: property,
+          validations: []
+        };
         httpErrorResponse.error[property].forEach((error: string) => {
           modelStateErrorsConsole += error + '\n';
-          modelStateErrors += '<li>' + error + '</li>';
+          modelStateValidation.validations.push(error);
         });
+        modelStateValidations.validations.push(modelStateValidation);
       }
     }
     if (httpErrorResponse.status === 401) {
@@ -109,11 +116,31 @@ export class HttpService implements OnDestroy {
         this.router.navigateByUrl('/not-authorized');
       }
     }
-    modelStateErrors = modelStateErrors == '' ? null : modelStateErrors;
-    console.error(modelStateErrorsConsole || 'Server error');
-    if (!modelStateErrors) {
-      modelStateErrors = '<li>Unexpected Server Exception</li>';
+    console.error(
+      modelStateErrorsConsole === '' ? 'Server error' : modelStateErrorsConsole
+    );
+    return modelStateValidations;
+  }
+}
+
+export class ModelStateValidation {
+  property: string;
+  validations: string[];
+}
+
+export class ModelStateValidations {
+  validations: ModelStateValidation[] = [];
+
+  list(): string {
+    let errorList = '';
+    if (this.validations == null || this.validations.length === 0) {
+      return '<ul><li>Unexpected Server Exception</li></ul>';
     }
-    return '<ul>' + modelStateErrors + '</ul>';
+    this.validations.forEach((validation: ModelStateValidation) => {
+      validation.validations.forEach((error: string) => {
+        errorList += '<li>' + error + '</li>';
+      });
+    });
+    return '<ul>' + errorList + '</ul>';
   }
 }

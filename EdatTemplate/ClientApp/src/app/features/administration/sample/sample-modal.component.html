@@ -45,6 +45,14 @@
         </div>
         <div class="row">
           <div class="col">
+            <app-field-validation-message
+              property="isActive"
+              [validations]="validations"
+            ></app-field-validation-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
             <div class="form-group">
               <label for="sampleName">Sample Name</label>
               <input
@@ -75,6 +83,14 @@
                 <option value="{{ statusCode.Approved }}">Approved</option>
               </select>
             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <app-field-validation-message
+              property="status"
+              [validations]="validations"
+            ></app-field-validation-message>
           </div>
         </div>
         <div class="row">

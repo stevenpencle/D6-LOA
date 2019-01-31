@@ -24,6 +24,7 @@ import { StaffPickerComponent } from './app/components/common/staff-picker/staff
 import { FileUploadComponent } from './app/components/common/file-upload/file-upload.component';
 import { ChartToTableComponent } from './app/components/common/chart-to-table/chart-to-table.component';
 import { DateFieldComponent } from './app/components/common/date-field/date-field.component';
+import { FieldValidationMessageComponent } from './app/components/common/field-validation-message/field-validation-message.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -61,6 +62,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     StaffPickerComponent,
     FileUploadComponent,
     DateFieldComponent,
+    FieldValidationMessageComponent,
     HomeComponent,
     NotAuthorizedComponent,
     ServerErrorComponent,

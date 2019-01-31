@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '../../../services/http/http.service';
+import {
+  HttpService,
+  ModelStateValidations
+} from '../../../services/http/http.service';
 import * as linq from 'linq';
 import { ISample, IStringResponse } from '../../../model/model';
 import { Store } from 'src/app/services/store/store.service';
@@ -10,7 +13,10 @@ export class SampleStoreService extends Store<ISample[]> {
     super('SampleStoreService', new Array<ISample>());
   }
 
-  load(callback?: () => void, errorCallback?: (errors: string) => void): void {
+  load(
+    callback?: () => void,
+    errorCallback?: (errors: ModelStateValidations) => void
+  ): void {
     this.httpService.get<ISample[]>(
       'api/Sample/GetSamples',
       result => {
@@ -30,7 +36,7 @@ export class SampleStoreService extends Store<ISample[]> {
   add(
     sample: ISample,
     callback?: () => void,
-    errorCallback?: (errors: string) => void
+    errorCallback?: (errors: ModelStateValidations) => void
   ): void {
     this.httpService.post<ISample, ISample>(
       'api/Sample/AddOrUpdateSample',
@@ -52,7 +58,7 @@ export class SampleStoreService extends Store<ISample[]> {
   update(
     sample: ISample,
     callback?: () => void,
-    errorCallback?: (errors: string) => void
+    errorCallback?: (errors: ModelStateValidations) => void
   ): void {
     this.httpService.post<ISample, ISample>(
       'api/Sample/AddOrUpdateSample',
@@ -80,7 +86,7 @@ export class SampleStoreService extends Store<ISample[]> {
   remove(
     sample: ISample,
     callback?: () => void,
-    errorCallback?: (errors: string) => void
+    errorCallback?: (errors: ModelStateValidations) => void
   ): void {
     this.httpService.post<ISample, IStringResponse>(
       'api/Sample/RemoveSample',

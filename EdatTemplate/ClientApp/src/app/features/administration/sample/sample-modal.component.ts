@@ -11,6 +11,7 @@ import { StatusCode } from '../../../model/model.enums';
 import * as moment from 'moment';
 import { StaffService } from '../../../services/data/staff.service';
 import { StaffPickerComponent } from 'src/app/components/common/staff-picker/staff-picker.component';
+import { ModelStateValidations } from 'src/app/services/http/http.service';
 
 @Component({
   selector: 'app-sample-modal',
@@ -24,6 +25,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
 
   hasErrors = false;
   errors = '';
+  validations: ModelStateValidations;
   tempSample: ISample = {};
   statusCode = StatusCode;
   birthDate: moment.Moment;
@@ -50,6 +52,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
     this.selectedStaff = null;
     this.hasErrors = false;
     this.errors = '';
+    this.validations = new ModelStateValidations();
   }
 
   addNewSample(): void {
@@ -62,7 +65,8 @@ export class SampleModalComponent implements OnInit, OnDestroy {
       },
       errors => {
         this.hasErrors = true;
-        this.errors = errors;
+        this.errors = errors.list();
+        this.validations = errors;
       }
     );
   }
@@ -97,7 +101,8 @@ export class SampleModalComponent implements OnInit, OnDestroy {
         },
         errors => {
           this.hasErrors = true;
-          this.errors = errors;
+          this.errors = errors.list();
+          this.validations = errors;
         }
       );
     }
