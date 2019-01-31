@@ -2,7 +2,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
-export class Store<T> {
+export abstract class Store<T> {
   protected state$: Observable<T>;
   private _state$: BehaviorSubject<T>;
   private _storeName: string;
@@ -21,7 +21,6 @@ export class Store<T> {
    * @param changeCallback The function to call when the observed part of the state of the store changes
    * @param initializeStoreWith The optional function to load state into the store before the initial change callback is fired - typically this is another method on the store
    */
-
   safeSubscribeMap<P>(
     ref: OnDestroy,
     projection: (value: T) => P,
