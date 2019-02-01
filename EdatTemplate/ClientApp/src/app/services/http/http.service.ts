@@ -123,7 +123,7 @@ export class HttpService implements OnDestroy {
   }
 }
 
-export class ModelStateValidation {
+export interface ModelStateValidation {
   property: string;
   validations: string[];
 }
