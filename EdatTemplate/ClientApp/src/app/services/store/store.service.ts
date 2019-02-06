@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, NextObserver } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
@@ -32,21 +32,23 @@ export abstract class Store<T> {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    const subscription = this.state$
-      .pipe(
-        distinctUntilChanged(),
-        map(p => {
-          return projection(p);
-        })
-      )
-      .subscribe((state: P) => {
+    let next: NextObserver<P> = {
+      next: next => {
         console.log(
           this._storeName +
             ' change notification / total observer count = ' +
             this._state$.observers.length
         );
-        changeCallback(state);
-      });
+        changeCallback(next);
+      }
+    };
+    const subscription = this.state$
+      .pipe(
+        map(p => {
+          return projection(p);
+        })
+      )
+      .subscribe(next);
     const destroy = ref.ngOnDestroy;
     ref.ngOnDestroy = () => {
       subscription.unsubscribe();
@@ -78,14 +80,17 @@ export abstract class Store<T> {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    const subscription = this.state$.subscribe((state: T) => {
-      console.log(
-        this._storeName +
-          ' change notification / total observer count = ' +
-          this._state$.observers.length
-      );
-      changeCallback(state);
-    });
+    let next: NextObserver<T> = {
+      next: next => {
+        console.log(
+          this._storeName +
+            ' change notification / total observer count = ' +
+            this._state$.observers.length
+        );
+        changeCallback(next);
+      }
+    };
+    const subscription = this.state$.subscribe(next);
     const destroy = ref.ngOnDestroy;
     ref.ngOnDestroy = () => {
       subscription.unsubscribe();
