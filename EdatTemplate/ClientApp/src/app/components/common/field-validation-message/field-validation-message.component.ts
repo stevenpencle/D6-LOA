@@ -17,7 +17,7 @@ export class FieldValidationMessageComponent {
   set validations(validations: ModelStateValidations) {
     this._validations = validations;
     this.errors = [];
-    if (this.property == null) {
+    if (this.property == null || this._validations == null) {
       return;
     }
     this._validations.validations.forEach(validation => {
