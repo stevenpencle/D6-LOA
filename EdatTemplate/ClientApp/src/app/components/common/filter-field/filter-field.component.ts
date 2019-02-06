@@ -40,7 +40,7 @@ export class FilterFieldComponent implements AfterViewInit {
       const obs = fromEvent(this.inputElRef.nativeElement, 'keyup').pipe(
         map((i: any) => i.currentTarget.value)
       );
-      const debouncedInput = obs.pipe(debounceTime(1000));
+      const debouncedInput = obs.pipe(debounceTime(700));
       debouncedInput.subscribe(val => {
         this.filter.emit({ field: this.field, value: val });
       });
@@ -48,7 +48,6 @@ export class FilterFieldComponent implements AfterViewInit {
     if (this.type === 'select') {
       fromEvent(this.selectElRef.nativeElement, 'change')
         .pipe(map((i: any) => i.currentTarget.value))
-        .pipe()
         .subscribe(val => {
           this.filter.emit({ field: this.field, value: val });
         });
