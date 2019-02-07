@@ -31,12 +31,20 @@ namespace EdatTemplate
                 typeof(GraphDataPoint),
                 typeof(GraphSeries),
                 typeof(GraphData)
-            }, c => c.WithPublicProperties(p => p.ForceNullable()).ExportTo("model.d.ts"));
-            builder.ExportAsInterface<ApplicationRoles>().WithPublicFields(f => f.Constant()).ExportTo("model.d.ts");
+            }, c => c.WithPublicProperties(p => p
+                .ForceNullable())
+                .ExportTo("model.d.ts")
+                .DontIncludeToNamespace()
+                );
+            builder.ExportAsInterface<ApplicationRoles>()
+            .WithPublicFields(f => f.Constant())
+            .ExportTo("model.d.ts")
+            .DontIncludeToNamespace();
+
             builder.ExportAsEnums(new[]
             {
                 typeof(StatusCode),
-            }, c => c.ExportTo("model.enums.ts"));
+            }, c => c.ExportTo("model.enums.ts").DontIncludeToNamespace());
 
             // global type substitutions
             builder.Substitute(typeof(DateTimeOffset), new RtSimpleTypeName("string"));
@@ -49,7 +57,6 @@ namespace EdatTemplate
             {
                 x.CamelCaseForProperties();
                 x.UseModules();
-                x.ExportPureTypings();
             });
         }
     }

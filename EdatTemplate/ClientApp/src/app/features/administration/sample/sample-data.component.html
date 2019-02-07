@@ -325,40 +325,47 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          data-dismiss="modal"
-          (click)="clearCheckUserId()"
-          aria-label="Cancel delete"
-          title="Cancel delete"
-          #closeBtnDelete
-        >
-          <i class="fas fa-ban"></i> Cancel
-        </button>
-        <input
-          type="text"
-          class="form-control"
-          [(ngModel)]="checkUserId"
-          placeholder="Enter your User ID"
-          aria-placeholder="Enter your User ID"
-          aria-label="Enter your user ID to enable delete option"
-          title="Enter your user ID to enable delete option"
-        />
-        <button
-          type="button"
-          class="btn btn-danger"
-          (click)="removeSample()"
-          aria-label="Delete sample"
-          title="Delete sample"
-          [disabled]="
-            checkUserId != null &&
-            userId != null &&
-            checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()
-          "
-        >
-          <i class="fas fa-trash-alt"></i> Delete
-        </button>
+        <div class="row">
+          <div class="col">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="checkUserId"
+              placeholder="Enter your User ID"
+              aria-placeholder="Enter your User ID"
+              aria-label="Enter your user ID to enable delete option"
+              title="Enter your user ID to enable delete option"
+            />
+          </div>
+          <div class="col">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              (click)="clearCheckUserId()"
+              aria-label="Cancel delete"
+              title="Cancel delete"
+              #closeBtnDelete
+            >
+              <i class="fas fa-ban"></i>&nbsp;Cancel
+            </button>
+            &nbsp;&nbsp;
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="removeSample()"
+              aria-label="Delete sample"
+              title="Delete sample"
+              [disabled]="
+                checkUserId != null &&
+                userId != null &&
+                checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()
+              "
+            >
+              <i class="fas fa-trash-alt"></i>&nbsp;Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

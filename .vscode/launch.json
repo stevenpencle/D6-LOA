@@ -16,7 +16,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/EdatTemplate/bin/Debug/netcoreapp2.1/EdatTemplate.dll",
+      "program": "${workspaceFolder}/EdatTemplate/bin/Debug/netcoreapp2.2/EdatTemplate.dll",
       "args": ["node-server=true"],
       "cwd": "${workspaceFolder}/EdatTemplate",
       "stopAtEntry": false,

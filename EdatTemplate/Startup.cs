@@ -86,7 +86,7 @@ namespace EdatTemplate
                 opts.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 opts.CallbackPath = openIdConnectB2EOptions.CallbackPath;
                 opts.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
-                opts.Events = new B2EOpenIdConnectEvents(openIdConnectB2EOptions, new StaffService(fdotCoreApis));
+                opts.Events = new B2EOpenIdConnectEvents(openIdConnectB2EOptions, new StaffService(fdotCoreApis), sendGridConfig);
             });
             if (authProviderConfig.AllowB2C)
             {

@@ -1,4 +1,5 @@
-﻿using EdatTemplate.Services;
+﻿using EdatTemplate.Infrastructure;
+using EdatTemplate.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
@@ -11,7 +12,7 @@ namespace EdatTemplate.Security
 {
     public class B2EOpenIdConnectEvents : OpenIdConnectEvents
     {
-        public B2EOpenIdConnectEvents(OpenIdConnectB2EOptions openIdConnectB2EOptions, IStaffService staffService)
+        public B2EOpenIdConnectEvents(OpenIdConnectB2EOptions openIdConnectB2EOptions, IStaffService staffService, SendGridConfig sendGridConfig)
         {
             OnTokenValidated = async ctx =>
             {
@@ -79,12 +80,13 @@ namespace EdatTemplate.Security
                     var currentClaims = claimsIdentity.Claims.ToArray();
                     foreach (var claim in currentClaims)
                     {
+                        if (claim.Type == sendGridConfig.DeveloperEmailAddressClaim) continue;
                         claimsIdentity.RemoveClaim(claim);
                     }
                 }
                 foreach (var claim in identityClaims)
                 {
-                    claimsIdentity.AddClaim(claim);   
+                    claimsIdentity.AddClaim(claim);
                 }
                 ctx.Principal = new ClaimsPrincipal(claimsIdentity);
                 await Task.FromResult(0);

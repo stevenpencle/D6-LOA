@@ -49,7 +49,7 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Install the Following Tools
 
-1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 2.1
+1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 2.2
 2. [VS Code](https://code.visualstudio.com/)
 3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
 4. Node.js and NPM: [https://nodejs.org/en/](https://nodejs.org/en/)
@@ -465,10 +465,6 @@ It is also the developer's responsibility to render only the application menu op
 ![alt text](Documentation/ngif_role_eval_in_template.png "Evaluating the role in the template with *ngIf")
 
 Role assignment for B2C users must be handled via a custom user/role management implementation in your application since these users are not in AD.
-
-### TODO (difficulty 1 - 5)
-
-- Add support for field-level validation message display (2)
 
 ### Where We're Heading
 
