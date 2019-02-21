@@ -4,3 +4,21 @@
 .content-fixed-top-buffer {
   height: 75px;
 }
+.environment-warning-content {
+  background-color: red;
+  color: white;
+  height: 40px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 10px;
+}
+.environment-warning {
+  position: fixed;
+  top: 55px;
+  left: 0;
+  width: 100%;
+  z-index: 1049;
+}
+.environment-warning-content-fixed-top-buffer {
+  height: 130px;
+}

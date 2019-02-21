@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { OnInit, OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { SecurityService } from '../../services/security/security.service';
-import { HttpService } from '../../services/http/http.service';
 import { IEdatFooter } from '../../model/model';
 import * as moment from 'moment';
+import { EnvironmentService } from 'src/app/services/environment/environment.service';
 
 @Component({
   selector: 'app-footer',
@@ -16,8 +16,8 @@ export class FooterComponent implements OnInit, OnDestroy {
   currentYear = '';
 
   constructor(
-    private httpService: HttpService,
-    private securityService: SecurityService
+    private securityService: SecurityService,
+    private environmentService: EnvironmentService
   ) {}
 
   ngOnInit(): void {
@@ -37,8 +37,8 @@ export class FooterComponent implements OnInit, OnDestroy {
         this.securityService.getToken();
       }
     );
-    this.httpService.get<IEdatFooter>('api/site/GetFooter', result => {
-      this.footer = result;
+    this.environmentService.safeSubscribe(this, state => {
+      this.footer = state.footer;
     });
   }
 

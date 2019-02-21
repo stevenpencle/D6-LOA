@@ -1,7 +1,16 @@
 <app-nav-menu></app-nav-menu>
-<div class='container-fluid'>
-  <div class='row'>
-    <div class='col'>
+<div
+  *ngIf="showWarning"
+  id="environmentWarning"
+  class="environment-warning-content"
+  role="alert"
+>
+  WARNING: THIS IS NOT PRODUCTION! DO NOT DO PRODUCTION WORK IN THIS
+  APPLICATION!!!
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
       <div id="contentBuffer" class="content-buffer"></div>
       <router-outlet></router-outlet>
     </div>
