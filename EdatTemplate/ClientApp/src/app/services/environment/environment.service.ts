@@ -14,10 +14,10 @@ export class EnvironmentService extends Store<EnvironmentData> {
       this.baseUrl = ele[0].href;
     }
     this.httpClient.get<IEdatHeader>('api/site/GetHeader').subscribe(result => {
-      this.setState({ header: result, footer: this.state.footer });
+      this.setState({ header: result, footer: this.getState().footer });
     });
     this.httpClient.get<IEdatFooter>('api/site/GetFooter').subscribe(result => {
-      this.setState({ header: this.state.header, footer: result });
+      this.setState({ header: this.getState().header, footer: result });
     });
   }
 }

@@ -19,6 +19,7 @@ import { StatusCode } from '../../../model/model.enums';
 import * as linq from 'linq';
 import { ExcelExportService } from '../../../services/data/excel-export.service';
 import * as moment from 'moment';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-sample-data',
@@ -137,7 +138,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
             assignedStaffId: 0,
             assignedStaffName: ''
           }
-        : Object.assign({}, sample);
+        : cloneDeep(sample);
     this.sampleModal.setTempSample(this.tempSample);
   }
 

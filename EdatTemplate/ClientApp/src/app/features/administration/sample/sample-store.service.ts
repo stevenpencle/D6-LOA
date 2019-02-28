@@ -42,7 +42,7 @@ export class SampleStoreService extends Store<ISample[]> {
       'api/Sample/AddOrUpdateSample',
       sample,
       result => {
-        this.setState([...this.state, result]);
+        this.setState([...this.getState(), result]);
         if (callback) {
           callback();
         }
@@ -66,7 +66,7 @@ export class SampleStoreService extends Store<ISample[]> {
       result => {
         this.setState([
           ...linq
-            .from(this.state)
+            .from(this.getState())
             .where(x => x.id !== sample.id)
             .toArray(),
           result
@@ -95,7 +95,7 @@ export class SampleStoreService extends Store<ISample[]> {
         console.log(result.data);
         this.setState([
           ...linq
-            .from(this.state)
+            .from(this.getState())
             .where(x => x.id !== sample.id)
             .toArray()
         ]);

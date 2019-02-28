@@ -1,3 +1,4 @@
+using System;
 using EdatTemplate.Automation;
 using EdatTemplate.Infrastructure;
 using EdatTemplate.Models.Security;
@@ -182,6 +183,7 @@ namespace EdatTemplate
                 if (usingAngularCliServer)
                 {
                     //serve files from CLI server (in-memory files when debugging in VS Code)
+                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 90);
                     spa.UseAngularCliServer("start");
                 }
             });

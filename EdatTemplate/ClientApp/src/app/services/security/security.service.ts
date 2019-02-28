@@ -13,7 +13,7 @@ export class SecurityService extends Store<IClientToken> {
   }
 
   getToken(callback?: () => void): void {
-    if (this.state != null) {
+    if (this.getState() != null) {
       return;
     }
     this.httpClient.get<IClientToken>('api/security/gettoken').subscribe(
