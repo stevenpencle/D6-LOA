@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, NextObserver } from 'rxjs';
+import { Observable, BehaviorSubject, NextObserver, Subscription } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
@@ -45,16 +45,7 @@ export abstract class Store<T> {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    let next: NextObserver<P> = {
-      next: next => {
-        console.log(
-          this._storeName +
-            ' change notification / total observer count = ' +
-            this._state$.observers.length
-        );
-        changeCallback(next);
-      }
-    };
+    let next = this.getNextObserver(changeCallback);
     const subscription = this.state$
       .pipe(
         map(p => {
@@ -62,18 +53,7 @@ export abstract class Store<T> {
         })
       )
       .subscribe(next);
-    const destroy = ref.ngOnDestroy;
-    ref.ngOnDestroy = () => {
-      subscription.unsubscribe();
-      destroy.apply(ref);
-      console.log(
-        this._storeName +
-          ' ' +
-          ref.constructor.name +
-          ' unsubscribed / total observer count = ' +
-          this._state$.observers.length
-      );
-    };
+    this.refDestroyInjection(ref, subscription);
   }
 
   /**
@@ -93,7 +73,25 @@ export abstract class Store<T> {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    let next: NextObserver<T> = {
+    let next = this.getNextObserver(changeCallback);
+    const subscription = this.state$.subscribe(next);
+    this.refDestroyInjection(ref, subscription);
+  }
+
+  protected getState(): T {
+    return this._state$.getValue();
+  }
+
+  protected setState(nextState: T): void {
+    this._enforceImmutableState
+      ? this._state$.next(cloneDeep(nextState))
+      : this._state$.next(nextState);
+  }
+
+  private getNextObserver<Z>(
+    changeCallback: (state: Z) => void
+  ): NextObserver<Z> {
+    return {
       next: next => {
         console.log(
           this._storeName +
@@ -103,7 +101,12 @@ export abstract class Store<T> {
         changeCallback(next);
       }
     };
-    const subscription = this.state$.subscribe(next);
+  }
+
+  private refDestroyInjection(
+    ref: OnDestroy,
+    subscription: Subscription
+  ): void {
     const destroy = ref.ngOnDestroy;
     ref.ngOnDestroy = () => {
       subscription.unsubscribe();
@@ -116,15 +119,5 @@ export abstract class Store<T> {
           this._state$.observers.length
       );
     };
-  }
-
-  protected getState(): T {
-    return this._state$.getValue();
-  }
-
-  protected setState(nextState: T): void {
-    this._enforceImmutableState
-      ? this._state$.next(cloneDeep(nextState))
-      : this._state$.next(nextState);
   }
 }
