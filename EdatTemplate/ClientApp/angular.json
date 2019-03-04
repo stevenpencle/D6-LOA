@@ -76,8 +76,8 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": false,
-              "vendorChunk": false,
-              "buildOptimizer": true,
+              "vendorChunk": true,
+              "buildOptimizer": false,
               "fileReplacements": [
                 {
                   "replace": "./src/environments/environment.ts",
