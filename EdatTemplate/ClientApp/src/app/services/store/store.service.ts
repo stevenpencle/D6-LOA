@@ -1,11 +1,19 @@
-import { Observable, BehaviorSubject, NextObserver, Subscription } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  NextObserver,
+  Subscription,
+  ReplaySubject
+} from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
+import { environment } from 'src/environments/environment';
 
 export abstract class Store<T> {
   protected state$: Observable<T>;
   private _state$: BehaviorSubject<T>;
+  private _replayState$: ReplaySubject<T>;
   private _storeName: string;
   private _enforceImmutableState = false;
 
@@ -24,6 +32,11 @@ export abstract class Store<T> {
     this._enforceImmutableState = enforceImmutableState;
     this._state$ = new BehaviorSubject(initialState);
     this.state$ = this._state$.asObservable();
+    if (!environment.production && environment.allowStoreReplay) {
+      this._enforceImmutableState = true;
+      this._replayState$ = new ReplaySubject();
+      this._replayState$.next(initialState);
+    }
   }
 
   /**
@@ -78,11 +91,33 @@ export abstract class Store<T> {
     this.refDestroyInjection(ref, subscription);
   }
 
+  /**
+   * Call to replay all state changes of the observable. The allowStoreReplay must be true in the environment.dev.ts file. This is a development feature only to assist with seeing the changes made to the observable over time.
+   *
+   * @param replayCallbackFormatter The callback that receives each (next T) state change that has occured. the developer should provide console.log formatting in the callback.
+   */
+  replayState(replayCallbackFormatter: (state: T) => void): void {
+    if (environment.production || !environment.allowStoreReplay) {
+      console.log(
+        'state replay is not allowed - either this is a production build, or the environment.allowStoreReplay === false.'
+      );
+      return;
+    }
+    console.log('Replaying state');
+    this._replayState$
+      .subscribe(this.getReplayObserver(replayCallbackFormatter))
+      .unsubscribe();
+    console.log('Replay complete');
+  }
+
   protected getState(): T {
     return this._state$.getValue();
   }
 
   protected setState(nextState: T): void {
+    if (!environment.production && environment.allowStoreReplay) {
+      this._replayState$.next(nextState);
+    }
     this._enforceImmutableState
       ? this._state$.next(cloneDeep(nextState))
       : this._state$.next(nextState);
@@ -99,6 +134,17 @@ export abstract class Store<T> {
             this._state$.observers.length
         );
         changeCallback(next);
+      }
+    };
+  }
+
+  private getReplayObserver<Z>(
+    replayCallback: (state: Z) => void
+  ): NextObserver<Z> {
+    return {
+      next: next => {
+        console.log('...next');
+        replayCallback(next);
       }
     };
   }

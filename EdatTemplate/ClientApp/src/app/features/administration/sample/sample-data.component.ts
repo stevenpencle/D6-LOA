@@ -101,6 +101,17 @@ export class SampleDataComponent implements OnInit, OnDestroy {
       this.data.sourceData = samples;
       this.dataNavigationService.filter(this.data, this.filters, resetPaging);
     }
+    this.sampleStoreService.replayState(state => {
+      for (let i = 0; i < state.length; i++) {
+        console.log(
+          `id:${state[i].id}, isActive:${state[i].isActive}, name:${
+            state[i].name
+          }, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${
+            state[i].cost
+          }, assignedStaffName:${state[i].assignedStaffName}`
+        );
+      }
+    });
   }
 
   ngOnDestroy(): void {}
