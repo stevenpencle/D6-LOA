@@ -103,7 +103,7 @@ namespace EdatTemplate.Controllers
         public IActionResult Logout()
         {
             return User.Claims.First(c => c.Type == ApplicationClaims.AuthenticationTypeClaim).Value == ApplicationAuthenticationType.Ad
-                ? SignOut(new AuthenticationProperties { RedirectUri = "/" }, CookieAuthenticationDefaults.AuthenticationScheme, _openIdConnectB2EOptions.Scheme)
+                ? SignOut(new AuthenticationProperties { RedirectUri = "/#/home?reload=true" }, CookieAuthenticationDefaults.AuthenticationScheme, _openIdConnectB2EOptions.Scheme)
                 : SignOut(new AuthenticationProperties(), CookieAuthenticationDefaults.AuthenticationScheme, _openIdConnectB2COptions.Scheme);
         }
 
@@ -113,7 +113,7 @@ namespace EdatTemplate.Controllers
         {
             if (!_authProviderConfig.AllowImpersonation || !(User.Identity is ClaimsIdentity identity))
             {
-                return Redirect("/");
+                return Redirect("/#/home");
             }
             var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaims.RoleClaim);
             if (claim != null)
@@ -122,7 +122,7 @@ namespace EdatTemplate.Controllers
             }
             identity.AddClaim(new Claim(ApplicationClaims.RoleClaim, id));
             await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
-            return Redirect("/");
+            return Redirect("/#/home?reload=true");
         }
     }
 }
