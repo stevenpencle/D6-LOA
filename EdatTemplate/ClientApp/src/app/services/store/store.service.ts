@@ -58,7 +58,13 @@ export abstract class Store<T> {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    let next = this.getNextObserver(changeCallback);
+    let next = this.getNextObserver(changeCallback, () => {
+      console.log(
+        this._storeName +
+          ' change notification / total observer count = ' +
+          this._state$.observers.length
+      );
+    });
     const subscription = this.state$
       .pipe(
         map(p => {
@@ -86,7 +92,13 @@ export abstract class Store<T> {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    let next = this.getNextObserver(changeCallback);
+    let next = this.getNextObserver(changeCallback, () => {
+      console.log(
+        this._storeName +
+          ' change notification / total observer count = ' +
+          this._state$.observers.length
+      );
+    });
     const subscription = this.state$.subscribe(next);
     this.refDestroyInjection(ref, subscription);
   }
@@ -105,7 +117,44 @@ export abstract class Store<T> {
     }
     console.log('Replaying state');
     this._replayState$
-      .subscribe(this.getReplayObserver(replayCallbackFormatter))
+      .subscribe(
+        this.getNextObserver(replayCallbackFormatter, () => {
+          console.log('...next');
+        })
+      )
+      .unsubscribe();
+    console.log('Replay complete');
+  }
+
+  /**
+   *
+   * Call to replay a projection of state changes of the observable. The allowStoreReplay must be true in the environment.dev.ts file. This is a development feature only to assist with seeing the changes made to the observable over time.
+   *
+   * @param projection The projection expression that narrows what part of the replay state to observe.
+   * @param replayCallbackFormatter The callback that receives each (next T) state change that has occured for the projection. the developer should provide console.log formatting in the callback.
+   */
+  replayStateMap<P>(
+    projection: (value: T) => P,
+    replayCallbackFormatter: (state: P) => void
+  ): void {
+    if (environment.production || !environment.allowStoreReplay) {
+      console.log(
+        'state replay is not allowed - either this is a production build, or the environment.allowStoreReplay === false.'
+      );
+      return;
+    }
+    console.log('Replaying state');
+    this._replayState$
+      .pipe(
+        map(p => {
+          return projection(p);
+        })
+      )
+      .subscribe(
+        this.getNextObserver(replayCallbackFormatter, () => {
+          console.log('...next');
+        })
+      )
       .unsubscribe();
     console.log('Replay complete');
   }
@@ -124,27 +173,15 @@ export abstract class Store<T> {
   }
 
   private getNextObserver<Z>(
-    changeCallback: (state: Z) => void
+    changeCallback: (state: Z) => void,
+    nextCallback?: () => void
   ): NextObserver<Z> {
     return {
       next: next => {
-        console.log(
-          this._storeName +
-            ' change notification / total observer count = ' +
-            this._state$.observers.length
-        );
+        if (nextCallback != null) {
+          nextCallback();
+        }
         changeCallback(next);
-      }
-    };
-  }
-
-  private getReplayObserver<Z>(
-    replayCallback: (state: Z) => void
-  ): NextObserver<Z> {
-    return {
-      next: next => {
-        console.log('...next');
-        replayCallback(next);
       }
     };
   }

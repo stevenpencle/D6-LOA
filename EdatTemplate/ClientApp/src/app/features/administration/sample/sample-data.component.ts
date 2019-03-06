@@ -101,17 +101,38 @@ export class SampleDataComponent implements OnInit, OnDestroy {
       this.data.sourceData = samples;
       this.dataNavigationService.filter(this.data, this.filters, resetPaging);
     }
-    this.sampleStoreService.replayState(state => {
-      for (let i = 0; i < state.length; i++) {
-        console.log(
-          `id:${state[i].id}, isActive:${state[i].isActive}, name:${
-            state[i].name
-          }, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${
-            state[i].cost
-          }, assignedStaffName:${state[i].assignedStaffName}`
-        );
-      }
-    });
+    if (this.observableFilter == null || this.observableFilter.trim() === '') {
+      this.sampleStoreService.replayState(state => {
+        this.formatReplayState(state);
+      });
+    } else {
+      this.sampleStoreService.replayStateMap(
+        samples => {
+          return linq
+            .from(samples)
+            .where(x => x.name.startsWith(this.observableFilter))
+            .toArray();
+        },
+        state => {
+          this.formatReplayState(state);
+        }
+      );
+    }
+  }
+
+  formatReplayState(state: ISample[]): void {
+    if (state == null) {
+      return;
+    }
+    for (let i = 0; i < state.length; i++) {
+      console.log(
+        `id:${state[i].id}, isActive:${state[i].isActive}, name:${
+          state[i].name
+        }, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${
+          state[i].cost
+        }, assignedStaffName:${state[i].assignedStaffName}`
+      );
+    }
   }
 
   ngOnDestroy(): void {}
