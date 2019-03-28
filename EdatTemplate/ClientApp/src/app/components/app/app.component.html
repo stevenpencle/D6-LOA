@@ -1,13 +1,25 @@
 <app-nav-menu></app-nav-menu>
-<div
-  *ngIf="showWarning"
-  id="environmentWarning"
-  class="environment-warning-content"
-  role="alert"
->
-  WARNING: THIS IS NOT PRODUCTION! DO NOT DO PRODUCTION WORK IN THIS
-  APPLICATION!!!
-</div>
+<span class="d-none d-md-block">
+  <div
+    *ngIf="showWarning"
+    id="environmentWarning"
+    class="environment-warning-content"
+    role="alert"
+  >
+    WARNING: THIS IS NOT PRODUCTION! DO NOT DO PRODUCTION WORK IN THIS
+    APPLICATION!!!
+  </div>
+</span>
+<span class="d-sm-block d-md-none">
+  <div
+    *ngIf="showWarning"
+    id="environmentWarning"
+    class="environment-warning-content"
+    role="alert"
+  >
+    WARNING: THIS IS NOT PRODUCTION!
+  </div>
+</span>
 <div class="container-fluid">
   <div class="row">
     <div class="col">
