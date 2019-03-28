@@ -52,7 +52,7 @@ export abstract class Store<T> {
     projection: (value: T) => P,
     changeCallback: (state: P) => void,
     initializeStoreWith?: () => void
-  ): void {
+  ): Subscription {
     console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
     if (initializeStoreWith != null) {
       console.log(this._storeName + ' initializing... ');
@@ -73,6 +73,7 @@ export abstract class Store<T> {
       )
       .subscribe(next);
     this.refDestroyInjection(ref, subscription);
+    return subscription;
   }
 
   /**
@@ -86,7 +87,7 @@ export abstract class Store<T> {
     ref: OnDestroy,
     changeCallback: (state: T) => void,
     initializeStoreWith?: () => void
-  ): void {
+  ): Subscription {
     console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
     if (initializeStoreWith != null) {
       console.log(this._storeName + ' initializing... ');
@@ -101,6 +102,7 @@ export abstract class Store<T> {
     });
     const subscription = this.state$.subscribe(next);
     this.refDestroyInjection(ref, subscription);
+    return subscription;
   }
 
   /**
@@ -192,7 +194,9 @@ export abstract class Store<T> {
   ): void {
     const destroy = ref.ngOnDestroy;
     ref.ngOnDestroy = () => {
-      subscription.unsubscribe();
+      if (!subscription.closed) {
+        subscription.unsubscribe();
+      }
       destroy.apply(ref);
       console.log(
         this._storeName +
