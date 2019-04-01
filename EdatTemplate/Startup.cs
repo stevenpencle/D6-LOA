@@ -128,8 +128,7 @@ namespace EdatTemplate
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                });
             //global SPA config
             services.AddSpaStaticFiles(configuration =>
             {
