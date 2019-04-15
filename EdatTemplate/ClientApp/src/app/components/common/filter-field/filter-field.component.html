@@ -1,0 +1,22 @@
+﻿<input
+  #filterText
+  *ngIf="type == 'text'"
+  type="text"
+  class="form-control form-control-sm"
+  [value]="filterVal"
+  [attr.aria-label]="'Filter by ' + label"
+  title="Filter by {{label}}"
+/>
+<select
+  #filterSelect
+  *ngIf="type == 'select'"
+  class="form-control form-control-sm"
+  [(ngModel)]="filterVal"
+  [attr.aria-label]="'Filter by ' + label"
+  title="Filter by {{label}}"
+>
+  <option value=""></option>
+  <option *ngFor="let opt of selectValues" value="{{opt.value}}">{{
+    opt.label
+  }}</option>
+</select>
