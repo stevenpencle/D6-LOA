@@ -44,7 +44,13 @@ namespace EdatTemplate.Security
                 var staff = await staffService.GetByEmail(email);
                 if (staff == null)
                 {
-                    throw new InvalidOperationException($"Staff not found for email {email}");
+                    var givenName = ctx.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").Value;
+                    var surName = ctx.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").Value;
+                    staff = await staffService.GetByEmail($"{givenName}.{surName}@dot.state.fl.us");
+                    if (staff == null)
+                    {
+                        throw new InvalidOperationException($"Staff not found for email {email}");
+                    }
                 }
                 identityClaims.Add(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
                 identityClaims.Add(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
