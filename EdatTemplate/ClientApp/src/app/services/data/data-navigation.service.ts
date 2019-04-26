@@ -8,14 +8,15 @@ export class DataNavigationService {
   init<T>(
     data: Array<T>,
     initialSortField: string,
-    pageSize: number
+    pageSize: number,
+    initialSortDirection: 'ascending' | 'descending' = 'ascending'
   ): DataNavigation<T> {
     const dn: DataNavigation<T> = {
       sourceData: data,
       sortedFilteredData: data,
       pageData: [],
       currentSortField: initialSortField,
-      currentSortDirection: 'ascending',
+      currentSortDirection: initialSortDirection,
       pageSize: pageSize,
       currentPage: 0,
       totalPages: 0
@@ -51,9 +52,11 @@ export class DataNavigationService {
   ): void {
     data.sortedFilteredData = [...data.sourceData];
     for (let i = 0; i < filters.length; i++) {
-      data.sortedFilteredData = linq
+      let fieldGraph = filters[i].field.split('.');
+      if (fieldGraph.length === 1) {
+        data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .where(x => {
+        .where(x => {   
           if (
             x[filters[i].field] == null &&
             (filters[i].value == null || filters[i].value.trim() === '')
@@ -69,6 +72,27 @@ export class DataNavigationService {
             .includes(filters[i].value.toUpperCase());
         })
         .toArray();
+      }
+      if (fieldGraph.length === 2) {
+        data.sortedFilteredData = linq
+        .from(data.sortedFilteredData)
+        .where(x => {   
+          if (
+            x[fieldGraph[0]][fieldGraph[1]] == null &&
+            (filters[i].value == null || filters[i].value.trim() === '')
+          ) {
+            return true;
+          }
+          if (x[fieldGraph[0]][fieldGraph[1]] == null) {
+            return false;
+          }
+          return (x[fieldGraph[0]][fieldGraph[1]] as string)
+            .toString()
+            .toUpperCase()
+            .includes(filters[i].value.toUpperCase());
+        })
+        .toArray();
+      }
     }
     this.doSort(data, data.currentSortField);
     this.resetPaging(data, data.pageSize, resetPaging);
@@ -84,15 +108,34 @@ export class DataNavigationService {
   }
 
   private doSort<T>(data: DataNavigation<T>, field: string): void {
+    let fieldGraph = field.split('.');
     if (data.currentSortDirection === 'ascending') {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .orderBy(x => (x[field] == null ? '' : x[field]))
+        .orderBy(x => (
+          fieldGraph.length === 1 
+          ? x[fieldGraph[0]] == null 
+            ? '' 
+            : x[fieldGraph[0]] 
+          : fieldGraph.length === 2 
+            ? x[fieldGraph[0]][fieldGraph[1]] == null 
+              ? '' 
+              : x[fieldGraph[0]][fieldGraph[1]]
+            : null))
         .toArray();
     } else {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .orderByDescending(x => (x[field] == null ? '' : x[field]))
+        .orderByDescending(x => (
+        fieldGraph.length === 1 
+          ? x[fieldGraph[0]] == null 
+            ? '' 
+            : x[fieldGraph[0]] 
+          : fieldGraph.length === 2 
+            ? x[fieldGraph[0]][fieldGraph[1]] == null 
+              ? '' 
+              : x[fieldGraph[0]][fieldGraph[1]]
+            : null))
         .toArray();
     }
     if (data.pageSize > 0) {
