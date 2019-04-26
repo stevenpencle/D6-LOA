@@ -11,6 +11,8 @@ export class SortButtonComponent<T> implements OnInit {
   @Input()
   label: string;
   @Input()
+  textClass: string;
+  @Input()
   field: string;
 
   @Input()

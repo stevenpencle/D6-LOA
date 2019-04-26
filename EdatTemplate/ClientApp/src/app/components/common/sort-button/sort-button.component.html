@@ -1,6 +1,6 @@
 ﻿<button
   type="button"
-  class="btn btn-sm btn-link text-white"
+  class="btn btn-sm btn-link text-white {{textClass}}" 
   (click)="invokeSort()"
   [attr.aria-label]="'Sort by ' + label"
   title="Sort by {{label}} {{sortData.currentSortField === field ? (sortData.currentSortDirection === 'ascending' ? 'descending' : 'ascending') : 'ascending'}}"
