@@ -18,14 +18,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.environmentService.safeSubscribe(this, state => {
       this.header = state.header;
     });
+    let fixedTop = false;
     // stick nav on scroll
     jQuery(window).scroll(() => {
+      const topPosition = jQuery(window).scrollTop();
       // console.log(jQuery(window).scrollTop());
-      if (jQuery(window).scrollTop() > 153) {
+      if (topPosition > 153 && !fixedTop) {
+        fixedTop = true;
         jQuery('#navigationMenu').addClass('fixed-top');
         jQuery('#contentBuffer').removeClass('content-buffer');
         if (this.header.showEnvironmentWarning) {
-          jQuery('#environmentWarning').addClass('environment-warning');
+          jQuery('#environmentWarningLarge').addClass('environment-warning');
+          jQuery('#environmentWarningSmall').addClass('environment-warning');
           jQuery('#contentBuffer').addClass(
             'environment-warning-content-fixed-top-buffer'
           );
@@ -33,11 +37,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
           jQuery('#contentBuffer').addClass('content-fixed-top-buffer');
         }
       }
-      if (jQuery(window).scrollTop() < 153) {
+      else if (topPosition < 153 && fixedTop) {
+        fixedTop = false;
         jQuery('#navigationMenu').removeClass('fixed-top');
         jQuery('#contentBuffer').addClass('content-buffer');
         if (this.header.showEnvironmentWarning) {
-          jQuery('#environmentWarning').removeClass('environment-warning');
+          jQuery('#environmentWarningLarge').removeClass('environment-warning');
+          jQuery('#environmentWarningSmall').removeClass('environment-warning');
           jQuery('#contentBuffer').removeClass(
             'environment-warning-content-fixed-top-buffer'
           );
