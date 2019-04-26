@@ -18,37 +18,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.environmentService.safeSubscribe(this, state => {
       this.header = state.header;
     });
-    let fixedTop = false;
     // stick nav on scroll
-    jQuery(window).scroll(() => {
-      const topPosition = jQuery(window).scrollTop();
-      // console.log(jQuery(window).scrollTop());
+    let fixedTop = false;
+    const w = jQuery(window);
+    const navigationMenu = jQuery('#navigationMenu');
+    const contentBuffer = jQuery('#contentBuffer');
+    w.scroll(() => {
+      const topPosition = w.scrollTop();
+      // console.log(w.scrollTop());
       if (topPosition > 153 && !fixedTop) {
         fixedTop = true;
-        jQuery('#navigationMenu').addClass('fixed-top');
-        jQuery('#contentBuffer').removeClass('content-buffer');
+        navigationMenu.addClass('fixed-top');
+        contentBuffer.removeClass('content-buffer');
         if (this.header.showEnvironmentWarning) {
           jQuery('#environmentWarningLarge').addClass('environment-warning');
           jQuery('#environmentWarningSmall').addClass('environment-warning');
-          jQuery('#contentBuffer').addClass(
-            'environment-warning-content-fixed-top-buffer'
-          );
+          contentBuffer.addClass('environment-warning-content-fixed-top-buffer');
         } else {
-          jQuery('#contentBuffer').addClass('content-fixed-top-buffer');
+          contentBuffer.addClass('content-fixed-top-buffer');
         }
       }
       else if (topPosition < 153 && fixedTop) {
         fixedTop = false;
-        jQuery('#navigationMenu').removeClass('fixed-top');
-        jQuery('#contentBuffer').addClass('content-buffer');
+        navigationMenu.removeClass('fixed-top');
+        contentBuffer.addClass('content-buffer');
         if (this.header.showEnvironmentWarning) {
           jQuery('#environmentWarningLarge').removeClass('environment-warning');
           jQuery('#environmentWarningSmall').removeClass('environment-warning');
-          jQuery('#contentBuffer').removeClass(
-            'environment-warning-content-fixed-top-buffer'
-          );
+          contentBuffer.removeClass('environment-warning-content-fixed-top-buffer');
         } else {
-          jQuery('#contentBuffer').removeClass('content-fixed-top-buffer');
+          contentBuffer.removeClass('content-fixed-top-buffer');
         }
       }
     });
