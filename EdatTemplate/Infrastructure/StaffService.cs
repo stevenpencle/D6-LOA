@@ -12,6 +12,7 @@ namespace EdatTemplate.Infrastructure
 {
     public class StaffService : IStaffService
     {
+        private readonly static HttpClient _client = new HttpClient();
         private readonly FdotCoreApis _fdotCoreApis;
         private readonly string _endpoint;
 
@@ -19,13 +20,12 @@ namespace EdatTemplate.Infrastructure
         {
             _fdotCoreApis = fdotCoreApis;
             _endpoint = _fdotCoreApis.ProductUri + _fdotCoreApis.ApiStaff;
+            _client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
         }
 
         public async Task<IEnumerable<Staff>> GetStaffByName(string name)
         {
-            var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
             var nameParts = name.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
             if (nameParts.Length == 2)
             {
@@ -36,10 +36,9 @@ namespace EdatTemplate.Infrastructure
             {
                 queryString["partialName"] = name;
             }
-
             queryString["status"] = "active";
             var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
-            var response = await client.GetAsync(uri);
+            var response = await _client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var staffs = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data);
             return staffs
@@ -56,10 +55,8 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<Staff> GetById(int id)
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
             var uri = _endpoint + $"GetStaffById?id={id}";
-            var response = await client.GetAsync(uri);
+            var response = await _client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var s = JsonConvert.DeserializeObject<Staff>(data);
             return new Staff
@@ -75,13 +72,11 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<Staff> GetByEmail(string email)
         {
-            var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
             queryString["emailAddress"] = email;
             queryString["status"] = "active";
             var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
-            var response = await client.GetAsync(uri);
+            var response = await _client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
             if (sl.Count != 1)
