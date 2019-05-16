@@ -38,7 +38,10 @@ export class HttpService implements OnDestroy {
     this.httpClient
       .get<TResult>(this.environmentService.baseUrl + api, {
         headers: {
-          'ng-api-call': 'true'
+          'ng-api-call': 'true',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': 'Sat, 01 Jan 2019 00:00:00 GMT'
         }
       })
       .subscribe(
