@@ -7,10 +7,10 @@ namespace EdatTemplate.Services
 {
     public interface IBlobStorageProvider
     {
-        Task<DocumentMetadata> UploadBlob(Stream stream, string directory, string fileName, string user);
-        Task<IEnumerable<DocumentMetadata>> ListBlobs(string directory);
-        Task<string> GetBlobDirectory(string name);
-        Task<MemoryStream> GetBlob(string name);
-        Task<bool> DeleteBlob(string name);
+        Task<DocumentMetadata> UploadBlobAsync(Stream stream, string directory, string fileName, string user);
+        Task<IEnumerable<DocumentMetadata>> ListBlobsAsync(string directory);
+        Task<string> GetBlobDirectoryAsync(string name);
+        Task<MemoryStream> GetBlobAsync(string name);
+        Task<bool> DeleteBlobAsync(string name);
     }
 }

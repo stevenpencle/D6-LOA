@@ -5,6 +5,6 @@ namespace EdatTemplate.Services
 {
     public interface IEmailService
     {
-        Task<bool> SendEmail(EmailMessage emailMessage);
+        Task<bool> SendEmailAsync(EmailMessage emailMessage);
     }
 }

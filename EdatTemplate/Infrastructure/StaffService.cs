@@ -23,7 +23,7 @@ namespace EdatTemplate.Infrastructure
             _client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
         }
 
-        public async Task<IEnumerable<Staff>> GetStaffByName(string name)
+        public async Task<IEnumerable<Staff>> GetStaffByNameAsync(string name)
         {
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             var nameParts = name.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
@@ -53,7 +53,7 @@ namespace EdatTemplate.Infrastructure
                 }).ToList();
         }
 
-        public async Task<Staff> GetById(int id)
+        public async Task<Staff> GetByIdAsync(int id)
         {
             var uri = _endpoint + $"GetStaffById?id={id}";
             var response = await _client.GetAsync(uri);
@@ -70,7 +70,7 @@ namespace EdatTemplate.Infrastructure
             };
         }
 
-        public async Task<Staff> GetByEmail(string email)
+        public async Task<Staff> GetByEmailAsync(string email)
         {
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             queryString["emailAddress"] = email;

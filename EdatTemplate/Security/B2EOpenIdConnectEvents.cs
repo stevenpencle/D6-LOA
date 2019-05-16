@@ -41,12 +41,12 @@ namespace EdatTemplate.Security
                 //Set name claim
                 identityClaims.Add(new Claim(claimsIdentity.NameClaimType, name));
                 //Get staff object
-                var staff = await staffService.GetByEmail(email);
+                var staff = await staffService.GetByEmailAsync(email);
                 if (staff == null)
                 {
                     var givenName = ctx.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").Value;
                     var surName = ctx.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").Value;
-                    staff = await staffService.GetByEmail($"{givenName}.{surName}@dot.state.fl.us");
+                    staff = await staffService.GetByEmailAsync($"{givenName}.{surName}@dot.state.fl.us");
                     if (staff == null)
                     {
                         throw new InvalidOperationException($"Staff not found for email {email}");

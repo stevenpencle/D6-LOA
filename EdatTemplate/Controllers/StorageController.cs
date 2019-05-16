@@ -35,7 +35,7 @@ namespace EdatTemplate.Controllers
                     var folder = file.Name.Trim().ToUpper();
                     using (var stream = files[i].OpenReadStream())
                     {
-                        var metadata = await _blobStorageProvider.UploadBlob(stream, folder, file.FileName, User.Identity.Name);
+                        var metadata = await _blobStorageProvider.UploadBlobAsync(stream, folder, file.FileName, User.Identity.Name);
                         metadatas.Add(metadata);
                         i++;
                     }
@@ -49,7 +49,7 @@ namespace EdatTemplate.Controllers
         [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IEnumerable<DocumentMetadata>> GetFileList(string directory)
         {
-            return await _blobStorageProvider.ListBlobs(directory);
+            return await _blobStorageProvider.ListBlobsAsync(directory);
         }
 
         [HttpGet]
@@ -57,7 +57,7 @@ namespace EdatTemplate.Controllers
         [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetFile(string id)
         {
-            var blob = await _blobStorageProvider.GetBlob(id);
+            var blob = await _blobStorageProvider.GetBlobAsync(id);
             if (blob == null)
             {
                 return NotFound();
@@ -70,10 +70,10 @@ namespace EdatTemplate.Controllers
         [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<StringResponse> RemoveFiles([FromBody] StringRequest request)
         {
-            var l = await _blobStorageProvider.ListBlobs(request.Data);
+            var l = await _blobStorageProvider.ListBlobsAsync(request.Data);
             foreach (var documentMetadata in l)
             {
-                await _blobStorageProvider.DeleteBlob(documentMetadata.Id);
+                await _blobStorageProvider.DeleteBlobAsync(documentMetadata.Id);
             }
             return new StringResponse { Data = "files removed succesfully" };
         }
@@ -83,7 +83,7 @@ namespace EdatTemplate.Controllers
         [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<StringResponse> RemoveFile([FromBody] StringRequest request)
         {
-            await _blobStorageProvider.DeleteBlob(request.Data);
+            await _blobStorageProvider.DeleteBlobAsync(request.Data);
             return new StringResponse { Data = "file removed succesfully" };
         }
 

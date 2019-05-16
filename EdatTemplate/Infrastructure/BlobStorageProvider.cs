@@ -23,7 +23,7 @@ namespace EdatTemplate.Infrastructure
             _container.CreateIfNotExistsAsync();
         }
 
-        public async Task<DocumentMetadata> UploadBlob(Stream stream, string directory, string fileName, string user)
+        public async Task<DocumentMetadata> UploadBlobAsync(Stream stream, string directory, string fileName, string user)
         {
             var blobName = Guid.NewGuid().ToString();
             CloudBlockBlob blobReference;
@@ -54,7 +54,7 @@ namespace EdatTemplate.Infrastructure
             };
         }
 
-        public async Task<IEnumerable<DocumentMetadata>> ListBlobs(string directory)
+        public async Task<IEnumerable<DocumentMetadata>> ListBlobsAsync(string directory)
         {
             var list = new List<IListBlobItem>();
             BlobContinuationToken continuationToken = null;
@@ -87,7 +87,7 @@ namespace EdatTemplate.Infrastructure
             }).OrderByDescending(x => x.Uploaded);
         }
 
-        public async Task<string> GetBlobDirectory(string name)
+        public async Task<string> GetBlobDirectoryAsync(string name)
         {
             var blob = _container.GetBlockBlobReference(name);
             if (!await blob.ExistsAsync())
@@ -97,7 +97,7 @@ namespace EdatTemplate.Infrastructure
             return blob.Parent.Prefix.TrimEnd('/');
         }
 
-        public async Task<MemoryStream> GetBlob(string name)
+        public async Task<MemoryStream> GetBlobAsync(string name)
         {
             var ms = new MemoryStream();
             var blob = _container.GetBlockBlobReference(name);
@@ -110,7 +110,7 @@ namespace EdatTemplate.Infrastructure
             return ms;
         }
 
-        public async Task<bool> DeleteBlob(string name)
+        public async Task<bool> DeleteBlobAsync(string name)
         {
             var blob = _container.GetBlockBlobReference(name);
             return await blob.DeleteIfExistsAsync();

@@ -26,14 +26,14 @@ namespace EdatTemplate.Controllers
         [Route("[action]")]
         public async Task<IEnumerable<Staff>> Search([FromBody] StringResponse namePattern)
         {
-            return await _staffService.GetStaffByName(namePattern.Data);
+            return await _staffService.GetStaffByNameAsync(namePattern.Data);
         }
 
         [HttpGet]
         [Route("[action]/{id}")]
         public async Task<Staff> Get(int id)
         {
-            return await _staffService.GetById(id);
+            return await _staffService.GetByIdAsync(id);
         }
     }
 }

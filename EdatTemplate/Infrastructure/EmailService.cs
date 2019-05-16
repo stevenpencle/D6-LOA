@@ -22,7 +22,7 @@ namespace EdatTemplate.Infrastructure
             _sendGridConfig = sendGridConfig;
         }
 
-        public async Task<bool> SendEmail(EmailMessage emailMessage)
+        public async Task<bool> SendEmailAsync(EmailMessage emailMessage)
         {
             if (!_sendGridConfig.Enabled)
             {

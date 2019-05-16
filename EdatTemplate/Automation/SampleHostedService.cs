@@ -46,7 +46,7 @@ namespace EdatTemplate.Automation
             }
         }
 
-        private async Task SendEmail()
+        private async Task SendEmailAsync()
         {
             var emailBody = "Sample email sent from the hosted service.";
             var emailSubject = "EdatTemplate Email Notification";
@@ -56,7 +56,7 @@ namespace EdatTemplate.Automation
                 Subject = emailSubject,
                 //Tos = 
             };
-            await _emailService.SendEmail(emailMessage);
+            await _emailService.SendEmailAsync(emailMessage);
         }
     }
 }

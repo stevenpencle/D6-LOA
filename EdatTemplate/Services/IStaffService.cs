@@ -6,8 +6,8 @@ namespace EdatTemplate.Services
 {
     public interface IStaffService
     {
-        Task<IEnumerable<Staff>> GetStaffByName(string name);
-        Task<Staff> GetById(int id);
-        Task<Staff> GetByEmail(string email);
+        Task<IEnumerable<Staff>> GetStaffByNameAsync(string name);
+        Task<Staff> GetByIdAsync(int id);
+        Task<Staff> GetByEmailAsync(string email);
     }
 }

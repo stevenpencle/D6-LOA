@@ -25,7 +25,7 @@ namespace EdatTemplate.Controllers
         [Route("[action]")]
         public async Task<bool> Send([FromBody] EmailMessage emailMessage)
         {
-            return await _emailService.SendEmail(emailMessage);
+            return await _emailService.SendEmailAsync(emailMessage);
         }
     }
 }
