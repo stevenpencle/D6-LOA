@@ -357,6 +357,8 @@
               aria-label="Delete sample"
               title="Delete sample"
               [disabled]="
+                checkUserId != undefined &&
+                userId != undefined &&
                 checkUserId != null &&
                 userId != null &&
                 checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()

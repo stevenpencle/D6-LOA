@@ -30,7 +30,7 @@ export class RouteGuard implements CanActivate, OnDestroy {
         : this.httpClient.get<IClientToken>('api/security/gettoken');
     return tokenObservable.pipe(
       map(result => {
-        if (result != null) {
+        if (result != undefined && result != null) {
           const routeData = route.data as RouteData;
           if (
             routeData == null ||

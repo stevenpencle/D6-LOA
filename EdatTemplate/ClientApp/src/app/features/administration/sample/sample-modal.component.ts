@@ -74,7 +74,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   setTempSample(sample: ISample): void {
     this.clearErrors();
     this.staffPickerComponent.clearInput();
-    if (sample.assignedStaffId != null && sample.assignedStaffId > 0) {
+    if (sample.assignedStaffId != undefined && sample.assignedStaffId != null && sample.assignedStaffId > 0) {
       this.staffService.get(sample.assignedStaffId, staff => {
         this.selectedStaff = staff;
       });
@@ -127,7 +127,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   }
 
   private setBirthDate(sample: ISample): void {
-    if (this.birthDate != null && this.birthDate.isValid()) {
+    if (this.birthDate != undefined && this.birthDate != null && this.birthDate.isValid()) {
       sample.birthDate = this.birthDate.toDate();
     } else {
       sample.birthDate = null;

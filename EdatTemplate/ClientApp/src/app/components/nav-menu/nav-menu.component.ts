@@ -55,10 +55,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         } else {
           this.isAuthenticated = true;
           this.isAdmin =
+            token.roles != undefined &&
             token.roles != null &&
             isArray(token.roles) &&
             linq.from(token.roles).any(x => x === 'Admin');
           this.isB2CUser =
+            token.roles != undefined &&
             token.roles != null &&
             isArray(token.roles) &&
             linq.from(token.roles).any(x => x === 'B2CUser');
