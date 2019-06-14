@@ -52,11 +52,11 @@ export class DataNavigationService {
   ): void {
     data.sortedFilteredData = [...data.sourceData];
     for (let i = 0; i < filters.length; i++) {
-      let fieldGraph = filters[i].field.split('.');
+      const fieldGraph = filters[i].field.split('.');
       if (fieldGraph.length === 1) {
         data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .where(x => {   
+        .where(x => {
           if (
             x[filters[i].field] == null &&
             (filters[i].value == null || filters[i].value.trim() === '')
@@ -76,7 +76,7 @@ export class DataNavigationService {
       if (fieldGraph.length === 2) {
         data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .where(x => {   
+        .where(x => {
           if (
             x[fieldGraph[0]][fieldGraph[1]] == null &&
             (filters[i].value == null || filters[i].value.trim() === '')
@@ -108,18 +108,18 @@ export class DataNavigationService {
   }
 
   private doSort<T>(data: DataNavigation<T>, field: string): void {
-    let fieldGraph = field.split('.');
+    const fieldGraph = field.split('.');
     if (data.currentSortDirection === 'ascending') {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
         .orderBy(x => (
           fieldGraph.length === 1 
           ? x[fieldGraph[0]] == null 
-            ? '' 
+            ? ''
             : x[fieldGraph[0]] 
           : fieldGraph.length === 2 
             ? x[fieldGraph[0]][fieldGraph[1]] == null 
-              ? '' 
+              ? ''
               : x[fieldGraph[0]][fieldGraph[1]]
             : null))
         .toArray();
@@ -127,13 +127,13 @@ export class DataNavigationService {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
         .orderByDescending(x => (
-        fieldGraph.length === 1 
-          ? x[fieldGraph[0]] == null 
-            ? '' 
-            : x[fieldGraph[0]] 
-          : fieldGraph.length === 2 
-            ? x[fieldGraph[0]][fieldGraph[1]] == null 
-              ? '' 
+        fieldGraph.length === 1
+          ? x[fieldGraph[0]] == null
+            ? ''
+            : x[fieldGraph[0]]
+          : fieldGraph.length === 2
+            ? x[fieldGraph[0]][fieldGraph[1]] == null
+              ? ''
               : x[fieldGraph[0]][fieldGraph[1]]
             : null))
         .toArray();
