@@ -107,18 +107,27 @@ export class DataNavigationService {
       .toArray();
   }
 
+  setPage<T>(data: DataNavigation<T>, page: number): void {
+    data.currentPage = page;
+    data.pageData = linq
+      .from(data.sortedFilteredData)
+      .skip((data.currentPage - 1) * data.pageSize)
+      .take(data.pageSize)
+      .toArray();
+  }
+
   private doSort<T>(data: DataNavigation<T>, field: string): void {
     const fieldGraph = field.split('.');
     if (data.currentSortDirection === 'ascending') {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
         .orderBy(x => (
-          fieldGraph.length === 1 
-          ? x[fieldGraph[0]] == null 
+          fieldGraph.length === 1
+          ? x[fieldGraph[0]] == null
             ? ''
-            : x[fieldGraph[0]] 
-          : fieldGraph.length === 2 
-            ? x[fieldGraph[0]][fieldGraph[1]] == null 
+            : x[fieldGraph[0]]
+          : fieldGraph.length === 2
+            ? x[fieldGraph[0]][fieldGraph[1]] == null
               ? ''
               : x[fieldGraph[0]][fieldGraph[1]]
             : null))
