@@ -122,6 +122,8 @@ namespace EdatTemplate
             {
                 services.AddHostedService<SampleHostedService>();
             }
+            //enable application insights telemetry collection
+            services.AddApplicationInsightsTelemetry();
             //configure MVC
             services
                 .AddMvc()
