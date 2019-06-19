@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EdatTemplate.ORM
 {
@@ -13,6 +15,7 @@ namespace EdatTemplate.ORM
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly IList<string> Commands = new List<string>();
+        private static readonly IList<string> Declares = new List<string>();
 
         private static readonly object Lock = new object();
 
@@ -38,33 +41,73 @@ namespace EdatTemplate.ORM
         private void Log(DbCommand command)
         {
             //this method creats an executable SQL script (Logs/sql.log) for DBAs to review the SQL of the application
+            var sb = new StringBuilder();
+            var commandText = $"{command.CommandText} ";
             if (_entityFrameworkConfig.DeduplicateLoggedCommands)
             {
                 lock (Lock)
                 {
-                    if (Commands.Contains(command.CommandText))
+                    if (Commands.Contains(commandText))
                     {
                         return;
                     }
-                    Commands.Add(command.CommandText);
+                    Commands.Add(commandText);
                 }
             }
             if (command.Parameters.Count > 0)
             {
-                Logger.Info($"--Parameters:");
+                sb.AppendLine("--Parameters:");
             }
+            
             foreach (DbParameter param in command.Parameters)
             {
                 var sqlParam = (SqlParameter)param;
-                Logger.Info($"declare {(sqlParam.ParameterName.StartsWith("@") ? "" : "@")}{sqlParam.ParameterName} {sqlParam.SqlDbType.ToString().ToLower()} {(sqlParam.Size > 0 ? "(" + sqlParam.Size + ")" : "")}");
-                Logger.Info($"set {(sqlParam.ParameterName.StartsWith("@") ? "" : "@")}{sqlParam.ParameterName} = '{sqlParam.SqlValue}'");
+                var parameterType = sqlParam.SqlDbType.ToString().ToLower();
+                var parameterName = $"@P{Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", "")}";
+                commandText = commandText.Replace($" {sqlParam.ParameterName} ", $" {parameterName} ");
+                commandText = commandText.Replace($" {sqlParam.ParameterName}{Environment.NewLine}", $" {parameterName}{Environment.NewLine}");
+                commandText = commandText.Replace($" {sqlParam.ParameterName},", $" {parameterName},");
+                commandText = commandText.Replace($",{sqlParam.ParameterName} ", $",{parameterName} ");
+                commandText = commandText.Replace($",{sqlParam.ParameterName}{Environment.NewLine}", $",{parameterName}{Environment.NewLine}");
+                commandText = commandText.Replace($",{sqlParam.ParameterName},", $",{parameterName},");
+                commandText = commandText.Replace($"({sqlParam.ParameterName} ", $"({parameterName} ");
+                commandText = commandText.Replace($"({sqlParam.ParameterName}{Environment.NewLine}", $"({parameterName}{Environment.NewLine}");
+                commandText = commandText.Replace($"({sqlParam.ParameterName},", $"({parameterName},");
+                commandText = commandText.Replace($" {sqlParam.ParameterName})", $" {parameterName})");
+                commandText = commandText.Replace($",{sqlParam.ParameterName})", $",{parameterName})");
+                commandText = commandText.Replace($" {sqlParam.ParameterName};", $" {parameterName};");
+                commandText = commandText.Replace($",{sqlParam.ParameterName};", $",{parameterName};");
+                //
+                commandText = commandText.Replace($" @{sqlParam.ParameterName} ", $" {parameterName} ");
+                commandText = commandText.Replace($" @{sqlParam.ParameterName}{Environment.NewLine}", $" {parameterName}{Environment.NewLine}");
+                commandText = commandText.Replace($" @{sqlParam.ParameterName},", $" {parameterName},");
+                commandText = commandText.Replace($",@{sqlParam.ParameterName} ", $",{parameterName} ");
+                commandText = commandText.Replace($",@{sqlParam.ParameterName}{Environment.NewLine}", $",{parameterName}{Environment.NewLine}");
+                commandText = commandText.Replace($",@{sqlParam.ParameterName},", $",{parameterName},");
+                commandText = commandText.Replace($"(@{sqlParam.ParameterName} ", $"({parameterName} ");
+                commandText = commandText.Replace($"(@{sqlParam.ParameterName}{Environment.NewLine}", $"({parameterName}{Environment.NewLine}");
+                commandText = commandText.Replace($"(@{sqlParam.ParameterName},", $"({parameterName},");
+                commandText = commandText.Replace($" @{sqlParam.ParameterName})", $" {parameterName})");
+                commandText = commandText.Replace($",@{sqlParam.ParameterName})", $",{parameterName})");
+                commandText = commandText.Replace($" @{sqlParam.ParameterName};", $" {parameterName};");
+                commandText = commandText.Replace($",@{sqlParam.ParameterName};", $",{parameterName};");
+                sb.AppendLine($"declare {parameterName} {parameterType} {(sqlParam.Size > 0 ? "(" + sqlParam.Size + ")" : "")}");
+                if (sqlParam.SqlValue.ToString().ToLower() == "null") 
+                {
+                    sb.AppendLine($"set {parameterName} = NULL");
+                }
+                else 
+                {
+                    sb.AppendLine($"set {parameterName} = '{sqlParam.SqlValue}'");
+                }
             }
             if (command.Parameters.Count > 0)
             {
-                Logger.Info(Environment.NewLine);
+                sb.AppendLine(Environment.NewLine);
             }
-            Logger.Info($"--Query:{Environment.NewLine}{command.CommandText}");
-            Logger.Info(Environment.NewLine);
+            sb.AppendLine($"--Query:{Environment.NewLine}{commandText}");
+            sb.AppendLine(Environment.NewLine);
+            Logger.Info(sb.ToString());
         }
     }
 }
