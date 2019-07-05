@@ -8,7 +8,7 @@
   aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content" id="modalConent" #modalContent>
       <div class="modal-header text-white bg-secondary">
         <h4 class="modal-title" id="sampleModalLabel">
           {{
@@ -200,6 +200,15 @@
         >
           <i class="fas fa-save"></i> Save
         </button>
+        
+        <button 
+        type="button" 
+        class="btn btn-primary"
+        (click)="printtoPDF()"
+        aria-label="Export sample PDF"
+        title="Export sample PDF"
+        >
+       <i class="fas fa-file-pdf"></i> Export</button> 
       </div>
     </div>
   </div>
