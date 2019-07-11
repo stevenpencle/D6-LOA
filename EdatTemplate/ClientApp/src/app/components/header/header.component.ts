@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { OnInit, OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Component,  OnInit, OnDestroy } from '@angular/core';
 import * as jQuery from 'jquery';
 import { IEdatHeader } from '../../model/model';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';

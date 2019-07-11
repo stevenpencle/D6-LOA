@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { OnInit, OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import fontawesome from '@fortawesome/fontawesome';
 import * as fas from '@fortawesome/fontawesome-free-solid';

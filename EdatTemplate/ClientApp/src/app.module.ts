@@ -85,8 +85,8 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     NgxChartsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    NgxMaskModule.forRoot(),
-    NgbModule.forRoot()
+    NgbModule,
+    NgxMaskModule.forRoot()
   ],
   providers: [
     EnvironmentService,
