@@ -18,7 +18,7 @@ export class FileUploadComponent {
   filesToUpload: Array<File> = [];
   selectedFileNames: string[] = [];
   isLoadingData: Boolean = false;
-  @ViewChild('fileUpload')
+  @ViewChild('fileUpload', { static: false })
   fileUploadVar: any;
   @Input()
   blobDirectory: string;

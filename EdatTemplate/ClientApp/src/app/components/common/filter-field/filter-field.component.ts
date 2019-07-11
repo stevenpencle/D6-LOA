@@ -28,9 +28,9 @@ export class FilterFieldComponent implements AfterViewInit {
   selectValues: Array<{ label: string; value: string }>;
   filterVal = '';
   keyUp: Subscription;
-  @ViewChild('filterText')
+  @ViewChild('filterText', { static: false })
   inputElRef: ElementRef;
-  @ViewChild('filterSelect')
+  @ViewChild('filterSelect', { static: false })
   selectElRef: ElementRef;
 
   constructor() {}

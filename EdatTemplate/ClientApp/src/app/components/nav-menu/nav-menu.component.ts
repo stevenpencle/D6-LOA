@@ -16,7 +16,7 @@ import { IAuthProviderConfig } from '../../model/model';
   templateUrl: './nav-menu.component.html'
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
-  @ViewChild('skipnav')
+  @ViewChild('skipnav', { static: true })
   skipnav: ElementRef;
   isAuthenticated = false;
   isAdmin = false;

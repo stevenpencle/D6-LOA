@@ -15,18 +15,18 @@ import { ModelStateValidations } from 'src/app/services/http/http.service';
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas'; 
 import { Inject} from "@angular/core"; 
-import { DOCUMENT } from '@angular/platform-browser'; 
+import { DOCUMENT } from "@angular/common"; 
 
 @Component({
   selector: 'app-sample-modal',
   templateUrl: './sample-modal.component.html'
 })
 export class SampleModalComponent implements OnInit, OnDestroy {
-  @ViewChild('closeBtn')
+  @ViewChild('closeBtn', { static: true })
   closeBtn: ElementRef;
-  @ViewChild(StaffPickerComponent)
+  @ViewChild(StaffPickerComponent, { static: true })
   staffPickerComponent: StaffPickerComponent;
-  @ViewChild('modalContent') 
+  @ViewChild('modalContent', { static: true }) 
   modalContent: ElementRef;
 
   hasErrors = false;

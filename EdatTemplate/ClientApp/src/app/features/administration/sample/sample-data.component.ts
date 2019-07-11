@@ -26,9 +26,9 @@ import { cloneDeep } from 'lodash';
   templateUrl: './sample-data.component.html'
 })
 export class SampleDataComponent implements OnInit, OnDestroy {
-  @ViewChild('closeBtnDelete')
+  @ViewChild('closeBtnDelete', { static: true })
   closeBtnDelete: ElementRef;
-  @ViewChild(SampleModalComponent)
+  @ViewChild(SampleModalComponent, { static: true })
   sampleModal: SampleModalComponent;
   userId = '';
   checkUserId = '';

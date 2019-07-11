@@ -31,7 +31,7 @@ export class StaffPickerComponent implements OnInit {
   title: string;
   @Input()
   selectedStaff: IStaff;
-  @ViewChild('input') input: ElementRef;
+  @ViewChild('input', { static: true }) input: ElementRef;
   searching = false;
   searchFailed = false;
   searchStaff: (text$: Observable<string>) => Observable<IStaff | any>;
