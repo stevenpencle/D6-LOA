@@ -20,7 +20,7 @@
       "args": ["node-server=true"],
       "cwd": "${workspaceFolder}/EdatTemplate",
       "stopAtEntry": false,
-      "internalConsoleOptions": "openOnSessionStart",
+      "internalConsoleOptions": "neverOpen",
       "launchBrowser": {
         "enabled": false,
         "args": "${auto-detect-url}",
