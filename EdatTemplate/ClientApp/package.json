@@ -15,15 +15,15 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^8.1.1",
+    "@angular/animations": "^8.2.13",
     "@angular/cdk": "^8.0.2",
-    "@angular/common": "^8.1.1",
-    "@angular/compiler": "^8.1.1",
-    "@angular/core": "^8.1.1",
-    "@angular/forms": "^8.1.1",
-    "@angular/platform-browser": "^8.1.1",
-    "@angular/platform-browser-dynamic": "^8.1.1",
-    "@angular/router": "^8.1.1",
+    "@angular/common": "^8.2.13",
+    "@angular/compiler": "^8.2.13",
+    "@angular/core": "^8.2.13",
+    "@angular/forms": "^8.2.13",
+    "@angular/platform-browser": "^8.2.13",
+    "@angular/platform-browser-dynamic": "^8.2.13",
+    "@angular/router": "^8.2.13",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-brands": "^5.0.13",
     "@fortawesome/fontawesome-free-regular": "^5.0.13",
@@ -45,16 +45,16 @@
     "ngx-mask": "^8.1.6",
     "npm": "^6.13.0",
     "popper.js": "^1.15.0",
-    "rxjs": "^6.5.2",
+    "rxjs": "^6.5.3",
     "web-animations-js": "^2.3.2",
     "xlsx": "^0.14.3",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.801.1",
-    "@angular/cli": "^8.1.1",
-    "@angular/compiler-cli": "^8.1.1",
-    "@angular/language-service": "^8.1.1",
+    "@angular-devkit/build-angular": "~0.803.17",
+    "@angular/cli": "^8.3.17",
+    "@angular/compiler-cli": "^8.2.13",
+    "@angular/language-service": "^8.2.13",
     "@types/core-js": "^2.5.2",
     "@types/file-saver": "^2.0.1",
     "@types/jquery": "^3.3.30",
@@ -63,6 +63,6 @@
     "codelyzer": "^5.1.0",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
-    "typescript": "3.4.5"
+    "typescript": "3.5.3"
   }
 }
