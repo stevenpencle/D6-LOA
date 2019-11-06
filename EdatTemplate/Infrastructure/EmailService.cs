@@ -1,21 +1,22 @@
 ﻿using EdatTemplate.Models.View;
 using EdatTemplate.Services;
-using Microsoft.AspNetCore.Hosting;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace EdatTemplate.Infrastructure
 {
     public class EmailService : IEmailService
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment; 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SendGridConfig _sendGridConfig;
 
-        public EmailService(IHostingEnvironment environment, IHttpContextAccessor httpContextAccessor, SendGridConfig sendGridConfig)
+        public EmailService(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, SendGridConfig sendGridConfig)
         {
             _environment = environment;
             _httpContextAccessor = httpContextAccessor;

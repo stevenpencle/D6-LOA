@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DiagnosticAdapter;
+using Microsoft.Data.SqlClient;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
 

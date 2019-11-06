@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -26,9 +27,9 @@ namespace EdatTemplate
     {
         private IConfiguration Configuration { get; }
 
-        private IHostingEnvironment Environment { get; }
+        private IWebHostEnvironment Environment { get; }
 
-        public Startup(IHostingEnvironment environment, IConfiguration configuration)
+        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
         {
             Configuration = configuration;
             Environment = environment;
@@ -127,7 +128,7 @@ namespace EdatTemplate
             //configure MVC
             services
                 .AddMvc()
-                .AddJsonOptions(options =>
+                .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
@@ -139,7 +140,7 @@ namespace EdatTemplate
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
         {
             //are we using the angular-cli server (VS Code debugging)?
             var usingAngularCliServer = Configuration["node-server"] == "true";
@@ -169,10 +170,18 @@ namespace EdatTemplate
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+            app.UseAuthorization();
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapDefaultControllerRoute();
             });
+
+            // app.UseMvc(routes =>
+            // {
+            //     routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+            // });
             if (!usingAngularCliServer)
             {
                 //serve files using IIS express (VS development) or deployed code - static files located in "ClientApp/dist"

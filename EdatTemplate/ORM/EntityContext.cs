@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -14,24 +15,24 @@ namespace EdatTemplate.ORM
 {
     public class EntityContext : DbContext
     {
-        private IHostingEnvironment _environment;
+        private IWebHostEnvironment _environment;
         private IHttpContextAccessor _httpContextAccessor;
         private EntityFrameworkConfig _entityFrameworkConfig;
         private DiagnosticListener _listener;
 
         public virtual DbSet<Sample> Samples { get; set; }
 
-        public EntityContext(IHostingEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
+        public EntityContext(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
         {
             Initialize(environment, httpContextAccessor, entityFrameworkConfig);
         }
 
-        public EntityContext(IHostingEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig, DbContextOptions options) : base(options)
+        public EntityContext(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig, DbContextOptions options) : base(options)
         {
             Initialize(environment, httpContextAccessor, entityFrameworkConfig);
         }
 
-        private void Initialize(IHostingEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
+        private void Initialize(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
         {
             _environment = environment;
             _httpContextAccessor = httpContextAccessor;
