@@ -12,15 +12,14 @@ namespace EdatTemplate.Infrastructure
 {
     public class StaffService : IStaffService
     {
-        private readonly static HttpClient _client = new HttpClient();
-        private readonly FdotCoreApis _fdotCoreApis;
+        private static readonly HttpClient Client = new HttpClient();
         private readonly string _endpoint;
 
         public StaffService(FdotCoreApis fdotCoreApis)
         {
-            _fdotCoreApis = fdotCoreApis;
-            _endpoint = _fdotCoreApis.ProductUri + _fdotCoreApis.ApiStaff;
-            _client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _fdotCoreApis.ClientSecret);
+            var fdotCoreApis1 = fdotCoreApis;
+            _endpoint = fdotCoreApis1.ProductUri + fdotCoreApis1.ApiStaff;
+            Client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", fdotCoreApis1.ClientSecret);
         }
 
         public async Task<IEnumerable<Staff>> GetStaffByNameAsync(string name)
@@ -38,7 +37,7 @@ namespace EdatTemplate.Infrastructure
             }
             queryString["status"] = "active";
             var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
-            var response = await _client.GetAsync(uri);
+            var response = await Client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var staffs = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data);
             return staffs
@@ -56,7 +55,7 @@ namespace EdatTemplate.Infrastructure
         public async Task<Staff> GetByIdAsync(int id)
         {
             var uri = _endpoint + $"GetStaffById?id={id}";
-            var response = await _client.GetAsync(uri);
+            var response = await Client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var s = JsonConvert.DeserializeObject<Staff>(data);
             return new Staff
@@ -76,7 +75,7 @@ namespace EdatTemplate.Infrastructure
             queryString["emailAddress"] = email;
             queryString["status"] = "active";
             var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
-            var response = await _client.GetAsync(uri);
+            var response = await Client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
             if (sl.Count != 1)

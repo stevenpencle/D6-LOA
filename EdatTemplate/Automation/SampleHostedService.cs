@@ -30,17 +30,17 @@ namespace EdatTemplate.Automation
             {
                 using (var serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
-                //     using (var entityContext = serviceScope.ServiceProvider.GetService<EntityContext>())
-                //     {
-                //         using (var transaction = entityContext.Database.BeginTransaction())
-                //         {
-                //             //do something   
-                //             //await SendEmail(); 
-                //         }
-                //     }
+                    //     using (var entityContext = serviceScope.ServiceProvider.GetService<EntityContext>())
+                    //     {
+                    //         using (var transaction = entityContext.Database.BeginTransaction())
+                    //         {
+                    //             //do something   
+                    //             //await SendEmail(); 
+                    //         }
+                    //     }
                 }
                 serviceLoopCount += 1;
-                Debug.Write($"SampleHosetedService task executed {serviceLoopCount} times!{Environment.NewLine}");
+                Debug.Write($"SampleHostedService task executed {serviceLoopCount} times!{Environment.NewLine}");
                 //repeat the task every 10 seconds
                 await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
             }

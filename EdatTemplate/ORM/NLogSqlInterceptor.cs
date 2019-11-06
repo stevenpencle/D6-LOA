@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DiagnosticAdapter;
-using Microsoft.Data.SqlClient;
 using NLog;
 using System;
 using System.Collections.Generic;

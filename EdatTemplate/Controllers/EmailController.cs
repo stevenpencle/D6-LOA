@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using EdatTemplate.Models.View;
+﻿using EdatTemplate.Models.View;
 using EdatTemplate.Security;
 using EdatTemplate.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EdatTemplate.Controllers
 {
