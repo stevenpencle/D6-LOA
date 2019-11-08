@@ -6,6 +6,7 @@ import { NgbModule, NgbDateAdapter, NgbActiveModal } from '@ng-bootstrap/ng-boot
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxMaskModule } from 'ngx-mask';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 // routing
 import { AppRoutingModule } from './app-routing.module';
@@ -38,6 +39,7 @@ import { EmailService } from './app/services/data/email.service';
 import { NgbMomentDatePickerAdapter } from './app/services/data/ngbMomentDatePickerAdapter';
 import { ExcelExportService } from './app/services/data/excel-export.service';
 import { BlobService } from './app/services/data/blob.service';
+import { LoadingService } from './app/services/environment/loading.service';
 
 // features
 // ** administration
@@ -86,7 +88,8 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     BrowserAnimationsModule,
     AppRoutingModule,
     NgbModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    NgxSpinnerModule
   ],
   providers: [
     NgbActiveModal,
@@ -100,6 +103,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     HttpService,
     SecurityService,
     RouteGuard,
+    LoadingService,
     // stores
     // ** administration
     // ** SAMPLE START

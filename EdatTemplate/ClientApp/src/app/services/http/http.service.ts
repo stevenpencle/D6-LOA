@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { SecurityService } from '../security/security.service';
 import { IClientToken } from '../../model/model';
 import { DataMarshalerService } from '../data/data-marshaler.service';
+import { LoadingService } from '../environment/loading.service';
 
 @Injectable()
 export class HttpService implements OnDestroy {
@@ -15,7 +16,8 @@ export class HttpService implements OnDestroy {
     private environmentService: EnvironmentService,
     private securityService: SecurityService,
     private dataMarshalerService: DataMarshalerService,
-    private router: Router
+    private router: Router,
+    private loadingService: LoadingService
   ) {
     this.securityService.safeSubscribe(
       this,
@@ -35,6 +37,7 @@ export class HttpService implements OnDestroy {
     callback: (result: TResult) => void,
     modelStateErrorCallback?: (errors: ModelStateValidations) => void
   ): void {
+    const completed = this.loadingService.show();
     this.httpClient
       .get<TResult>(this.environmentService.baseUrl + api, {
         headers: {
@@ -47,11 +50,13 @@ export class HttpService implements OnDestroy {
       .subscribe(
         result => {
           callback(result);
+          completed();
         },
         (error: HttpErrorResponse) => {
           const errors = this.handleError(error);
           if (modelStateErrorCallback) {
             modelStateErrorCallback(errors);
+            completed();
           }
         }
       );
@@ -63,6 +68,7 @@ export class HttpService implements OnDestroy {
     callback: (result: TResult) => void,
     modelStateErrorCallback?: (errors: ModelStateValidations) => void
   ): void {
+    const completed = this.loadingService.show();
     this.httpClient
       .post<TResult>(this.environmentService.baseUrl + api, payload, {
         headers: {
@@ -72,11 +78,13 @@ export class HttpService implements OnDestroy {
       .subscribe(
         result => {
           callback(result);
+          completed();
         },
         (error: HttpErrorResponse) => {
           const errors = this.handleError(error);
           if (modelStateErrorCallback) {
             modelStateErrorCallback(errors);
+            completed();
           }
         }
       );
