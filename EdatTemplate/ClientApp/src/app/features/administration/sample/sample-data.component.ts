@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
-  ElementRef,
   Input
 } from '@angular/core';
 import { SampleStoreService } from './sample-store.service';
@@ -20,16 +18,14 @@ import * as linq from 'linq';
 import { ExcelExportService } from '../../../services/data/excel-export.service';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StaffService } from 'src/app/services/data/staff.service';
 
 @Component({
   selector: 'app-sample-data',
   templateUrl: './sample-data.component.html'
 })
 export class SampleDataComponent implements OnInit, OnDestroy {
-  @ViewChild('closeBtnDelete', { static: true })
-  closeBtnDelete: ElementRef;
-  @ViewChild(SampleModalComponent, { static: true })
-  sampleModal: SampleModalComponent;
   userId = '';
   checkUserId = '';
   tempSample: ISample = {};
@@ -39,10 +35,12 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   @Input('observableFilter') observableFilter: string;
 
   constructor(
+    private modalService: NgbModal,
     private securityService: SecurityService,
     private sampleStoreService: SampleStoreService,
     private dataNavigationService: DataNavigationService,
-    private excelExportService: ExcelExportService
+    private excelExportService: ExcelExportService,
+    private staffService: StaffService
   ) {}
 
   ngOnInit(): void {
@@ -171,14 +169,29 @@ export class SampleDataComponent implements OnInit, OnDestroy {
             assignedStaffName: ''
           }
         : cloneDeep(sample);
-    this.sampleModal.setTempSample(this.tempSample);
+    const modalRef = this.modalService.open(SampleModalComponent, { backdrop: "static" });
+    modalRef.componentInstance.tempSample = this.tempSample;
+    modalRef.componentInstance.staffPickerComponent.clearInput();
+    if (this.tempSample.assignedStaffId !== undefined && this.tempSample.assignedStaffId != null && this.tempSample.assignedStaffId > 0) {
+      this.staffService.get(this.tempSample.assignedStaffId, staff => {
+        modalRef.componentInstance.selectedStaff = staff;
+      });
+    }
+    if (this.tempSample.birthDate == null) {
+      modalRef.componentInstance.birthDate = null;
+    } else {
+      modalRef.componentInstance.birthDate = moment(this.tempSample.birthDate);
+    }
   }
 
-  removeSample(): void {
-    this.sampleStoreService.remove(this.tempSample, () => {
-      this.tempSample = {};
+  removeSample(deleteModal: any, sample: ISample): void {
+    this.tempSample = cloneDeep(sample);
+    this.modalService.open(deleteModal, {ariaLabelledBy: 'deleteSampleModalLabel'}).result.then(() => {
+      this.sampleStoreService.remove(this.tempSample, () => {
+        this.clearCheckUserId();
+      });
+    }, () => {
       this.clearCheckUserId();
-      this.closeBtnDelete.nativeElement.click();
     });
   }
 

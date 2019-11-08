@@ -29,51 +29,45 @@
       />&nbsp;EDAT Template</span
     >
   </a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-    title="Toggle navigation"
-  >
+  <button 
+    class="navbar-toggler" 
+    type="button" 
+    aria-controls="navbarContent" 
+    [attr.aria-expanded]="!collapsed" 
+    aria-label="Toggle navigation" 
+    (click)="collapsed = !collapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav mr-auto">
-      <li
-        class="nav-item dropdown"
-        routerLinkActive="active"
-        routerLinkActiveOptions="{ exact: true }"
-        *ngIf="isAdmin"
-      >
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="adminDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          aria-label="Administration menu"
-          title="Administration menu"
-        >
-          <i class="fas fa-cogs"></i> Administration
-        </a>
-        <div class="dropdown-menu" aria-labelledby="adminDropdown">
-          <!-- ** SAMPLE START -->
-          <a
-            class="dropdown-item"
-            aria-label="Sample administration"
-            title="Sample administration"
-            routerLink="/administration/sample"
-            >Samples</a
-          >
-          <!-- ** SAMPLE END -->
-        </div>
-      </li>
+      <li 
+        *ngIf="isAdmin" 
+        class="nav-item" 
+        ngbDropdown>
+          <a 
+            class="nav-link" 
+            style="cursor: pointer" 
+            ngbDropdownToggle 
+            id="adminDropdown" 
+            role="button">
+            <span class="fas fa-cogs"></span>&nbsp;Administration
+          </a>
+          <div 
+            ngbDropdownMenu 
+            aria-labelledby="adminDropdown" 
+            class="dropdown-menu dropdown-menu-right">
+            <!-- ** SAMPLE START -->
+            <a
+              class="dropdown-item"
+              aria-label="Sample administration"
+              title="Sample administration"
+              (click)="$event.preventDefault()"
+              routerLink="/administration/sample"
+              >Samples</a
+            >
+            <!-- ** SAMPLE END -->
+          </div>
+        </li>
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item" *ngIf="!isAuthenticated">
@@ -83,7 +77,7 @@
           aria-label="Network Login"
           title="Network Login"
         >
-          <i class="fas fa-sign-in-alt"></i> Network Login
+          <span class="fas fa-sign-in-alt"></span>&nbsp;Network Login
         </a>
       </li>
       <li class="nav-item" *ngIf="!isAuthenticated && allowB2C">
@@ -93,7 +87,7 @@
           aria-label="Consumer Login"
           title="Consumer Login"
         >
-          <i class="fas fa-sign-in-alt"></i> Consumer Login
+          <span class="fas fa-sign-in-alt"></span>&nbsp;Consumer Login
         </a>
       </li>
       <li
@@ -106,7 +100,7 @@
           aria-label="User Profile"
           title="User Profile"
         >
-          <i class="fas fa-user-edit"></i> User Profile
+          <span class="fas fa-user-edit"></span>&nbsp;User Profile
         </a>
       </li>
       <li class="nav-item" *ngIf="isAuthenticated">
@@ -116,7 +110,7 @@
           aria-label="Logout"
           title="Logout"
         >
-          <i class="fas fa-sign-out-alt"></i> Logout {{ userName }}
+          <span class="fas fa-sign-out-alt"></span>&nbsp;Logout {{ userName }}
           {{ userId == '' ? '' : '(' + userId + ')' }}
         </a>
       </li>

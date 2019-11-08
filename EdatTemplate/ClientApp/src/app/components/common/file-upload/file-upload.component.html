@@ -53,7 +53,7 @@
       (click)="cancelUpload()"
       [disabled]="filesToUpload?.length == 0"
     >
-      <i class="fas fa-ban"></i> Cancel</button
+      <span class="fas fa-ban"></span>&nbsp;Cancel</button
     >&nbsp;
     <button
       class="btn btn-primary btn-sm"
@@ -61,7 +61,7 @@
       (click)="upload()"
       [disabled]="filesToUpload?.length == 0"
     >
-      <i class="fas fa-upload"></i> Upload
+      <span class="fas fa-upload"></span>&nbsp;Upload
     </button>
   </div>
 </div>

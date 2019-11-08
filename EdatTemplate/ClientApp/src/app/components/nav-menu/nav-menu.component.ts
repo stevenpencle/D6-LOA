@@ -27,6 +27,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   canImpersonate = false;
   allowB2C = false;
   isB2CAuthenticated = false;
+  collapsed = true;
 
   constructor(
     private securityService: SecurityService,

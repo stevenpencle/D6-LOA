@@ -2,33 +2,22 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
+  ViewChild} from '@angular/core';
 import { SampleStoreService } from './sample-store.service';
 import { ISample, IStaff } from '../../../model/model';
 import { StatusCode } from '../../../model/model.enums';
 import * as moment from 'moment';
-import { StaffService } from '../../../services/data/staff.service';
 import { StaffPickerComponent } from 'src/app/components/common/staff-picker/staff-picker.component';
 import { ModelStateValidations } from 'src/app/services/http/http.service';
-import * as jsPDF from 'jspdf';
-import html2canvas from 'html2canvas'; 
-import { Inject} from "@angular/core"; 
-import { DOCUMENT } from "@angular/common"; 
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-sample-modal',
   templateUrl: './sample-modal.component.html'
 })
 export class SampleModalComponent implements OnInit, OnDestroy {
-  @ViewChild('closeBtn', { static: true })
-  closeBtn: ElementRef;
   @ViewChild(StaffPickerComponent, { static: true })
   staffPickerComponent: StaffPickerComponent;
-  @ViewChild('modalContent', { static: true }) 
-  modalContent: ElementRef;
-
   hasErrors = false;
   errors = '';
   validations: ModelStateValidations;
@@ -38,20 +27,13 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   selectedStaff: IStaff;
 
   constructor(
-    private sampleStoreService: SampleStoreService,
-    private staffService: StaffService,
-    @Inject(DOCUMENT) private document: Document
+    public activeModal: NgbActiveModal,
+    private sampleStoreService: SampleStoreService
   ) {}
 
   ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    this.closeEditModal();
-  }
-
-  private closeEditModal(): void {
-    this.closeBtn.nativeElement.click();
-  }
+  ngOnDestroy(): void {}
 
   clearErrors(): void {
     this.tempSample = {};
@@ -68,7 +50,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
       this.tempSample,
       () => {
         this.clearErrors();
-        this.closeEditModal();
+        this.activeModal.close();
       },
       errors => {
         this.hasErrors = true;
@@ -76,22 +58,6 @@ export class SampleModalComponent implements OnInit, OnDestroy {
         this.validations = errors;
       }
     );
-  }
-
-  setTempSample(sample: ISample): void {
-    this.clearErrors();
-    this.staffPickerComponent.clearInput();
-    if (sample.assignedStaffId != undefined && sample.assignedStaffId != null && sample.assignedStaffId > 0) {
-      this.staffService.get(sample.assignedStaffId, staff => {
-        this.selectedStaff = staff;
-      });
-    }
-    if (sample.birthDate == null) {
-      this.birthDate = null;
-    } else {
-      this.birthDate = moment(sample.birthDate);
-    }
-    this.tempSample = sample;
   }
 
   editSample(): void {
@@ -104,7 +70,7 @@ export class SampleModalComponent implements OnInit, OnDestroy {
         () => {
           this.tempSample = {};
           this.clearErrors();
-          this.closeEditModal();
+          this.activeModal.close();
         },
         errors => {
           this.hasErrors = true;
@@ -140,54 +106,4 @@ export class SampleModalComponent implements OnInit, OnDestroy {
       sample.birthDate = null;
     }
   }
-
-  printtoPDF(): void{
-   
-    let selectedElement;
-    var leftMargin = 15;
-    //Get the DOM For the Div element Modal Content
-    selectedElement = this.modalContent.nativeElement;
-     //Scroll the element to the top in order to Capture
-     this.document.documentElement.scrollTop = 0;
-   
-
-    // set up your pdf. This is in portrait mode, used millimeters for measurement, and the paper size is letter
-    let pdf = new jsPDF('p', 'mm', 'letter');
-    if (selectedElement!= null) {
-   
-        // pass your content into html2canvas, then set up the print job
-        html2canvas(selectedElement).then(canvas => {
-
-               var docWidth = pdf.internal.pageSize.getWidth();
-               var docHeight = pdf.internal.pageSize.getHeight(); 
-          
-            if (selectedElement != null) {
-  
-                 // I used bitmap here but the image type seems irrelevant, however the canvas.toDataUrl is required
-                const selectedElementUrl = canvas.toDataURL('image/png');
-                 // use the image properties when scaling the image to fit the page
-              const imageProperties = pdf.getImageProperties(selectedElementUrl);
-              
-                 // get the width of the image to maintain the ratio. This content is “tall” so I scale the width to maintain the aspect. 
-                // I also reduced the width and height by 20 mm to leave a margin
-              docWidth = ((imageProperties.width * docHeight) / imageProperties.height) - 20;
-  
-                 // add the image to the pdf
-                pdf.addImage(selectedElementUrl, 'PNG', 10,10,docWidth,docHeight-20);
-            //}
-            
-            var filename = this.tempSample.name.length>0 ?  this.tempSample.name : `New`;
-           
-            // save the pdf with whatever name you choose
-           pdf.save(filename + " " +  'Modal.pdf');
-           this.closeEditModal();
-           
-            }
-        });
-        
-    }
-  
-  }
-
-
 }

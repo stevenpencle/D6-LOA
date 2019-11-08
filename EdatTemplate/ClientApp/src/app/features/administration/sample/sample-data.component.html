@@ -9,7 +9,7 @@
       aria-label="New sample"
       title="New sample"
     >
-      <i class="fas fa-plus"></i> New Sample
+      <span class="fas fa-plus"></span>&nbsp;New Sample
     </button>
   </div>
   <div class="col text-right d-none d-md-block">
@@ -22,7 +22,7 @@
       aria-label="New sample"
       title="New sample"
     >
-      <i class="fas fa-plus"></i> New Sample
+      <span class="fas fa-plus"></span>&nbsp;New Sample
     </button>
   </div>
 </div>
@@ -44,7 +44,7 @@
                   [disabled]="data.currentPage == 1"
                   (click)="page('previous')"
                 >
-                  <i class="fas fa-angle-left"></i></button
+                  <span class="fas fa-angle-left"></span></button
                 >&nbsp;&nbsp;
                 <button
                   class="btn btn-secondary btn-sm"
@@ -52,14 +52,14 @@
                   [disabled]="data.currentPage == data.totalPages"
                   (click)="page('next')"
                 >
-                  <i class="fas fa-angle-right"></i></button
+                  <span class="fas fa-angle-right"></span></button
                 >&nbsp;&nbsp;
                 <button
                   class="btn btn-primary btn-sm"
                   title="export to excel"
                   (click)="export()"
                 >
-                  <i class="fas fa-file-excel"></i>
+                  <span class="fas fa-file-excel"></span>
                 </button>
               </div>
             </div>
@@ -228,30 +228,26 @@
                   <button
                     type="button"
                     class="btn btn-sm btn-outline-primary"
-                    data-toggle="modal"
-                    data-target="#sampleModal"
                     (click)="setTempSample(sample)"
                     aria-label="Edit sample"
                     title="Edit sample"
                   >
-                    <i class="fas fa-edit"></i>
+                    <span class="fas fa-edit"></span>
                   </button>
                 </td>
                 <td>
                   <button
                     type="button"
                     class="btn btn-sm btn-outline-danger"
-                    data-toggle="modal"
-                    data-target="#deleteSample"
-                    (click)="setTempSample(sample)"
+                    (click)="removeSample(deleteModal, sample)"
                     aria-label="Delete sample"
                     title="Delete sample"
                   >
-                    <i class="fas fa-trash-alt"></i>
+                    <span class="fas fa-trash-alt"></span>
                   </button>
                 </td>
                 <td style="text-align: center; vertical-align: middle;">
-                  <i class="fas fa-check" *ngIf="sample.isActive"></i>
+                  <span class="fas fa-check" *ngIf="sample.isActive"></span>
                 </td>
                 <td style="white-space: nowrap; text-align: center;">
                   {{ sample.name }}
@@ -293,83 +289,71 @@
     </div>
   </div>
 </div>
-<div
-  class="modal fade"
-  id="deleteSample"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="deleteSampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-white bg-danger">
-        <h4 class="modal-title" id="deleteSampleModalLabel">
-          Delete {{ tempSample.name }} Sample?
-        </h4>
+<ng-template #deleteModal let-modal>
+  <div class="modal-header text-white bg-danger">
+    <h4 class="modal-title" id="deleteSampleModalLabel">
+      Delete {{ tempSample.name }} Sample?
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Cancel delete"
+      title="Cancel delete"
+      (click)="modal.dismiss();"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="text-danger">
+      <strong>WARNING:</strong>&nbsp;This action is permanent. Are you sure
+      you want to delete the {{ tempSample.name }} sample?
+    </p>
+  </div>
+  <div class="modal-footer">
+    <div class="row">
+      <div class="col">
+        <input
+          ngbAutofocus
+          type="text"
+          class="form-control"
+          [(ngModel)]="checkUserId"
+          placeholder="Enter your User ID"
+          aria-placeholder="Enter your User ID"
+          aria-label="Enter your user ID to enable delete option"
+          title="Enter your user ID to enable delete option"
+        />
+      </div>
+      <div class="col">
         <button
           type="button"
-          class="close"
+          class="btn btn-secondary"
           data-dismiss="modal"
+          (click)="modal.dismiss();"
           aria-label="Cancel delete"
           title="Cancel delete"
-          (click)="clearCheckUserId()"
         >
-          <span aria-hidden="true">&times;</span>
+          <span class="fas fa-ban"></span>&nbsp;Cancel
         </button>
-      </div>
-      <div class="modal-body">
-        <p class="text-danger">
-          <strong>WARNING:</strong>&nbsp;This action is permanent. Are you sure
-          you want to delete the {{ tempSample.name }} sample?
-        </p>
-      </div>
-      <div class="modal-footer">
-        <div class="row">
-          <div class="col">
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="checkUserId"
-              placeholder="Enter your User ID"
-              aria-placeholder="Enter your User ID"
-              aria-label="Enter your user ID to enable delete option"
-              title="Enter your user ID to enable delete option"
-            />
-          </div>
-          <div class="col">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-              (click)="clearCheckUserId()"
-              aria-label="Cancel delete"
-              title="Cancel delete"
-              #closeBtnDelete
-            >
-              <i class="fas fa-ban"></i>&nbsp;Cancel
-            </button>
-            &nbsp;&nbsp;
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="removeSample()"
-              aria-label="Delete sample"
-              title="Delete sample"
-              [disabled]="
-                checkUserId != undefined &&
-                userId != undefined &&
-                checkUserId != null &&
-                userId != null &&
-                checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()
-              "
-            >
-              <i class="fas fa-trash-alt"></i>&nbsp;Delete
-            </button>
-          </div>
-        </div>
+        &nbsp;&nbsp;
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="modal.close();"
+          aria-label="Delete sample"
+          title="Delete sample"
+          [disabled]="
+            checkUserId != undefined &&
+            userId != undefined &&
+            checkUserId != null &&
+            userId != null &&
+            checkUserId.trim().toUpperCase() != userId.trim().toUpperCase()
+          "
+        >
+          <span class="fas fa-trash-alt"></span>&nbsp;Delete
+        </button>
       </div>
     </div>
   </div>
-</div>
-<app-sample-modal></app-sample-modal>
+</ng-template>

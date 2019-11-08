@@ -7,10 +7,10 @@
 >
   <span *ngIf="sortData.currentSortField === field">
     <span *ngIf="sortData.currentSortDirection === 'descending'">
-      <i class="fas fa-sort-alpha-up"></i>
+      <span class="fas fa-sort-alpha-up"></span>
     </span>
     <span *ngIf="sortData.currentSortDirection === 'ascending'">
-      <i class="fas fa-sort-alpha-down"></i>
+      <span class="fas fa-sort-alpha-down"></span>
     </span>
   </span>
   {{ label }}
