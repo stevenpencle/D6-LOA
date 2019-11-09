@@ -300,24 +300,24 @@
       data-dismiss="modal"
       aria-label="Cancel delete"
       title="Cancel delete"
-      (click)="modal.dismiss();"
+      (click)="modal.dismiss()"
     >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <p class="text-danger">
-      <strong>WARNING:</strong>&nbsp;This action is permanent. Are you sure
-      you want to delete the {{ tempSample.name }} sample?
+      <strong>WARNING:</strong>&nbsp;This action is permanent. Are you sure you
+      want to delete the {{ tempSample.name }} sample?
     </p>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer" style="display: block;">
     <div class="row">
       <div class="col">
         <input
           ngbAutofocus
           type="text"
-          class="form-control"
+          class="form-control form-control-sm"
           [(ngModel)]="checkUserId"
           placeholder="Enter your User ID"
           aria-placeholder="Enter your User ID"
@@ -325,22 +325,22 @@
           title="Enter your user ID to enable delete option"
         />
       </div>
-      <div class="col">
+      <div class="col text-right">
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-secondary btn-sm"
           data-dismiss="modal"
-          (click)="modal.dismiss();"
+          (click)="modal.dismiss()"
           aria-label="Cancel delete"
           title="Cancel delete"
         >
           <span class="fas fa-ban"></span>&nbsp;Cancel
         </button>
-        &nbsp;&nbsp;
+        &nbsp;
         <button
           type="button"
-          class="btn btn-danger"
-          (click)="modal.close();"
+          class="btn btn-danger btn-sm"
+          (click)="modal.close()"
           aria-label="Delete sample"
           title="Delete sample"
           [disabled]="

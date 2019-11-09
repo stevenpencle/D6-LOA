@@ -1,8 +1,6 @@
 <div class="modal-header bg-light">
   <h4 class="modal-title" id="sampleModalLabel">
-    {{
-      tempSample.id == null || tempSample.id == 0 ? 'New' : 'Edit'
-    }}
+    {{ tempSample.id == null || tempSample.id == 0 ? 'New' : 'Edit' }}
     Sample
   </h4>
   <button
@@ -172,21 +170,20 @@
 <div class="modal-footer">
   <button
     type="button"
-    class="btn btn-secondary"
+    class="btn btn-secondary btn-sm"
     (click)="activeModal.close()"
     aria-label="Cancel"
     title="Cancel"
-    
   >
     <span class="fas fa-ban"></span>&nbsp;Cancel
   </button>
   <button
     type="button"
-    class="btn btn-primary"
+    class="btn btn-primary btn-sm"
     (click)="editSample()"
     aria-label="Save sample"
     title="Save sample"
   >
     <span class="fas fa-save"></span>&nbsp;Save
-  </button> 
+  </button>
 </div>
