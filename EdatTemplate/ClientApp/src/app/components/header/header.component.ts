@@ -1,4 +1,4 @@
-import { Component,  OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as jQuery from 'jquery';
 import { IEdatHeader } from '../../model/model';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
@@ -32,25 +32,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (this.header.showEnvironmentWarning) {
           jQuery('#environmentWarningLarge').addClass('environment-warning');
           jQuery('#environmentWarningSmall').addClass('environment-warning');
-          contentBuffer.addClass('environment-warning-content-fixed-top-buffer');
+          contentBuffer.addClass(
+            'environment-warning-content-fixed-top-buffer'
+          );
         } else {
           contentBuffer.addClass('content-fixed-top-buffer');
         }
-      }
-      else if (topPosition < 153 && fixedTop) {
+      } else if (topPosition < 153 && fixedTop) {
         fixedTop = false;
         navigationMenu.removeClass('fixed-top');
         contentBuffer.addClass('content-buffer');
         if (this.header.showEnvironmentWarning) {
           jQuery('#environmentWarningLarge').removeClass('environment-warning');
           jQuery('#environmentWarningSmall').removeClass('environment-warning');
-          contentBuffer.removeClass('environment-warning-content-fixed-top-buffer');
+          contentBuffer.removeClass(
+            'environment-warning-content-fixed-top-buffer'
+          );
         } else {
           contentBuffer.removeClass('content-fixed-top-buffer');
         }
       }
     });
   }
-  
+
   ngOnDestroy(): void {}
 }

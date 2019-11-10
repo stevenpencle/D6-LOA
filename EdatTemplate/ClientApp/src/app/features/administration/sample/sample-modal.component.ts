@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { SampleStoreService } from './sample-store.service';
 import { ISample, IStaff } from '../../../model/model';
 import { StatusCode } from '../../../model/model.enums';
@@ -100,7 +96,11 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   }
 
   private setBirthDate(sample: ISample): void {
-    if (this.birthDate != undefined && this.birthDate != null && this.birthDate.isValid()) {
+    if (
+      this.birthDate !== undefined &&
+      this.birthDate !== null &&
+      this.birthDate.isValid()
+    ) {
       sample.birthDate = this.birthDate.toDate();
     } else {
       sample.birthDate = null;

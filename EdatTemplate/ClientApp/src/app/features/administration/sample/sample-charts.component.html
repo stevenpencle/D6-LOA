@@ -1,4 +1,11 @@
-<div *ngIf="data != undefined && data != null && lineData != undefined && lineData != null">
+<div
+  *ngIf="
+    data != undefined &&
+    data != null &&
+    lineData != undefined &&
+    lineData != null
+  "
+>
   <div class="row">
     <div class="col-lg-6 col-md-12">
       <app-chart-to-table
@@ -37,13 +44,13 @@
       <div *ngFor="let dataPoint of data.seriesData[0].series" class="row">
         <div class="col">
           <div class="form-group">
-            <label for="{{'dp-' + dataPoint.name}}">
+            <label for="{{ 'dp-' + dataPoint.name }}">
               <strong>{{ dataPoint.name }}</strong>
             </label>
             <input
               type="range"
               class="form-control-range"
-              id="{{'dp-' + dataPoint.name}}"
+              id="{{ 'dp-' + dataPoint.name }}"
               [ngModel]="dataPoint.value"
               (change)="updateData($event, dataPoint)"
               min="1000000"

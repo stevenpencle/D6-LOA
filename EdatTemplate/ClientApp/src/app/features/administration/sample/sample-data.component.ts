@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { SampleStoreService } from './sample-store.service';
 import {
   DataNavigation,
@@ -32,7 +27,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   statusCode = StatusCode;
   data: DataNavigation<ISample>;
   filters: Array<FilterEvent> = [];
-  @Input('observableFilter') observableFilter: string;
+  @Input() observableFilter: string;
 
   constructor(
     private modalService: NgbModal,
@@ -105,9 +100,9 @@ export class SampleDataComponent implements OnInit, OnDestroy {
       });
     } else {
       this.sampleStoreService.replayStateMap(
-        samples => {
+        s => {
           return linq
-            .from(samples)
+            .from(s)
             .where(x => x.name.startsWith(this.observableFilter))
             .toArray();
         },
@@ -124,11 +119,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
     }
     for (let i = 0; i < state.length; i++) {
       console.log(
-        `id:${state[i].id}, isActive:${state[i].isActive}, name:${
-          state[i].name
-        }, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${
-          state[i].cost
-        }, assignedStaffName:${state[i].assignedStaffName}`
+        `id:${state[i].id}, isActive:${state[i].isActive}, name:${state[i].name}, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${state[i].cost}, assignedStaffName:${state[i].assignedStaffName}`
       );
     }
   }
@@ -169,10 +160,16 @@ export class SampleDataComponent implements OnInit, OnDestroy {
             assignedStaffName: ''
           }
         : cloneDeep(sample);
-    const modalRef = this.modalService.open(SampleModalComponent, { backdrop: "static" });
+    const modalRef = this.modalService.open(SampleModalComponent, {
+      backdrop: 'static'
+    });
     modalRef.componentInstance.tempSample = this.tempSample;
     modalRef.componentInstance.staffPickerComponent.clearInput();
-    if (this.tempSample.assignedStaffId !== undefined && this.tempSample.assignedStaffId != null && this.tempSample.assignedStaffId > 0) {
+    if (
+      this.tempSample.assignedStaffId !== undefined &&
+      this.tempSample.assignedStaffId != null &&
+      this.tempSample.assignedStaffId > 0
+    ) {
       this.staffService.get(this.tempSample.assignedStaffId, staff => {
         modalRef.componentInstance.selectedStaff = staff;
       });
@@ -186,13 +183,18 @@ export class SampleDataComponent implements OnInit, OnDestroy {
 
   removeSample(deleteModal: any, sample: ISample): void {
     this.tempSample = cloneDeep(sample);
-    this.modalService.open(deleteModal, {ariaLabelledBy: 'deleteSampleModalLabel'}).result.then(() => {
-      this.sampleStoreService.remove(this.tempSample, () => {
-        this.clearCheckUserId();
-      });
-    }, () => {
-      this.clearCheckUserId();
-    });
+    this.modalService
+      .open(deleteModal, { ariaLabelledBy: 'deleteSampleModalLabel' })
+      .result.then(
+        () => {
+          this.sampleStoreService.remove(this.tempSample, () => {
+            this.clearCheckUserId();
+          });
+        },
+        () => {
+          this.clearCheckUserId();
+        }
+      );
   }
 
   calculateAge(sample: ISample): number {

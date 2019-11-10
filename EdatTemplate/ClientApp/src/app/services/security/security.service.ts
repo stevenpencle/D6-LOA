@@ -14,7 +14,7 @@ export class SecurityService extends Store<IClientToken> {
 
   getToken(callback?: () => void): void {
     const state = this.getState();
-    if (state != undefined && state != null) {
+    if (state !== undefined && state !== null) {
       return;
     }
     this.httpClient.get<IClientToken>('api/security/gettoken').subscribe(

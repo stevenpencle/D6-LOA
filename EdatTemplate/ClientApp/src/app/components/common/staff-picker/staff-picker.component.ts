@@ -68,10 +68,20 @@ export class StaffPickerComponent implements OnInit {
       }
       let name = '';
       let userId = '';
-      if (value.firstName != undefined && value.firstName != null && value.lastName != undefined && value.lastName != null) {
+      if (
+        value.firstName !== undefined &&
+        value.firstName !== null &&
+        value.lastName !== undefined &&
+        value.lastName !== null
+      ) {
         name = value.firstName + ' ' + value.lastName;
       }
-      if (value.district != undefined && value.district != null && value.racfId != undefined && value.racfId != null) {
+      if (
+        value.district !== undefined &&
+        value.district !== null &&
+        value.racfId !== undefined &&
+        value.racfId !== null
+      ) {
         userId =
           ' (' +
           value.district.trim().toUpperCase() +

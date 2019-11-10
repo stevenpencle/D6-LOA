@@ -22,7 +22,7 @@ export class DateFieldComponent {
     }
   }
 
-  //internal
+  // internal
   stringDate = '';
 
   constructor() {}

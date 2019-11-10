@@ -34,7 +34,7 @@
               <button
                 type="button"
                 class="btn btn-link"
-                title="file download size: {{document.fileSize}} bytes"
+                title="file download size: {{ document.fileSize }} bytes"
                 (click)="getDocument(document.id, document.fileName)"
               >
                 {{ document.fileName }}
@@ -55,7 +55,7 @@
   <div class="col">
     <div style="max-width: 400px;;">
       <app-file-upload
-        blobDirectory="{{documentContainerName}}"
+        blobDirectory="{{ documentContainerName }}"
         (documentUploaded)="documentUploaded($event)"
         accept=".pdf,.doc,.docx"
       ></app-file-upload>

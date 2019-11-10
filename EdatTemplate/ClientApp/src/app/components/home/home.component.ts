@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
-      let reload = params['reload'];
+      const reload = params['reload'];
       if (reload === 'true') {
         this.router.navigateByUrl('/home').then(() => {
           const browser = detect();

@@ -55,43 +55,43 @@ export class DataNavigationService {
       const fieldGraph = filters[i].field.split('.');
       if (fieldGraph.length === 1) {
         data.sortedFilteredData = linq
-        .from(data.sortedFilteredData)
-        .where(x => {
-          if (
-            x[filters[i].field] == null &&
-            (filters[i].value == null || filters[i].value.trim() === '')
-          ) {
-            return true;
-          }
-          if (x[filters[i].field] == null) {
-            return false;
-          }
-          return (x[filters[i].field] as string)
-            .toString()
-            .toUpperCase()
-            .includes(filters[i].value.toUpperCase());
-        })
-        .toArray();
+          .from(data.sortedFilteredData)
+          .where(x => {
+            if (
+              x[filters[i].field] == null &&
+              (filters[i].value == null || filters[i].value.trim() === '')
+            ) {
+              return true;
+            }
+            if (x[filters[i].field] == null) {
+              return false;
+            }
+            return (x[filters[i].field] as string)
+              .toString()
+              .toUpperCase()
+              .includes(filters[i].value.toUpperCase());
+          })
+          .toArray();
       }
       if (fieldGraph.length === 2) {
         data.sortedFilteredData = linq
-        .from(data.sortedFilteredData)
-        .where(x => {
-          if (
-            x[fieldGraph[0]][fieldGraph[1]] == null &&
-            (filters[i].value == null || filters[i].value.trim() === '')
-          ) {
-            return true;
-          }
-          if (x[fieldGraph[0]][fieldGraph[1]] == null) {
-            return false;
-          }
-          return (x[fieldGraph[0]][fieldGraph[1]] as string)
-            .toString()
-            .toUpperCase()
-            .includes(filters[i].value.toUpperCase());
-        })
-        .toArray();
+          .from(data.sortedFilteredData)
+          .where(x => {
+            if (
+              x[fieldGraph[0]][fieldGraph[1]] == null &&
+              (filters[i].value == null || filters[i].value.trim() === '')
+            ) {
+              return true;
+            }
+            if (x[fieldGraph[0]][fieldGraph[1]] == null) {
+              return false;
+            }
+            return (x[fieldGraph[0]][fieldGraph[1]] as string)
+              .toString()
+              .toUpperCase()
+              .includes(filters[i].value.toUpperCase());
+          })
+          .toArray();
       }
     }
     this.doSort(data, data.currentSortField);
@@ -121,30 +121,32 @@ export class DataNavigationService {
     if (data.currentSortDirection === 'ascending') {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .orderBy(x => (
+        .orderBy(x =>
           fieldGraph.length === 1
-          ? x[fieldGraph[0]] == null
-            ? ''
-            : x[fieldGraph[0]]
-          : fieldGraph.length === 2
+            ? x[fieldGraph[0]] == null
+              ? ''
+              : x[fieldGraph[0]]
+            : fieldGraph.length === 2
             ? x[fieldGraph[0]][fieldGraph[1]] == null
               ? ''
               : x[fieldGraph[0]][fieldGraph[1]]
-            : null))
+            : null
+        )
         .toArray();
     } else {
       data.sortedFilteredData = linq
         .from(data.sortedFilteredData)
-        .orderByDescending(x => (
-        fieldGraph.length === 1
-          ? x[fieldGraph[0]] == null
-            ? ''
-            : x[fieldGraph[0]]
-          : fieldGraph.length === 2
+        .orderByDescending(x =>
+          fieldGraph.length === 1
+            ? x[fieldGraph[0]] == null
+              ? ''
+              : x[fieldGraph[0]]
+            : fieldGraph.length === 2
             ? x[fieldGraph[0]][fieldGraph[1]] == null
               ? ''
               : x[fieldGraph[0]][fieldGraph[1]]
-            : null))
+            : null
+        )
         .toArray();
     }
     if (data.pageSize > 0) {
@@ -170,8 +172,7 @@ export class DataNavigationService {
         dataNavigation.sortedFilteredData.length / dataNavigation.pageSize
       );
       if (
-        dataNavigation.sortedFilteredData.length %
-        dataNavigation.pageSize >
+        dataNavigation.sortedFilteredData.length % dataNavigation.pageSize >
         0
       ) {
         dataNavigation.totalPages += 1;

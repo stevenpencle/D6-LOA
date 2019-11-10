@@ -24,7 +24,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.environmentService.safeSubscribe(this, state => {
       this.showWarning = state.header.showEnvironmentWarning;
     });
-    if (fastRoute != undefined && fastRoute != null && fastRoute.trim() !== '') {
+    if (
+      fastRoute !== undefined &&
+      fastRoute !== null &&
+      fastRoute.trim() !== ''
+    ) {
       localStorage.removeItem('fast-route');
       const routeData = JSON.parse(fastRoute) as LocationData;
       this.router.navigate(routeData.path, {

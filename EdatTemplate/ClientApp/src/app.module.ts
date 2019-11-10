@@ -2,11 +2,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { NgbModule, NgbDateAdapter, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModule,
+  NgbDateAdapter,
+  NgbActiveModal
+} from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxMaskModule } from 'ngx-mask';
-import { NgxSpinnerModule } from "ngx-spinner";
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 // routing
 import { AppRoutingModule } from './app-routing.module';
@@ -111,7 +115,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     // ** SAMPLE END
     { provide: NgbDateAdapter, useClass: NgbMomentDatePickerAdapter }
   ],
-  entryComponents: [ SampleModalComponent ],
+  entryComponents: [SampleModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

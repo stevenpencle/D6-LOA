@@ -3,9 +3,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class LoadingService {
-
   showCounter = 0;
-  
+
   constructor(private spinner: NgxSpinnerService) {}
 
   show(): () => void {
@@ -24,5 +23,5 @@ export class LoadingService {
       }
     };
     return complete;
-  }  
+  }
 }

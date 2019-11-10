@@ -43,8 +43,8 @@ export class HttpService implements OnDestroy {
         headers: {
           'ng-api-call': 'true',
           'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
-          'Expires': 'Sat, 01 Jan 2019 00:00:00 GMT'
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
         }
       })
       .subscribe(
@@ -102,18 +102,20 @@ export class HttpService implements OnDestroy {
       this.router.navigateByUrl('/server-error');
     }
     let modelStateErrorsConsole = '';
-    let modelStateValidations: ModelStateValidations = new ModelStateValidations();
+    const modelStateValidations: ModelStateValidations = new ModelStateValidations();
     if (httpErrorResponse.status === 400) {
       for (const property in httpErrorResponse.error) {
-        let modelStateValidation: ModelStateValidation = {
-          property: property,
-          validations: []
-        };
-        httpErrorResponse.error[property].forEach((error: string) => {
-          modelStateErrorsConsole += error + '\n';
-          modelStateValidation.validations.push(error);
-        });
-        modelStateValidations.validations.push(modelStateValidation);
+        if (httpErrorResponse.error.hasOwnProperty(property)) {
+          const modelStateValidation: ModelStateValidation = {
+            property: property,
+            validations: []
+          };
+          httpErrorResponse.error[property].forEach((error: string) => {
+            modelStateErrorsConsole += error + '\n';
+            modelStateValidation.validations.push(error);
+          });
+          modelStateValidations.validations.push(modelStateValidation);
+        }
       }
     }
     if (httpErrorResponse.status === 401) {

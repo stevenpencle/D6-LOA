@@ -17,6 +17,8 @@ export abstract class Store<T> {
   private _storeName: string;
   private _enforceImmutableState = false;
 
+  // tslint:disable:max-line-length
+
   /**
    *
    * @param storeName The name of the store for auditing observers in debug console.
@@ -54,11 +56,11 @@ export abstract class Store<T> {
     initializeStoreWith?: () => void
   ): Subscription {
     console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
-    if (initializeStoreWith != undefined && initializeStoreWith != null) {
+    if (initializeStoreWith !== undefined && initializeStoreWith !== null) {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    let next = this.getNextObserver(changeCallback, () => {
+    const next = this.getNextObserver(changeCallback, () => {
       console.log(
         this._storeName +
           ' change notification / total observer count = ' +
@@ -89,11 +91,11 @@ export abstract class Store<T> {
     initializeStoreWith?: () => void
   ): Subscription {
     console.log(this._storeName + ' ' + ref.constructor.name + ' subscribed');
-    if (initializeStoreWith != undefined && initializeStoreWith != null) {
+    if (initializeStoreWith !== undefined && initializeStoreWith !== null) {
       console.log(this._storeName + ' initializing... ');
       initializeStoreWith();
     }
-    let next = this.getNextObserver(changeCallback, () => {
+    const next = this.getNextObserver(changeCallback, () => {
       console.log(
         this._storeName +
           ' change notification / total observer count = ' +
@@ -180,7 +182,7 @@ export abstract class Store<T> {
   ): NextObserver<Z> {
     return {
       next: next => {
-        if (nextCallback != undefined && nextCallback != null) {
+        if (nextCallback !== undefined && nextCallback !== null) {
           nextCallback();
         }
         changeCallback(next);

@@ -29,45 +29,45 @@
       />&nbsp;EDAT Template</span
     >
   </a>
-  <button 
-    class="navbar-toggler" 
-    type="button" 
-    aria-controls="navbarContent" 
-    [attr.aria-expanded]="!collapsed" 
-    aria-label="Toggle navigation" 
-    (click)="collapsed = !collapsed">
+  <button
+    class="navbar-toggler"
+    type="button"
+    aria-controls="navbarContent"
+    [attr.aria-expanded]="!collapsed"
+    aria-label="Toggle navigation"
+    (click)="collapsed = !collapsed"
+  >
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav mr-auto">
-      <li 
-        *ngIf="isAdmin" 
-        class="nav-item" 
-        ngbDropdown>
-          <a 
-            class="nav-link" 
-            style="cursor: pointer" 
-            ngbDropdownToggle 
-            id="adminDropdown" 
-            role="button">
-            <span class="fas fa-cogs"></span>&nbsp;Administration
-          </a>
-          <div 
-            ngbDropdownMenu 
-            aria-labelledby="adminDropdown" 
-            class="dropdown-menu dropdown-menu-right">
-            <!-- ** SAMPLE START -->
-            <a
-              class="dropdown-item"
-              aria-label="Sample administration"
-              title="Sample administration"
-              (click)="$event.preventDefault()"
-              routerLink="/administration/sample"
-              >Samples</a
-            >
-            <!-- ** SAMPLE END -->
-          </div>
-        </li>
+      <li *ngIf="isAdmin" class="nav-item" ngbDropdown>
+        <a
+          class="nav-link"
+          style="cursor: pointer"
+          ngbDropdownToggle
+          id="adminDropdown"
+          role="button"
+        >
+          <span class="fas fa-cogs"></span>&nbsp;Administration
+        </a>
+        <div
+          ngbDropdownMenu
+          aria-labelledby="adminDropdown"
+          class="dropdown-menu dropdown-menu-right"
+        >
+          <!-- ** SAMPLE START -->
+          <a
+            class="dropdown-item"
+            aria-label="Sample administration"
+            title="Sample administration"
+            (click)="$event.preventDefault()"
+            routerLink="/administration/sample"
+            >Samples</a
+          >
+          <!-- ** SAMPLE END -->
+        </div>
+      </li>
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item" *ngIf="!isAuthenticated">

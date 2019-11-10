@@ -14,7 +14,11 @@
       #fileUpload
       type="file"
       class="custom-file-input"
-      [disabled]="filesToUpload != undefined && filesToUpload != null && filesToUpload.length > 0"
+      [disabled]="
+        filesToUpload != undefined &&
+        filesToUpload != null &&
+        filesToUpload.length > 0
+      "
       (change)="fileChangeEvent($event)"
       placeholder="Upload file..."
       multiple

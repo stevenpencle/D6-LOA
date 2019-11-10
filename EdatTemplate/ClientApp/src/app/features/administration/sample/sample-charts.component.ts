@@ -45,7 +45,7 @@ export class SampleChartsComponent implements OnInit {
   }
 
   updateData(event: any, dataPoint: IGraphDataPoint): void {
-    dataPoint.value = Number.parseInt(event.target.value);
+    dataPoint.value = Number.parseInt(event.target.value, 10);
     let dataPoints = linq
       .from(this.data.seriesData[0].series)
       .where(x => x.name !== dataPoint.name)
