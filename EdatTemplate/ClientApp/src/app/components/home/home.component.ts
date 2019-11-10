@@ -25,10 +25,10 @@ export class HomeComponent implements OnInit {
               case 'edge':
                 break;
               default:
-                location.reload(true);
+                location.reload();
             }
           } else {
-            location.reload(true);
+            location.reload();
           }
         });
       }

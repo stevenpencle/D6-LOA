@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const w = jQuery(window);
     const navigationMenu = jQuery('#navigationMenu');
     const contentBuffer = jQuery('#contentBuffer');
-    w.scroll(() => {
+    w.on('scroll', () => {
       const topPosition = w.scrollTop();
       // console.log(w.scrollTop());
       if (topPosition > 153 && !fixedTop) {
