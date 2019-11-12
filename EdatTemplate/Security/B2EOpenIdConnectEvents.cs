@@ -1,6 +1,10 @@
 ﻿using EdatTemplate.Infrastructure;
+using EdatTemplate.Models.Domain;
+using EdatTemplate.ORM;
 using EdatTemplate.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
@@ -90,6 +94,38 @@ namespace EdatTemplate.Security
                         claimsIdentity.RemoveClaim(claim);
                     }
                 }
+                using (var serviceScope = ctx.HttpContext.RequestServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    using (var context = serviceScope.ServiceProvider.GetService<EntityContext>())
+                    {
+                        using (var transaction = await context.Database.BeginTransactionAsync())
+                        {
+                            var appUser = await context.FdotAppUsers.Where(x => x.SrsId == staff.Id).SingleOrDefaultAsync();
+                            if (appUser == null)
+                            {
+                                appUser = new FdotAppUser
+                                {
+                                    Name = $"{staff.FirstName} {staff.LastName}",
+                                    Email = staff.EmailAddress,
+                                    SrsId = staff.Id,
+                                    District = staff.District,
+                                    RacfId = staff.RacfId
+                                };
+                                await context.AddAsync(appUser);
+                            }
+                            else
+                            {
+                                appUser.Name = $"{staff.FirstName} {staff.LastName}";
+                                appUser.Email = staff.EmailAddress;
+                                appUser.District = staff.District;
+                                appUser.RacfId = staff.RacfId;
+                            }
+                            await context.SaveChangesAsync();
+                            transaction.Commit();
+                            identityClaims.Add(new Claim(ApplicationClaims.AppUserId, appUser.Id.ToString()));
+                        }
+                    }
+                }
                 foreach (var claim in identityClaims)
                 {
                     claimsIdentity.AddClaim(claim);
@@ -108,7 +144,6 @@ namespace EdatTemplate.Security
                 {
                     throw ctx.Failure;
                 }
-
                 return Task.FromResult(0);
             };
         }

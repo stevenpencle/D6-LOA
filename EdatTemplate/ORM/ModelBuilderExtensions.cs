@@ -26,8 +26,7 @@ namespace EdatTemplate.ORM
         public static void SetAuditingShadowProperties<T>(ModelBuilder builder) where T : class, IAuditedEntity
         {
             builder.Entity<T>().Property(x => x.LastUpdated).IsRequired();
-            builder.Entity<T>().Property(x => x.LastUpdatedBy).HasMaxLength(100).IsRequired();
-            builder.Entity<T>().Property(x => x.LastUpdatedByStaffId).IsRequired();
+            builder.Entity<T>().Property(x => x.LastUpdatedAppUserId).IsRequired();
         }
     }
 }

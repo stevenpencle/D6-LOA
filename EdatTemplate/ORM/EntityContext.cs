@@ -1,4 +1,5 @@
 ﻿using EdatTemplate.Models.Domain;
+using EdatTemplate.Models.Domain.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,9 @@ namespace EdatTemplate.ORM
         private EntityFrameworkConfig _entityFrameworkConfig;
         private DiagnosticListener _listener;
 
+        public virtual DbSet<AppUser> AppUsers { get; set; }
+        public virtual DbSet<FdotAppUser> FdotAppUsers { get; set; }
+        public virtual DbSet<PublicAppUser> PublicAppUsers { get; set; }
         public virtual DbSet<Sample> Samples { get; set; }
 
         public EntityContext(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
@@ -98,8 +102,69 @@ namespace EdatTemplate.ORM
                         : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc)
                 ));
             }
-            // add any additional constraints
-            modelBuilder.Entity<Sample>().HasIndex(e => e.Name).IsUnique().HasName("IX_Sample_Name");
+            // add entities
+            // AppUser
+            modelBuilder.Entity<AppUser>()
+                        .ToTable("EDATTB0001_AppUser")
+                        .HasKey(x => x.Id);
+            modelBuilder.Entity<AppUser>()
+                        .Property(x => x.Id)
+                        .HasColumnName("AppUserId");
+            modelBuilder.Entity<AppUser>()
+                        .Property(x => x.Name)
+                        .HasColumnType("varchar(100)");
+            modelBuilder.Entity<AppUser>()
+                        .Property(x => x.Email)
+                        .HasColumnType("varchar(100)");
+            modelBuilder.Entity<AppUser>()
+                        .HasDiscriminator<AppUserType>(x => x.AppUserType)
+                        .HasValue<FdotAppUser>(AppUserType.Fdot)
+                        .HasValue<PublicAppUser>(AppUserType.Public);
+            modelBuilder.Entity<AppUser>()
+                        .HasMany(x => x.LastUpdatedSamples)
+                        .WithOne(x => x.LastUpdatedAppUser)
+                        .HasForeignKey(x => x.LastUpdatedAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+            // FdotAppUser
+            modelBuilder.Entity<FdotAppUser>()
+                        .Property(x => x.District)
+                        .HasColumnType("varchar(2)");
+            modelBuilder.Entity<FdotAppUser>()
+                        .Property(x => x.RacfId)
+                        .HasColumnType("varchar(10)");
+            modelBuilder.Entity<FdotAppUser>()
+                        .HasIndex(x => x.SrsId)
+                        .IsUnique()
+                        .HasName("IX_FdotAppUser_SrsId");
+            modelBuilder.Entity<FdotAppUser>()
+                        .HasMany(x => x.SampleAssignments)
+                        .WithOne(x => x.AssignedFdotAppUser)
+                        .HasForeignKey(x => x.AssignedFdotAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+            // PublicAppUser
+            modelBuilder.Entity<PublicAppUser>()
+                        .Property(x => x.Sid)
+                        .HasColumnType("varchar(36)");
+            modelBuilder.Entity<PublicAppUser>()
+                        .HasIndex(x => x.Sid)
+                        .IsUnique()
+                        .HasName("IX_PublicAppUser_Sid");
+            // Sample
+            modelBuilder.Entity<Sample>()
+                        .ToTable("EDATTB0002_Sample")
+                        .HasKey(x => x.Id);
+            modelBuilder.Entity<Sample>()
+                        .Property(x => x.Id)
+                        .HasColumnName("SampleId");
+            modelBuilder.Entity<Sample>()
+                        .Property(x => x.Name)
+                        .HasColumnType("varchar(50)");
+            modelBuilder.Entity<Sample>()
+                        .HasIndex(e => e.Name)
+                        .IsUnique()
+                        .HasName("IX_Sample_Name");
             //call base
             base.OnModelCreating(modelBuilder);
         }

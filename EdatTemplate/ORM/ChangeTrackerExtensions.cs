@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace EdatTemplate.ORM
@@ -14,17 +15,21 @@ namespace EdatTemplate.ORM
         {
             changeTracker.DetectChanges();
             var timestamp = DateTime.UtcNow;
-            var userName = httpContextAccessor.HttpContext == null
-                ? "SYSTEM"
-                : httpContextAccessor.HttpContext.User.Identity.Name;
-            var staffClaim = ((ClaimsIdentity) httpContextAccessor.HttpContext?.User.Identity)?.FindFirst(ApplicationClaims.StaffId);
+            var appUserIdClaim = ((ClaimsIdentity)httpContextAccessor.HttpContext?.User.Identity)?.FindFirst(ApplicationClaims.AppUserId);
             foreach (var entry in changeTracker.Entries())
             {
                 if (!(entry.Entity is IAuditedEntity entity)) continue;
                 if (entry.State != EntityState.Added && entry.State != EntityState.Modified) continue;
                 entity.LastUpdated = timestamp;
-                entity.LastUpdatedBy = userName;
-                entity.LastUpdatedByStaffId = staffClaim == null ? 0 : int.Parse(staffClaim.Value);
+                if (appUserIdClaim == null)
+                {
+                    var sysUser = ((EntityContext)changeTracker.Context).FdotAppUsers.Where(x => x.SrsId == 0).Single();
+                    entity.LastUpdatedAppUserId = sysUser.Id;
+                }
+                else
+                {
+                    entity.LastUpdatedAppUserId = int.Parse(appUserIdClaim.Value);
+                }
             }
         }
     }

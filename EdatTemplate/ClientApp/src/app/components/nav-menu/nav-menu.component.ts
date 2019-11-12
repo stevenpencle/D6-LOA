@@ -8,7 +8,6 @@ import {
 import { SecurityService } from '../../services/security/security.service';
 import { HttpService } from '../../services/http/http.service';
 import * as linq from 'linq';
-import { isArray } from 'util';
 import { IAuthProviderConfig } from '../../model/model';
 
 @Component({

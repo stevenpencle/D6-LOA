@@ -41,7 +41,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav mr-auto">
-      <li *ngIf="isAdmin" class="nav-item" ngbDropdown>
+      <li *ngIf="isAdmin || isB2CUser" class="nav-item" ngbDropdown>
         <a
           class="nav-link"
           style="cursor: pointer"
@@ -117,7 +117,7 @@
     </ul>
     <form
       class="form-inline my-2 my-lg-0"
-      *ngIf="isAuthenticated && canImpersonate"
+      *ngIf="isAuthenticated && canImpersonate && !isB2CUser"
     >
       <select
         id="roleImpersonation"
@@ -129,7 +129,6 @@
         [ngModelOptions]="{ standalone: true }"
       >
         <option value="Admin">Admin</option>
-        <option value="B2CUser">B2CUser</option>
         <option value="NotAuthorized">No Role</option>
       </select>
     </form>

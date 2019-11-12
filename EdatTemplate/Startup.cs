@@ -1,5 +1,6 @@
 using EdatTemplate.Automation;
 using EdatTemplate.Infrastructure;
+using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.Security;
 using EdatTemplate.Models.View;
 using EdatTemplate.ORM;
@@ -19,6 +20,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace EdatTemplate
 {
@@ -126,7 +128,13 @@ namespace EdatTemplate
             services.AddApplicationInsightsTelemetry();
             //configure MVC
             services
-                .AddMvc()
+                .AddAuthorization(options =>
+                    {
+                        options.AddPolicy("AdminOrB2C", policy =>
+                            policy.RequireClaim(ApplicationClaims.RoleClaim, ApplicationRoles.Admin, ApplicationRoles.B2CUser));
+                    }
+                )
+                .AddMvc(options => options.EnableEndpointRouting = false)
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -139,7 +147,7 @@ namespace EdatTemplate
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //are we using the angular-cli server (VS Code debugging)?
             var usingAngularCliServer = Configuration["node-server"] == "true";
@@ -170,17 +178,7 @@ namespace EdatTemplate
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints => {
-                endpoints.MapDefaultControllerRoute();
-            });
-
-            // app.UseMvc(routes =>
-            // {
-            //     routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
-            // });
+            app.UseMvcWithDefaultRoute();
             if (!usingAngularCliServer)
             {
                 //serve files using IIS express (VS development) or deployed code - static files located in "ClientApp/dist"
@@ -196,6 +194,32 @@ namespace EdatTemplate
                     spa.UseAngularCliServer("start");
                 }
             });
+            //register system user
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var dbContext = serviceScope.ServiceProvider.GetService<EntityContext>())
+                {
+                    using (var transaction = dbContext.Database.BeginTransaction())
+                    {
+                        var systemUser = dbContext.FdotAppUsers.SingleOrDefault(x => x.SrsId == 0);
+                        if (systemUser == null)
+                        {
+                            var sendGridConfig = Configuration.GetSection("SendGridConfig").Get<SendGridConfig>();
+                            systemUser = new FdotAppUser
+                            {
+                                Name = "SYSTEM",
+                                Email = sendGridConfig.DoNotReplyEmailAddress,
+                                SrsId = 0,
+                                District = "CO",
+                                RacfId = "SYSTEM"
+                            };
+                            dbContext.AppUsers.Add(systemUser);
+                            dbContext.SaveChanges();
+                            transaction.Commit();
+                        }
+                    }
+                }
+            }
         }
     }
 }

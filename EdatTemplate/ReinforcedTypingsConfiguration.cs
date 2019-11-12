@@ -17,6 +17,9 @@ namespace EdatTemplate
             builder.ExportAsInterfaces(new[] {
                 // domain entity models
                 typeof(Staff),
+                typeof(AppUser),
+                typeof(FdotAppUser),
+                typeof(PublicAppUser),
                 typeof(Sample),
                 // security models
                 typeof(ClientToken),
@@ -43,7 +46,8 @@ namespace EdatTemplate
 
             builder.ExportAsEnums(new[]
             {
-                typeof(StatusCode),
+                typeof(AppUserType),
+                typeof(StatusCode)
             }, c => c.ExportTo("model.enums.ts").DontIncludeToNamespace());
 
             // global type substitutions

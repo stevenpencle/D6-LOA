@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace EdatTemplate.Controllers
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "AdminOrB2C", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class SampleController : Controller
     {
@@ -26,7 +26,7 @@ namespace EdatTemplate.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "AdminOrB2C", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> AddOrUpdateSample([FromBody] Sample sample)
@@ -59,7 +59,13 @@ namespace EdatTemplate.Controllers
             var tracker = sample.Id == 0 ? await _context.Samples.AddAsync(sample) : _context.Samples.Update(sample);
             await _context.SaveChangesAsync();
             //return the serialized entity
-            return new ObjectResult(tracker.Entity);
+            sample = await _context.Samples
+                .Where(x => x.Id == tracker.Entity.Id)
+                .Include(x => x.AssignedFdotAppUser)
+                .Include(x => x.LastUpdatedAppUser)
+                .AsNoTracking()
+                .SingleOrDefaultAsync();
+            return new ObjectResult(sample);
         }
 
         [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
@@ -81,6 +87,8 @@ namespace EdatTemplate.Controllers
         public async Task<IEnumerable<Sample>> GetSamples()
         {
             var l = await _context.Samples
+                .Include(x => x.AssignedFdotAppUser)
+                .Include(x => x.LastUpdatedAppUser)
                 .AsNoTracking()
                 .ToListAsync();
             return l;

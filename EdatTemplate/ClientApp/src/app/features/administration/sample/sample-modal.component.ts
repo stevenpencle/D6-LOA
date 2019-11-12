@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { StaffPickerComponent } from 'src/app/components/common/staff-picker/staff-picker.component';
 import { ModelStateValidations } from 'src/app/services/http/http.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { StaffService } from 'src/app/services/data/staff.service';
 
 @Component({
   selector: 'app-sample-modal',
@@ -24,7 +25,8 @@ export class SampleModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public activeModal: NgbActiveModal,
-    private sampleStoreService: SampleStoreService
+    private sampleStoreService: SampleStoreService,
+    private staffService: StaffService
   ) {}
 
   ngOnInit(): void {}
@@ -61,6 +63,8 @@ export class SampleModalComponent implements OnInit, OnDestroy {
       this.addNewSample();
     } else {
       this.setBirthDate(this.tempSample);
+      this.tempSample.assignedFdotAppUser = null;
+      this.tempSample.lastUpdatedAppUser = null;
       this.sampleStoreService.update(
         this.tempSample,
         () => {
@@ -79,19 +83,11 @@ export class SampleModalComponent implements OnInit, OnDestroy {
 
   changeAssignment(staff: IStaff) {
     if (staff == null) {
-      this.tempSample.assignedStaffId = 0;
-      this.tempSample.assignedStaffName = '';
+      this.tempSample.assignedFdotAppUserId = null;
     } else {
-      this.tempSample.assignedStaffId = staff.id;
-      this.tempSample.assignedStaffName =
-        staff.firstName +
-        ' ' +
-        staff.lastName +
-        ' (' +
-        staff.district +
-        '\\' +
-        staff.racfId +
-        ')';
+      this.staffService.saveFdotAppUser(staff, fdotAppUser => {
+        this.tempSample.assignedFdotAppUserId = fdotAppUser.id;
+      });
     }
   }
 

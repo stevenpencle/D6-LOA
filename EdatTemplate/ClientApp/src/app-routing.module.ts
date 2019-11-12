@@ -22,7 +22,7 @@ const appRoutes: Routes = [
     canActivate: [RouteGuard],
     pathMatch: 'full',
     data: {
-      AuthorizedRoles: ['Admin']
+      AuthorizedRoles: ['Admin', 'B2CUser']
     } as RouteData
   },
   {
@@ -31,7 +31,7 @@ const appRoutes: Routes = [
     redirectTo: 'administration/sample',
     pathMatch: 'full',
     data: {
-      AuthorizedRoles: ['Admin']
+      AuthorizedRoles: ['Admin', 'B2CUser']
     } as RouteData
   },
   // ** SAMPLE END

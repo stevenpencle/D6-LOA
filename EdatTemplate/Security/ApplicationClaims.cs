@@ -9,5 +9,6 @@
         public const string RoleClaim = "EDATTEMPLATE_ROLE";
         public static string UserId = "EDATTEMPLATE_USER_ID";
         public static string StaffId = "EDATTEMPLATE_STAFF_ID";
+        public static string AppUserId = "EDATTEMPLATE_APP_USER_ID";
     }
 }

@@ -27,6 +27,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   statusCode = StatusCode;
   data: DataNavigation<ISample>;
   filters: Array<FilterEvent> = [];
+  isAdmin = false;
   @Input() observableFilter: string;
 
   constructor(
@@ -51,6 +52,11 @@ export class SampleDataComponent implements OnInit, OnDestroy {
           } else {
             this.userId = '';
           }
+          this.isAdmin =
+            token.roles !== undefined &&
+            token.roles !== null &&
+            Array.isArray(token.roles) &&
+            linq.from(token.roles).any(x => x === 'Admin');
         }
       },
       () => {
@@ -119,7 +125,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
     }
     for (let i = 0; i < state.length; i++) {
       console.log(
-        `id:${state[i].id}, isActive:${state[i].isActive}, name:${state[i].name}, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${state[i].cost}, assignedStaffName:${state[i].assignedStaffName}`
+        `id:${state[i].id}, isActive:${state[i].isActive}, name:${state[i].name}, status:${state[i].status}, birthDate:${state[i].birthDate}, cost:${state[i].cost}, assignedStaffName:${state[i].assignedFdotAppUser.name}`
       );
     }
   }
@@ -156,8 +162,8 @@ export class SampleDataComponent implements OnInit, OnDestroy {
             birthDate: null,
             status: this.statusCode.New,
             cost: 0,
-            assignedStaffId: 0,
-            assignedStaffName: ''
+            assignedFdotAppUserId: null,
+            assignedFdotAppUser: null
           }
         : cloneDeep(sample);
     const modalRef = this.modalService.open(SampleModalComponent, {
@@ -166,13 +172,15 @@ export class SampleDataComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.tempSample = this.tempSample;
     modalRef.componentInstance.staffPickerComponent.clearInput();
     if (
-      this.tempSample.assignedStaffId !== undefined &&
-      this.tempSample.assignedStaffId != null &&
-      this.tempSample.assignedStaffId > 0
+      this.tempSample.assignedFdotAppUser !== undefined &&
+      this.tempSample.assignedFdotAppUser !== null
     ) {
-      this.staffService.get(this.tempSample.assignedStaffId, staff => {
-        modalRef.componentInstance.selectedStaff = staff;
-      });
+      this.staffService.get(
+        this.tempSample.assignedFdotAppUser.srsId,
+        staff => {
+          modalRef.componentInstance.selectedStaff = staff;
+        }
+      );
     }
     if (this.tempSample.birthDate == null) {
       modalRef.componentInstance.birthDate = null;
@@ -187,6 +195,8 @@ export class SampleDataComponent implements OnInit, OnDestroy {
       .open(deleteModal, { ariaLabelledBy: 'deleteSampleModalLabel' })
       .result.then(
         () => {
+          this.tempSample.assignedFdotAppUser = null;
+          this.tempSample.lastUpdatedAppUser = null;
           this.sampleStoreService.remove(this.tempSample, () => {
             this.clearCheckUserId();
           });
@@ -217,7 +227,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
               : '',
           birthDate: x.birthDate,
           cost: x.cost,
-          assignedTo: x.assignedStaffName
+          assignedTo: x.assignedFdotAppUser.name
         };
       })
       .toArray();
