@@ -7,7 +7,7 @@ import { EmailService } from 'src/app/services/data/email.service';
   templateUrl: './sample-email.component.html'
 })
 export class SampleEmailComponent {
-  emailStaff: IStaff;
+  emailStaff: IStaff = null;
 
   constructor(private emailService: EmailService) {}
 
