@@ -35,6 +35,7 @@ import { FieldValidationMessageComponent } from './app/components/common/field-v
 import { EnvironmentService } from './app/services/environment/environment.service';
 import { DataMarshalerService } from './app/services/data/data-marshaler.service';
 import { HttpService } from './app/services/http/http.service';
+import { HttpConfigService } from './app/services/http/http-config.service';
 import { SecurityService } from './app/services/security/security.service';
 import { RouteGuard } from './app/services/security/route.guard';
 import { DataNavigationService } from './app/services/data/data-navigation.service';
@@ -105,6 +106,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     EmailService,
     BlobService,
     HttpService,
+    HttpConfigService,
     SecurityService,
     RouteGuard,
     LoadingService,

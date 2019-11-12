@@ -6,7 +6,29 @@ import { SecurityService } from '../security/security.service';
 import { IClientToken } from '../../model/model';
 import { DataMarshalerService } from '../data/data-marshaler.service';
 import { LoadingService } from '../environment/loading.service';
+import { HttpConfigService } from './http-config.service';
 
+export interface ModelStateValidation {
+  property: string;
+  validations: string[];
+}
+
+export class ModelStateValidations {
+  validations: ModelStateValidation[] = [];
+
+  list(): string {
+    let errorList = '';
+    if (this.validations == null || this.validations.length === 0) {
+      return '<ul><li>Unexpected Server Exception</li></ul>';
+    }
+    this.validations.forEach((validation: ModelStateValidation) => {
+      validation.validations.forEach((error: string) => {
+        errorList += '<li>' + error + '</li>';
+      });
+    });
+    return '<ul>' + errorList + '</ul>';
+  }
+}
 @Injectable()
 export class HttpService implements OnDestroy {
   private token: IClientToken = null;
@@ -17,7 +39,8 @@ export class HttpService implements OnDestroy {
     private securityService: SecurityService,
     private dataMarshalerService: DataMarshalerService,
     private router: Router,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private httpConfigService: HttpConfigService
   ) {
     this.securityService.safeSubscribe(
       this,
@@ -39,24 +62,17 @@ export class HttpService implements OnDestroy {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<TResult>(this.environmentService.baseUrl + api, {
-        headers: {
-          'ng-api-call': 'true',
-          'Cache-Control': 'no-cache',
-          Pragma: 'no-cache',
-          Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
-        }
-      })
+      .get<TResult>(this.environmentService.baseUrl + api, this.httpConfigService.getOptions)
       .subscribe(
         result => {
-          callback(result);
           completed();
+          callback(result);
         },
         (error: HttpErrorResponse) => {
+          completed();
           const errors = this.handleError(error);
           if (modelStateErrorCallback) {
-            modelStateErrorCallback(errors);
-            completed();
+            modelStateErrorCallback(errors); 
           }
         }
       );
@@ -70,21 +86,17 @@ export class HttpService implements OnDestroy {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<TResult>(this.environmentService.baseUrl + api, payload, {
-        headers: {
-          'ng-api-call': 'true'
-        }
-      })
+      .post<TResult>(this.environmentService.baseUrl + api, payload, this.httpConfigService.postOptions)
       .subscribe(
         result => {
-          callback(result);
           completed();
+          callback(result);
         },
         (error: HttpErrorResponse) => {
+          completed();
           const errors = this.handleError(error);
           if (modelStateErrorCallback) {
             modelStateErrorCallback(errors);
-            completed();
           }
         }
       );
@@ -133,27 +145,5 @@ export class HttpService implements OnDestroy {
       modelStateErrorsConsole === '' ? 'Server error' : modelStateErrorsConsole
     );
     return modelStateValidations;
-  }
-}
-
-export interface ModelStateValidation {
-  property: string;
-  validations: string[];
-}
-
-export class ModelStateValidations {
-  validations: ModelStateValidation[] = [];
-
-  list(): string {
-    let errorList = '';
-    if (this.validations == null || this.validations.length === 0) {
-      return '<ul><li>Unexpected Server Exception</li></ul>';
-    }
-    this.validations.forEach((validation: ModelStateValidation) => {
-      validation.validations.forEach((error: string) => {
-        errorList += '<li>' + error + '</li>';
-      });
-    });
-    return '<ul>' + errorList + '</ul>';
   }
 }

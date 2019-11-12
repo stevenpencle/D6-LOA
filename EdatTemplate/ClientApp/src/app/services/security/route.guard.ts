@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IClientToken } from '../../model/model';
 import { SecurityService } from './security.service';
+import { HttpConfigService } from '../http/http-config.service';
 
 @Injectable()
 export class RouteGuard implements CanActivate, OnDestroy {
@@ -14,6 +15,7 @@ export class RouteGuard implements CanActivate, OnDestroy {
   constructor(
     private router: Router,
     private httpClient: HttpClient,
+    private httpConfigService: HttpConfigService,
     securityService: SecurityService
   ) {
     securityService.safeSubscribe(this, () => {
@@ -27,7 +29,7 @@ export class RouteGuard implements CanActivate, OnDestroy {
     const tokenObservable =
       this.token$ !== undefined
         ? this.token$
-        : this.httpClient.get<IClientToken>('api/security/gettoken');
+        : this.httpClient.get<IClientToken>('api/security/gettoken', this.httpConfigService.getOptions);
     return tokenObservable.pipe(
       map(result => {
         if (result !== undefined && result !== null) {

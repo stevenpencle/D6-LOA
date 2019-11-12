@@ -3,11 +3,13 @@ import { IDocumentMetadata, IStringResponse } from '../../model/model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { LoadingService } from '../environment/loading.service';
+import { HttpConfigService } from '../http/http-config.service';
 
 @Injectable()
 export class BlobService {
   constructor(
     private httpClient: HttpClient,
+    private httpConfigService: HttpConfigService,
     private loadingService: LoadingService
   ) {}
 
@@ -17,21 +19,11 @@ export class BlobService {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<IDocumentMetadata[]>(
-        'api/Storage/GetFileList?directory=' + directory,
-        {
-          headers: {
-            'ng-api-call': 'true',
-            'Cache-Control': 'no-cache',
-            Pragma: 'no-cache',
-            Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
-          }
-        }
-      )
+      .get<IDocumentMetadata[]>('api/Storage/GetFileList?directory=' + directory, this.httpConfigService.getOptions)
       .subscribe(
         result => {
-          callback(result);
           completed();
+          callback(result);
         },
         () => {
           completed();
@@ -53,8 +45,8 @@ export class BlobService {
       })
       .subscribe(
         result => {
-          saveAs(result, fileName);
           completed();
+          saveAs(result, fileName);
         },
         () => {
           completed();
@@ -69,25 +61,18 @@ export class BlobService {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IDocumentMetadata[]>('/api/Storage/UploadFiles', formData, {
-        headers: {
-          'ng-api-call': 'true',
-          'Cache-Control': 'no-cache',
-          Pragma: 'no-cache',
-          Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
-        }
-      })
+      .post<IDocumentMetadata[]>('/api/Storage/UploadFiles', formData, this.httpConfigService.postOptions)
       .subscribe(
         result => {
-          callback(result);
           completed();
+          callback(result);
         },
         (httpErrorResponse: HttpErrorResponse) => {
+          completed();
           console.error(httpErrorResponse.message);
           if (errorCallback) {
             errorCallback(httpErrorResponse.message);
           }
-          completed();
         }
       );
   }
@@ -95,22 +80,11 @@ export class BlobService {
   remove(id: string, callback: (response: string) => void): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IStringResponse>(
-        'api/Storage/RemoveFile',
-        { data: id },
-        {
-          headers: {
-            'ng-api-call': 'true',
-            'Cache-Control': 'no-cache',
-            Pragma: 'no-cache',
-            Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
-          }
-        }
-      )
+      .post<IStringResponse>('api/Storage/RemoveFile', { data: id }, this.httpConfigService.postOptions)
       .subscribe(
         result => {
-          callback(result.data);
           completed();
+          callback(result.data);
         },
         () => {
           completed();
@@ -121,22 +95,11 @@ export class BlobService {
   removeAll(directory: string, callback: (response: string) => void): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IStringResponse>(
-        'api/Storage/RemoveFiles',
-        { data: directory },
-        {
-          headers: {
-            'ng-api-call': 'true',
-            'Cache-Control': 'no-cache',
-            Pragma: 'no-cache',
-            Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
-          }
-        }
-      )
+      .post<IStringResponse>('api/Storage/RemoveFiles', { data: directory }, this.httpConfigService.postOptions)
       .subscribe(
         result => {
-          callback(result.data);
           completed();
+          callback(result.data);
         },
         () => {
           completed();

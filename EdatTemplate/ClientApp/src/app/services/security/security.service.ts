@@ -4,6 +4,7 @@ import { IClientToken } from '../../model/model';
 import { Store } from '../store/store.service';
 import { Observable } from 'rxjs';
 import { LoadingService } from '../environment/loading.service';
+import { HttpConfigService } from '../http/http-config.service';
 
 @Injectable()
 export class SecurityService extends Store<IClientToken> {
@@ -11,6 +12,7 @@ export class SecurityService extends Store<IClientToken> {
 
   constructor(
     private httpClient: HttpClient,
+    private httpConfigService: HttpConfigService,
     private loadingService: LoadingService
   ) {
     super('SecurityService', null);
@@ -22,23 +24,23 @@ export class SecurityService extends Store<IClientToken> {
       return;
     }
     const completed = this.loadingService.show();
-    this.httpClient.get<IClientToken>('api/security/gettoken').subscribe(
+    this.httpClient.get<IClientToken>('api/security/gettoken', this.httpConfigService.getOptions).subscribe(
       result => {
+        completed();
         this.setState(result);
         this.token$ = this.state$;
         if (callback) {
           callback();
         }
-        completed();
       },
       (httpErrorResponse: HttpErrorResponse) => {
+        completed();
         if (httpErrorResponse.status === 401) {
           this.setState(null);
           this.token$ = this.state$;
           if (callback) {
             callback();
           }
-          completed();
         }
       }
     );
