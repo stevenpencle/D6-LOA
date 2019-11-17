@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import fontawesome from '@fortawesome/fontawesome';
-import * as fas from '@fortawesome/fontawesome-free-solid';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 
 @Component({
@@ -15,9 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private environmentService: EnvironmentService,
     private router: Router
-  ) {
-    fontawesome.library.add(fas.default);
-  }
+  ) {}
 
   ngOnInit(): void {
     const fastRoute = localStorage.getItem('fast-route');
