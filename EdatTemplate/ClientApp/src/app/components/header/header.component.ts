@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import * as jQuery from 'jquery';
 import { IEdatHeader } from '../../model/model';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 
@@ -16,44 +15,56 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.environmentService.safeSubscribe(this, state => {
       this.header = state.header;
-    });
-    // stick nav on scroll
-    let fixedTop = false;
-    const w = jQuery(window);
-    const navigationMenu = jQuery('#navigationMenu');
-    const contentBuffer = jQuery('#contentBuffer');
-    w.on('scroll', () => {
-      const topPosition = w.scrollTop();
-      // console.log(w.scrollTop());
-      if (topPosition > 153 && !fixedTop) {
-        fixedTop = true;
-        navigationMenu.addClass('fixed-top');
-        contentBuffer.removeClass('content-buffer');
-        if (this.header.showEnvironmentWarning) {
-          jQuery('#environmentWarningLarge').addClass('environment-warning');
-          jQuery('#environmentWarningSmall').addClass('environment-warning');
-          contentBuffer.addClass(
-            'environment-warning-content-fixed-top-buffer'
-          );
-        } else {
-          contentBuffer.addClass('content-fixed-top-buffer');
-        }
-      } else if (topPosition < 153 && fixedTop) {
-        fixedTop = false;
-        navigationMenu.removeClass('fixed-top');
-        contentBuffer.addClass('content-buffer');
-        if (this.header.showEnvironmentWarning) {
-          jQuery('#environmentWarningLarge').removeClass('environment-warning');
-          jQuery('#environmentWarningSmall').removeClass('environment-warning');
-          contentBuffer.removeClass(
-            'environment-warning-content-fixed-top-buffer'
-          );
-        } else {
-          contentBuffer.removeClass('content-fixed-top-buffer');
-        }
-      }
+      this.stickNav();
     });
   }
 
   ngOnDestroy(): void {}
+
+  stickNav(): void {
+    let fixedTop = false;
+    const w = window;
+    const d = document;
+    const navigationMenu = d.getElementById('navigationMenu');
+    const contentBuffer = d.getElementById('contentBuffer');
+    const onScrollEventHandler = () => {
+      const topPosition = w.scrollY;
+      const environmentWarningLarge = this.header.showEnvironmentWarning
+        ? d.getElementById('environmentWarningLarge')
+        : null;
+      const environmentWarningSmall = this.header.showEnvironmentWarning
+        ? d.getElementById('environmentWarningSmall')
+        : null;
+      if (topPosition > 153 && !fixedTop) {
+        fixedTop = true;
+        navigationMenu.classList.add('fixed-top');
+        contentBuffer.classList.remove('content-buffer');
+        if (this.header.showEnvironmentWarning) {
+          environmentWarningLarge.classList.add('environment-warning');
+          environmentWarningSmall.classList.add('environment-warning');
+          contentBuffer.classList.add(
+            'environment-warning-content-fixed-top-buffer'
+          );
+        } else {
+          contentBuffer.classList.add('content-fixed-top-buffer');
+        }
+      } else if (topPosition < 153 && fixedTop) {
+        fixedTop = false;
+        navigationMenu.classList.remove('fixed-top');
+        contentBuffer.classList.add('content-buffer');
+        if (this.header.showEnvironmentWarning) {
+          environmentWarningLarge.classList.remove('environment-warning');
+          environmentWarningSmall.classList.remove('environment-warning');
+          contentBuffer.classList.remove(
+            'environment-warning-content-fixed-top-buffer'
+          );
+        } else {
+          contentBuffer.classList.remove('content-fixed-top-buffer');
+        }
+      }
+    };
+    if (w.addEventListener) {
+      w.addEventListener('scroll', onScrollEventHandler, false);
+    }
+  }
 }
