@@ -43,6 +43,7 @@ import { StaffService } from './app/services/data/staff.service';
 import { EmailService } from './app/services/data/email.service';
 import { NgbMomentDatePickerAdapter } from './app/services/data/ngbMomentDatePickerAdapter';
 import { ExcelExportService } from './app/services/data/excel-export.service';
+import { PdfDocumentService } from './app/services/data/pdf-document.service';
 import { BlobService } from './app/services/data/blob.service';
 import { LoadingService } from './app/services/environment/loading.service';
 
@@ -56,6 +57,7 @@ import { SampleEmailComponent } from './app/features/administration/sample/sampl
 import { SampleDocumentsComponent } from './app/features/administration/sample/sample-documents.component';
 import { SampleDataComponent } from './app/features/administration/sample/sample-data.component';
 import { SampleChartsComponent } from './app/features/administration/sample/sample-charts.component';
+import { SamplePdfPrintComponent } from './app/features/administration/sample/sample-pdf-print.component';
 // ** SAMPLE END
 
 @NgModule({
@@ -82,7 +84,8 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     SampleEmailComponent,
     SampleDocumentsComponent,
     SampleDataComponent,
-    SampleChartsComponent
+    SampleChartsComponent,
+    SamplePdfPrintComponent
     // ** SAMPLE END
   ],
   imports: [
@@ -102,6 +105,7 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
     DataMarshalerService,
     DataNavigationService,
     ExcelExportService,
+    PdfDocumentService,
     StaffService,
     EmailService,
     BlobService,
