@@ -50,7 +50,7 @@ export class SamplePdfDocumentComponent implements OnInit, OnDestroy {
     this.pdfDocumentService.fromHtml(
       pages,
       this.pdfDocHeader.nativeElement.innerHTML,
-      'test.pdf'
+      'PDF Document Service Example.pdf'
     );
   }
 }
