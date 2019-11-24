@@ -57,7 +57,7 @@ import { SampleEmailComponent } from './app/features/administration/sample/sampl
 import { SampleDocumentsComponent } from './app/features/administration/sample/sample-documents.component';
 import { SampleDataComponent } from './app/features/administration/sample/sample-data.component';
 import { SampleChartsComponent } from './app/features/administration/sample/sample-charts.component';
-import { SamplePdfPrintComponent } from './app/features/administration/sample/sample-pdf-print.component';
+import { SamplePdfDocumentComponent } from './app/features/administration/sample/sample-pdf-document.component';
 // ** SAMPLE END
 
 @NgModule({
@@ -85,7 +85,7 @@ import { SamplePdfPrintComponent } from './app/features/administration/sample/sa
     SampleDocumentsComponent,
     SampleDataComponent,
     SampleChartsComponent,
-    SamplePdfPrintComponent
+    SamplePdfDocumentComponent
     // ** SAMPLE END
   ],
   imports: [

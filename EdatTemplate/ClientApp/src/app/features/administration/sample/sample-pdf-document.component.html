@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-lg-2 col-md-4 col-sm-12">
+  <div class="col-lg-3 col-md-6 col-sm-12">
     <div class="form-group">
       <label for="documentTitle">Document Title</label>
       <input
@@ -14,6 +14,24 @@
     </div>
     <button
       type="button"
+      class="btn btn-sm btn-light"
+      aria-label="Show Template"
+      title="Show Template"
+      (click)="toggleShowTemplate()"
+    >
+      <span
+        class="fas fa-eye"
+        [ngClass]="{
+          fas: true,
+          'fa-eye': !showDocumentTemplate,
+          'fa-eye-slash': showDocumentTemplate
+        }"
+      ></span
+      >&nbsp;{{ showDocumentTemplate ? 'Hide' : 'Show' }} Template
+    </button>
+    &nbsp;
+    <button
+      type="button"
       class="btn btn-sm btn-primary"
       aria-label="Create PDF"
       title="Create PDF"
@@ -25,11 +43,24 @@
 </div>
 <br />
 <div class="row">
-  <div class="col">
-    <div style="width: 520pt;" #pdfDoc>
-      <div style="border: dashed 1px rgb(226, 226, 226)" #pdfDocPage1>
-        <h3 style="margin-bottom: 25px;">{{ documentTitle }}</h3>
-        <div style="margin-bottom: 25px;">
+  <div class="col-lg-6 col-md-8 col-sm-12">
+    <div style="max-width: 545px;">
+      <div
+        #pdfDocHeader
+        [ngStyle]="{ display: showDocumentTemplate == true ? 'block' : 'none' }"
+      >
+        <p style="font-size: large; font-weight: bold; font-style: italic;">
+          {{ documentTitle }}
+        </p>
+      </div>
+      <div
+        #pdfDocPage1
+        [ngStyle]="{
+          border: 'dashed 1px rgb(226, 226, 226)',
+          display: showDocumentTemplate == true ? 'block' : 'none'
+        }"
+      >
+        <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Gravida
           cum sociis natoque penatibus et. In pellentesque massa placerat duis.
@@ -40,8 +71,13 @@
           curabitur gravida. Non diam phasellus vestibulum lorem sed risus
           ultricies tristique. Mauris rhoncus aenean vel elit scelerisque mauris
           pellentesque. Ipsum consequat nisl vel pretium lectus quam.
-        </div>
-        <div style="margin-bottom: 25px;">
+        </p>
+        <p>
+          <a href="https://localhost:44376/#/administration/sample"
+            >https://localhost:44376/#/administration/sample</a
+          >
+        </p>
+        <p>
           Luctus venenatis lectus magna fringilla. Pharetra convallis posuere
           morbi leo urna molestie. Netus et malesuada fames ac turpis egestas
           maecenas. Cursus vitae congue mauris rhoncus aenean vel. Congue nisi
@@ -52,8 +88,8 @@
           aenean sed adipiscing diam donec. Eu non diam phasellus vestibulum
           lorem sed risus ultricies tristique. Consequat semper viverra nam
           libero.
-        </div>
-        <div>
+        </p>
+        <p>
           Egestas erat imperdiet sed euismod nisi porta lorem mollis. Nunc sed
           blandit libero volutpat sed. Volutpat odio facilisis mauris sit amet
           massa vitae tortor condimentum. Mattis ullamcorper velit sed
@@ -70,10 +106,16 @@
           accumsan lacus vel facilisis volutpat. Elit ullamcorper dignissim cras
           tincidunt lobortis. Arcu risus quis varius quam quisque id diam. Magna
           etiam tempor orci eu lobortis elementum nibh tellus molestie.
-        </div>
+        </p>
       </div>
-      <div style="border: dashed 1px rgb(226, 226, 226);" #pdfDocPage2>
-        <div style="margin-bottom: 25px;">
+      <div
+        #pdfDocPage2
+        [ngStyle]="{
+          border: 'dashed 1px rgb(226, 226, 226)',
+          display: showDocumentTemplate == true ? 'block' : 'none'
+        }"
+      >
+        <p>
           Morbi leo urna molestie at. Ullamcorper velit sed ullamcorper morbi
           tincidunt ornare. Mauris vitae ultricies leo integer malesuada nunc
           vel risus. Sit amet facilisis magna etiam tempor. Nisl pretium fusce
@@ -89,8 +131,8 @@
           fermentum dui faucibus in. Neque volutpat ac tincidunt vitae semper
           quis lectus nulla. Vestibulum morbi blandit cursus risus at ultrices
           mi. Sed id semper risus in hendrerit.
-        </div>
-        <table class="table table-bordered">
+        </p>
+        <table border="1">
           <thead>
             <tr>
               <th>Column 1</th>
@@ -117,8 +159,14 @@
           </tbody>
         </table>
       </div>
-      <div style="border: dashed 1px rgb(226, 226, 226);" #pdfDocPage3>
-          <img src="../../../../assets/template_architecture.png" />
+      <div
+        #pdfDocPage3
+        [ngStyle]="{
+          border: 'dashed 1px rgb(226, 226, 226)',
+          display: showDocumentTemplate == true ? 'block' : 'none'
+        }"
+      >
+        <img src="../../../../assets/a8.jpg" />
       </div>
     </div>
   </div>

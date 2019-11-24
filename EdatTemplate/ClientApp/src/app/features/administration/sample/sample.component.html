@@ -184,24 +184,28 @@
       <app-sample-documents></app-sample-documents>
     </div>
   </div>
-  <br/>
+  <br />
   <div class="card">
-    <div class="card-header">Sample PDF Print</div>
+    <div class="card-header">Sample PDF Document Generation</div>
     <div class="card-body">
       <div class="card-title">
-        <code> Sample Component: sample-pdf-print.component.(ts|html)</code> <br />
-        <code> PDF Document Service: pdf-document.service.ts </code
-        ><br />
+        <code> Sample Component: sample-pdf-document.component.(ts|html)</code>
+        <br />
+        <code> PDF Document Service: pdf-document.service.ts </code><br />
       </div>
       <h6 class="card-subtitle mb-2 text-muted">
-       This example demonstrates how to make an API call to get data
-        to bind to a chart. The ngx-charts library is a client-side Angular
-        charting framework that draws SVG charts that are reactive to data
-        binding updates. The charts use aria- attributes for accessibility
-        compliance.
+        This component demonstrats a service that uses the
+        <a href="https://github.com/MrRio/jsPDF" target="_blank">jsPDF</a>
+        library to create a PDF document from an HTML template. The HTML is
+        separated into multiple pages and contains various elements like text, a
+        hyperlink, a table, and an image. An input is bound to the document
+        title to demonstrate dynamic content binding. This is just to
+        demonstrate one way to use the jsPDF library to create PDF documents,
+        but the library is capable of much more. This example was meant to show
+        how a letter might be generated in the application.
       </h6>
       <hr />
-      <app-sample-pdf-print></app-sample-pdf-print>
+      <app-sample-pdf-document></app-sample-pdf-document>
     </div>
   </div>
 </div>
