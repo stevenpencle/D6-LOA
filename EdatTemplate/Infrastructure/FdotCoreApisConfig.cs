@@ -1,6 +1,6 @@
 ﻿namespace EdatTemplate.Infrastructure
 {
-    public class FdotCoreApis
+    public class FdotCoreApisConfig
     {
         public string ClientSecret { get; set; }
         public string ProductUri { get; set; }

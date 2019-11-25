@@ -15,11 +15,10 @@ namespace EdatTemplate.Infrastructure
         private static readonly HttpClient Client = new HttpClient();
         private readonly string _endpoint;
 
-        public StaffService(FdotCoreApis fdotCoreApis)
+        public StaffService(FdotCoreApisConfig fdotCoreApisConfig)
         {
-            var fdotCoreApis1 = fdotCoreApis;
-            _endpoint = fdotCoreApis1.ProductUri + fdotCoreApis1.ApiStaff;
-            Client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", fdotCoreApis1.ClientSecret);
+            _endpoint = fdotCoreApisConfig.ProductUri + fdotCoreApisConfig.ApiStaff;
+            Client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", fdotCoreApisConfig.ClientSecret);
         }
 
         public async Task<IEnumerable<Staff>> GetStaffByNameAsync(string name)

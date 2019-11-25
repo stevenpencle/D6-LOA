@@ -61,10 +61,15 @@ namespace EdatTemplate
             //add email service
             services.AddSingleton<IEmailService, EmailService>();
             //add core api configuration for infrastructure services
-            var fdotCoreApis = Configuration.GetSection("FdotCoreApis").Get<FdotCoreApis>();
-            services.AddSingleton(fdotCoreApis);
+            var fdotCoreApisConfig = Configuration.GetSection("FdotCoreApisConfig").Get<FdotCoreApisConfig>();
+            services.AddSingleton(fdotCoreApisConfig);
+            //add edms api configuration for infrastructure services
+            var edmsApiConfig = Configuration.GetSection("EdmsApiConfig").Get<EdmsApiConfig>();
+            services.AddSingleton(edmsApiConfig);
             //staff service api wrapper
             services.AddSingleton<IStaffService, StaffService>();
+            //edms service api wrapper
+            services.AddSingleton<IEdmsService, EdmsService>();
             //add auth provider configuration for security controller
             var authProviderConfig = Configuration.GetSection("Security:AuthProviderConfig").Get<AuthProviderConfig>();
             services.AddSingleton(authProviderConfig);
@@ -89,7 +94,7 @@ namespace EdatTemplate
                 opts.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 opts.CallbackPath = openIdConnectB2EOptions.CallbackPath;
                 opts.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
-                opts.Events = new B2EOpenIdConnectEvents(openIdConnectB2EOptions, new StaffService(fdotCoreApis), sendGridConfig);
+                opts.Events = new B2EOpenIdConnectEvents(openIdConnectB2EOptions, new StaffService(fdotCoreApisConfig), sendGridConfig);
             });
             if (authProviderConfig.AllowB2C)
             {
