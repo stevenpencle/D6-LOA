@@ -1,5 +1,6 @@
 ﻿using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.Domain.Enums;
+using EdatTemplate.Models.Edms;
 using EdatTemplate.Models.Security;
 using EdatTemplate.Models.View;
 using EdatTemplate.Security;
@@ -24,6 +25,12 @@ namespace EdatTemplate
                 // security models
                 typeof(ClientToken),
                 typeof(AuthProviderConfig),
+                // edms models
+                typeof(EdmsDocument),
+                typeof(EdmsDocumentMetadata),
+                typeof(EdmsDocumentVersion),
+                typeof(EdmsDocumentType),
+                typeof(EdmsDocumentProperty),
                 // view models
                 typeof(StringRequest),
                 typeof(StringResponse),
