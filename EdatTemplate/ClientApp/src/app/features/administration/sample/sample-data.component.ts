@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StaffService } from 'src/app/services/data/staff.service';
+import { ToastService } from 'src/app/services/environment/toast.service';
 
 @Component({
   selector: 'app-sample-data',
@@ -36,7 +37,8 @@ export class SampleDataComponent implements OnInit, OnDestroy {
     private sampleStoreService: SampleStoreService,
     private dataNavigationService: DataNavigationService,
     private excelExportService: ExcelExportService,
-    private staffService: StaffService
+    private staffService: StaffService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -199,6 +201,10 @@ export class SampleDataComponent implements OnInit, OnDestroy {
           this.tempSample.lastUpdatedAppUser = null;
           this.sampleStoreService.remove(this.tempSample, () => {
             this.clearCheckUserId();
+            this.toastService.show('Sample removed!', {
+              classname: 'bg-danger text-light',
+              delay: 5000
+            });
           });
         },
         () => {

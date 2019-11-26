@@ -7,6 +7,7 @@ import { StaffPickerComponent } from 'src/app/components/common/staff-picker/sta
 import { ModelStateValidations } from 'src/app/services/http/http.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { StaffService } from 'src/app/services/data/staff.service';
+import { ToastService } from 'src/app/services/environment/toast.service';
 
 @Component({
   selector: 'app-sample-modal',
@@ -26,7 +27,8 @@ export class SampleModalComponent implements OnInit, OnDestroy {
   constructor(
     public activeModal: NgbActiveModal,
     private sampleStoreService: SampleStoreService,
-    private staffService: StaffService
+    private staffService: StaffService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {}
@@ -49,6 +51,10 @@ export class SampleModalComponent implements OnInit, OnDestroy {
       () => {
         this.clearErrors();
         this.activeModal.close();
+        this.toastService.show('Sample added!', {
+          classname: 'bg-success text-light',
+          delay: 5000
+        });
       },
       errors => {
         this.hasErrors = true;
@@ -71,6 +77,10 @@ export class SampleModalComponent implements OnInit, OnDestroy {
           this.tempSample = {};
           this.clearErrors();
           this.activeModal.close();
+          this.toastService.show('Sample updated!', {
+            classname: 'bg-success text-light',
+            delay: 5000
+          });
         },
         errors => {
           this.hasErrors = true;

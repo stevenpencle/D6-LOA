@@ -234,6 +234,9 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
+# Mac DS Store files
+**/.DS_Store
+
 # NLog logs
 /EdatTemplate/Logs/
 

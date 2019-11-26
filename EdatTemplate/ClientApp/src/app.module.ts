@@ -30,6 +30,7 @@ import { FileUploadComponent } from './app/components/common/file-upload/file-up
 import { ChartToTableComponent } from './app/components/common/chart-to-table/chart-to-table.component';
 import { DateFieldComponent } from './app/components/common/date-field/date-field.component';
 import { FieldValidationMessageComponent } from './app/components/common/field-validation-message/field-validation-message.component';
+import { ToastsContainerComponent } from './app/components/common/toasts-container/toasts-container.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -46,6 +47,7 @@ import { ExcelExportService } from './app/services/data/excel-export.service';
 import { PdfDocumentService } from './app/services/data/pdf-document.service';
 import { BlobService } from './app/services/data/blob.service';
 import { LoadingService } from './app/services/environment/loading.service';
+import { ToastService } from './app/services/environment/toast.service';
 
 // features
 // ** administration
@@ -76,6 +78,7 @@ import { SamplePdfDocumentComponent } from './app/features/administration/sample
     NotAuthorizedComponent,
     ServerErrorComponent,
     ChartToTableComponent,
+    ToastsContainerComponent,
     // features
     // ** administration
     // ** SAMPLE START
@@ -114,6 +117,7 @@ import { SamplePdfDocumentComponent } from './app/features/administration/sample
     SecurityService,
     RouteGuard,
     LoadingService,
+    ToastService,
     // stores
     // ** administration
     // ** SAMPLE START
