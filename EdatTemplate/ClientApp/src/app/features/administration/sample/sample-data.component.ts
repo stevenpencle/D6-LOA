@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { SampleStoreService } from './sample-store.service';
 import {
   DataNavigation,
@@ -30,6 +37,8 @@ export class SampleDataComponent implements OnInit, OnDestroy {
   filters: Array<FilterEvent> = [];
   isAdmin = false;
   @Input() observableFilter: string;
+  @ViewChild('sampleRemovedToast', { static: true })
+  sampleRemovedToast: TemplateRef<any>;
 
   constructor(
     private modalService: NgbModal,
@@ -201,7 +210,7 @@ export class SampleDataComponent implements OnInit, OnDestroy {
           this.tempSample.lastUpdatedAppUser = null;
           this.sampleStoreService.remove(this.tempSample, () => {
             this.clearCheckUserId();
-            this.toastService.show('Sample removed!', {
+            this.toastService.show(this.sampleRemovedToast, {
               classname: 'bg-danger text-light',
               delay: 5000
             });
