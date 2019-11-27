@@ -72,7 +72,7 @@ export class HttpService implements OnDestroy {
           completed();
           const errors = this.handleError(error);
           if (modelStateErrorCallback) {
-            modelStateErrorCallback(errors); 
+            modelStateErrorCallback(errors);
           }
         }
       );

@@ -1,6 +1,21 @@
 import { Injectable } from '@angular/core';
 import * as linq from 'linq';
 
+export interface DataNavigation<T> {
+  sourceData: Array<T>;
+  sortedFilteredData: Array<T>;
+  pageData: Array<T>;
+  currentSortField: string;
+  currentSortDirection: 'ascending' | 'descending';
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface FilterEvent {
+  field: string;
+  value: any;
+}
 @Injectable()
 export class DataNavigationService {
   constructor() {}
@@ -182,20 +197,4 @@ export class DataNavigationService {
       }
     }
   }
-}
-
-export interface DataNavigation<T> {
-  sourceData: Array<T>;
-  sortedFilteredData: Array<T>;
-  pageData: Array<T>;
-  currentSortField: string;
-  currentSortDirection: 'ascending' | 'descending';
-  currentPage: number;
-  pageSize: number;
-  totalPages: number;
-}
-
-export interface FilterEvent {
-  field: string;
-  value: any;
 }

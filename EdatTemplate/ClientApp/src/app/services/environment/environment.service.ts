@@ -5,6 +5,11 @@ import { Store } from '../store/store.service';
 import { LoadingService } from './loading.service';
 import { HttpConfigService } from '../http/http-config.service';
 
+export interface EnvironmentData {
+  header: IEdatHeader;
+  footer: IEdatFooter;
+}
+
 @Injectable()
 export class EnvironmentService extends Store<EnvironmentData> {
   public baseUrl = '';
@@ -40,9 +45,4 @@ export class EnvironmentService extends Store<EnvironmentData> {
       }
     );
   }
-}
-
-export interface EnvironmentData {
-  header: IEdatHeader;
-  footer: IEdatFooter;
 }
