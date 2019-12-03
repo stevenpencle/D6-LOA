@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col">
+    <div class="table-responsive">
+      <table
+        class="table table-sm table-borderless table-hover"
+        aria-label="Documents"
+        title="Documents"
+        summary="View documents"
+      >
+        <thead class="small">
+          <tr>
+            <th style="min-width: 75px;"></th>
+            <th style="width: 100%;">
+              <span style="padding-left: 12px;">Document</span>
+            </th>
+            <th style="white-space: nowrap; min-width: 150px;">Created By</th>
+            <th style="white-space: nowrap; min-width: 150px;">Created On</th>
+          </tr>
+        </thead>
+        <tbody class="small" *ngFor="let document of documents">
+          <tr>
+            <td style="text-align: center;">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                aria-label="Delete document"
+                title="Delete document"
+                (click)="removeDocument(document.id)"
+              >
+                <span class="fas fa-trash-alt"></span>
+              </button>
+            </td>
+            <td style="white-space: nowrap;">
+              <button
+                type="button"
+                class="btn btn-link"
+                title="file download size: {{ document.fileSize }} bytes"
+                (click)="getDocument(document.id, document.fileName)"
+              >
+                {{ document.fileName }}
+              </button>
+            </td>
+            <td style="white-space: nowrap;">{{ document.user }}</td>
+            <td style="white-space: nowrap;">
+              {{ document.uploaded | date: 'yyyy-MM-dd, h:mm a' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col">
+    <div style="max-width: 400px;;">
+      <app-file-upload
+        blobDirectory="{{ documentContainerName }}"
+        (documentUploaded)="documentUploaded($event)"
+        accept=".pdf,.doc,.docx"
+      ></app-file-upload>
+    </div>
+  </div>
+</div>

@@ -46,6 +46,7 @@ import { NgbMomentDatePickerAdapter } from './app/services/data/ngbMomentDatePic
 import { ExcelExportService } from './app/services/data/excel-export.service';
 import { PdfDocumentService } from './app/services/data/pdf-document.service';
 import { BlobService } from './app/services/data/blob.service';
+import { EdmsService } from './app/services/data/edms.service';
 import { LoadingService } from './app/services/environment/loading.service';
 import { ToastService } from './app/services/environment/toast.service';
 
@@ -60,6 +61,7 @@ import { SampleDocumentsComponent } from './app/features/administration/sample/s
 import { SampleDataComponent } from './app/features/administration/sample/sample-data.component';
 import { SampleChartsComponent } from './app/features/administration/sample/sample-charts.component';
 import { SamplePdfDocumentComponent } from './app/features/administration/sample/sample-pdf-document.component';
+import { SampleEdmsComponent } from './app/features/administration/sample/sample-edms.component';
 // ** SAMPLE END
 
 @NgModule({
@@ -86,6 +88,7 @@ import { SamplePdfDocumentComponent } from './app/features/administration/sample
     SampleModalComponent,
     SampleEmailComponent,
     SampleDocumentsComponent,
+    SampleEdmsComponent,
     SampleDataComponent,
     SampleChartsComponent,
     SamplePdfDocumentComponent
@@ -112,6 +115,7 @@ import { SamplePdfDocumentComponent } from './app/features/administration/sample
     StaffService,
     EmailService,
     BlobService,
+    EdmsService,
     HttpService,
     HttpConfigService,
     SecurityService,
