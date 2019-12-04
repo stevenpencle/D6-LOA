@@ -27,6 +27,7 @@ import { NotAuthorizedComponent } from './app/components/not-authorized/not-auth
 import { ServerErrorComponent } from './app/components/server-error/server-error.component';
 import { StaffPickerComponent } from './app/components/common/staff-picker/staff-picker.component';
 import { FileUploadComponent } from './app/components/common/file-upload/file-upload.component';
+import { EdmsFileUploadComponent } from './app/components/common/edms-file-upload/edms-file-upload.component';
 import { ChartToTableComponent } from './app/components/common/chart-to-table/chart-to-table.component';
 import { DateFieldComponent } from './app/components/common/date-field/date-field.component';
 import { FieldValidationMessageComponent } from './app/components/common/field-validation-message/field-validation-message.component';
@@ -74,6 +75,7 @@ import { SampleEdmsComponent } from './app/features/administration/sample/sample
     SortButtonComponent,
     StaffPickerComponent,
     FileUploadComponent,
+    EdmsFileUploadComponent,
     DateFieldComponent,
     FieldValidationMessageComponent,
     HomeComponent,

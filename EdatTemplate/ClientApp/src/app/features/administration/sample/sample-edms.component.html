@@ -54,11 +54,11 @@
 <div class="row">
   <div class="col">
     <div style="max-width: 400px;;">
-      <app-file-upload
-        blobDirectory="{{ documentContainerName }}"
+      <app-edms-file-upload
+        blobDirectory="test"
         (documentUploaded)="documentUploaded($event)"
         accept=".pdf,.doc,.docx"
-      ></app-file-upload>
+      ></app-edms-file-upload>
     </div>
   </div>
 </div>
