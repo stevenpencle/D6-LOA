@@ -6,7 +6,7 @@
   EventEmitter
 } from '@angular/core';
 import { IDocumentMetadata } from '../../../model/model';
-import { BlobService } from '../../../services/data/blob.service';
+import { EdmsService } from 'src/app/services/data/edms.service';
 
 @Component({
   selector: 'app-edms-file-upload',
@@ -27,7 +27,7 @@ export class EdmsFileUploadComponent {
   @Input()
   accept: string;
 
-  constructor(private blobService: BlobService) {}
+  constructor(private edmsService: EdmsService) {}
 
   fileChangeEvent(fileInput: any) {
     this.clearErrors();
@@ -65,22 +65,15 @@ export class EdmsFileUploadComponent {
     this.clearErrors();
     if (this.filesToUpload.length > 0) {
       this.isLoadingData = true;
-      const directory =
-        this.blobDirectory == null
-          ? ''
-          : this.blobDirectory
-              .toString()
-              .toLowerCase()
-              .trim();
       const formData: FormData = new FormData();
       for (let i = 0; i < this.filesToUpload.length; i++) {
         formData.append(
-          directory,
+          'my file',
           this.filesToUpload[i],
           this.filesToUpload[i].name
         );
       }
-      this.blobService.add(
+      this.edmsService.add(
         formData,
         metadatas => {
           this.errorMessage = '';

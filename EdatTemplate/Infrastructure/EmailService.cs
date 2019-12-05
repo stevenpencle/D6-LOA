@@ -56,7 +56,7 @@ namespace EdatTemplate.Infrastructure
                 var hasEmailClaim = _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.HasClaim(c => c.Type == _sendGridConfig.DeveloperEmailAddressClaim);
                 if (hasOverrideEmailAddresses)
                 {
-                    emailMessage.Tos = _sendGridConfig.OverrideToEmailAddresses.ToList();
+                    emailMessage.Tos = _sendGridConfig.OverrideToEmailAddresses.Where(x => x.Trim() != "").ToList();
                 }
                 else if (hasEmailClaim)
                 {
