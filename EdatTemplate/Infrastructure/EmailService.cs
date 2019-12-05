@@ -33,7 +33,22 @@ namespace EdatTemplate.Infrastructure
             {
                 return false;
             }
-            var hasOverrideEmailAddresses = _sendGridConfig.OverrideToEmailAddresses != null && _sendGridConfig.OverrideToEmailAddresses.Any();
+            var hasOverrideEmailAddresses = false;
+            if (_sendGridConfig.OverrideToEmailAddresses != null) 
+            {
+                var emailList = _sendGridConfig.OverrideToEmailAddresses.ToList();
+                if (emailList.Count > 0)
+                {
+                    foreach (var email in emailList)
+                    {
+                        if (email.Trim() != "")
+                        {
+                            hasOverrideEmailAddresses = true;
+                            break;
+                        }
+                    }
+                }
+            }
             if (_environment.IsDevelopment() || hasOverrideEmailAddresses)
             {
                 emailMessage.Subject = $" ** {_environment.EnvironmentName} ** {emailMessage.Subject}";
