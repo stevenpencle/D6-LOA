@@ -79,6 +79,10 @@ namespace EdatTemplate.Infrastructure
                 Subject = emailMessage.Subject,
                 HtmlContent = emailMessage.Body
             };
+            if (!emailMessage.Tos.Any())
+            {
+                return true;
+            }
             sendGridMessage.AddTos(emailMessage.Tos.Select(email => new EmailAddress(email)).ToList());
             var response = await sendGridClient.SendEmailAsync(sendGridMessage);
             return response.StatusCode == System.Net.HttpStatusCode.Accepted;
