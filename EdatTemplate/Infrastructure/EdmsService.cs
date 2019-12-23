@@ -22,7 +22,7 @@ namespace EdatTemplate.Infrastructure
 
         private async Task<string> GetAuthenticationTokenFromApi()
         {
-            var uri =  $"{_edmsApiConfig.ProductUri}/authenticationToken";
+            var uri = $"{_edmsApiConfig.ProductUri}/authenticationToken";
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Library", _edmsApiConfig.Library),
@@ -41,22 +41,23 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<IEnumerable<EdmsDocumentType>> GetDocumentTypes()
         {
-             var token = await GetAuthenticationTokenFromApi();
-             var url =    $"{_edmsApiConfig.ProductUri}/documentTypes?authenticationToken={token}";
-             var response = await _client.GetAsync(url);
-             var data = await response.Content.ReadAsStringAsync();
-             var sl =  JsonConvert.DeserializeObject<IEnumerable<EdmsDocumentType>>(data).ToList();
-             if(sl.Any())
-             {
-                 return sl;
-             }
-             return null;
+            var token = await GetAuthenticationTokenFromApi();
+            var url = $"{_edmsApiConfig.ProductUri}/documentTypes?authenticationToken={token}";
+            var response = await _client.GetAsync(url);
+            var data = await response.Content.ReadAsStringAsync();
+            var sl = JsonConvert.DeserializeObject<IEnumerable<EdmsDocumentType>>(data).ToList();
+            if (sl.Any())
+            {
+                // var documentType = sl.Where(i => i.Id == "ODO012").FirstOrDefault();
+                return sl.OrderBy(x => x.Description);
+            }
+            return null;
         }
 
         public async Task<string> AddNewDocument(string fileName, byte[] bytes, EdmsDocumentMetadata metadata)
         {
             var token = await GetAuthenticationTokenFromApi();
-            var url =    $"{_edmsApiConfig.ProductUri}/addNewDocument?authenticationToken={token}";
+            var url = $"{_edmsApiConfig.ProductUri}/addNewDocument?authenticationToken={token}";
             metadata.FileSize = bytes.Length;
             var serializedMetadata = JsonConvert.SerializeObject(metadata, Formatting.None);
             var form = new MultipartFormDataContent

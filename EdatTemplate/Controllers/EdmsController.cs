@@ -3,7 +3,7 @@ using EdatTemplate.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EdatTemplate.Controllers
@@ -19,37 +19,11 @@ namespace EdatTemplate.Controllers
             _edmsService = edmsService;
         }
 
-        [HttpPost]
-        [Route("[action]")]
-        public async Task<EdmsDocument> UploadDocument(EdmsDocumentMetadata metadata)
-        {
-            var files = HttpContext.Request.Form.Files;
-            if (files.Count == 1)
-            {
-                var file = files[0];
-                using (var stream = file.OpenReadStream())
-                {
-                    var bytes = new byte[stream.Length];
-                    await stream.ReadAsync(bytes, 0, (int)stream.Length);
-                    metadata.FileSize = stream.Length;
-                    var response = await _edmsService.AddNewDocument(file.FileName, bytes, metadata);
-                    var document = JsonConvert.DeserializeObject<EdmsDocument>(response);
-                    return document;
-                }   
-            }
-            return null;
-        }
-
         [HttpGet]
         [Route("[action]")]
-        public async Task<IActionResult> GetDocument(int id)
+        public async Task<IEnumerable<EdmsDocumentType>> GetDocumentTypes()
         {
-            var blob = await _edmsService.GetDocument(id);
-            if (blob == null)
-            {
-                return NotFound();
-            }
-            return File(blob, "application/octet-stream");
+            return await _edmsService.GetDocumentTypes();
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IDocumentMetadata } from '../../../model/model';
+import { IDocumentMetadata, IEdmsDocumentType } from '../../../model/model';
 import { EdmsService } from 'src/app/services/data/edms.service';
 
 @Component({
@@ -8,35 +8,17 @@ import { EdmsService } from 'src/app/services/data/edms.service';
 })
 export class SampleEdmsComponent implements OnInit {
   documents: Array<IDocumentMetadata> = [];
+  documentTypes: Array<IEdmsDocumentType> = [];
+  selectedDocumentType: IEdmsDocumentType = null;
 
   constructor(private edmsService: EdmsService) {}
 
   ngOnInit(): void {
-    // this.getDocuments();
-  }
-
-  documentUploaded(metadatas: IDocumentMetadata[]): void {
-    // if (metadatas && metadatas.length) {
-    //   for (let i = 0; i < metadatas.length; i++) {
-    //     console.log('document uploaded key = ' + metadatas[i].id);
-    //   }
-    // }
-    // this.getDocuments();
-  }
-
-  getDocument(id: string, fileName: string): void {
-    // this.blobService.get(id, fileName);
-  }
-
-  removeDocument(id: string): void {
-    // this.blobService.remove(id, () => {
-    //   this.getDocuments();
-    // });
-  }
-
-  private getDocuments(): void {
-    // this.blobService.list(this.documentContainerName, result => {
-    //   this.documents = result;
-    // });
+    this.edmsService.getDocumentTypes(documentTypes => {
+      this.documentTypes = documentTypes;
+      if (documentTypes.length > 0) {
+        this.selectedDocumentType = documentTypes[0];
+      }
+    });
   }
 }
