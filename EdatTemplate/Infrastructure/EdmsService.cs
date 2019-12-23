@@ -48,8 +48,7 @@ namespace EdatTemplate.Infrastructure
             var sl = JsonConvert.DeserializeObject<IEnumerable<EdmsDocumentType>>(data).ToList();
             if (sl.Any())
             {
-                // var documentType = sl.Where(i => i.Id == "ODO012").FirstOrDefault();
-                return sl.OrderBy(x => x.Description);
+                return sl.OrderBy(x => x.Id);
             }
             return null;
         }

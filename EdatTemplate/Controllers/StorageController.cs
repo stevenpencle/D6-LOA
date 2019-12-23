@@ -70,7 +70,7 @@ namespace EdatTemplate.Controllers
             {
                 await _blobStorageProvider.DeleteBlobAsync(documentMetadata.Id);
             }
-            return new StringResponse { Data = "files removed succesfully" };
+            return new StringResponse { Data = "files removed successfully" };
         }
 
         [HttpPost]
@@ -78,7 +78,7 @@ namespace EdatTemplate.Controllers
         public async Task<StringResponse> RemoveFile([FromBody] StringRequest request)
         {
             await _blobStorageProvider.DeleteBlobAsync(request.Data);
-            return new StringResponse { Data = "file removed succesfully" };
+            return new StringResponse { Data = "file removed successfully" };
         }
 
     }

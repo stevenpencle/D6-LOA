@@ -5,8 +5,9 @@
   Output,
   EventEmitter
 } from '@angular/core';
-import { IDocumentMetadata } from '../../../model/model';
+import { IDocumentMetadata, IEdmsDocument } from '../../../model/model';
 import { BlobService } from '../../../services/data/blob.service';
+import { EdmsService } from 'src/app/services/data/edms.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -21,13 +22,18 @@ export class FileUploadComponent {
   @ViewChild('fileUpload', { static: false })
   fileUploadVar: any;
   @Input()
+  useEdms = false;
+  @Input()
   blobDirectory: string;
   @Output()
-  documentUploaded = new EventEmitter<IDocumentMetadata[]>();
+  documentUploaded = new EventEmitter<IDocumentMetadata[] | IEdmsDocument[]>();
   @Input()
   accept: string;
 
-  constructor(private blobService: BlobService) {}
+  constructor(
+    private blobService: BlobService,
+    private edmsService: EdmsService
+  ) {}
 
   fileChangeEvent(fileInput: any) {
     this.clearErrors();
@@ -80,22 +86,41 @@ export class FileUploadComponent {
           this.filesToUpload[i].name
         );
       }
-      this.blobService.add(
-        formData,
-        metadatas => {
-          this.errorMessage = '';
-          this.isLoadingData = false;
-          this.selectedFileNames = [];
-          this.filesToUpload = [];
-          this.documentUploaded.emit(metadatas);
-        },
-        (error: string) => {
-          this.errorMessage = error;
-          this.isLoadingData = false;
-          this.selectedFileNames = [];
-          this.filesToUpload = [];
-        }
-      );
+      if (this.useEdms) {
+        this.edmsService.add(
+          formData,
+          edmsDocuments => {
+            this.errorMessage = '';
+            this.isLoadingData = false;
+            this.selectedFileNames = [];
+            this.filesToUpload = [];
+            this.documentUploaded.emit(edmsDocuments);
+          },
+          (error: string) => {
+            this.errorMessage = error;
+            this.isLoadingData = false;
+            this.selectedFileNames = [];
+            this.filesToUpload = [];
+          }
+        );
+      } else {
+        this.blobService.add(
+          formData,
+          metadatas => {
+            this.errorMessage = '';
+            this.isLoadingData = false;
+            this.selectedFileNames = [];
+            this.filesToUpload = [];
+            this.documentUploaded.emit(metadatas);
+          },
+          (error: string) => {
+            this.errorMessage = error;
+            this.isLoadingData = false;
+            this.selectedFileNames = [];
+            this.filesToUpload = [];
+          }
+        );
+      }
     }
   }
 }

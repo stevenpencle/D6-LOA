@@ -1,20 +1,11 @@
 <div class="row">
   <div class="col">
-    <div class="form-group">
-      <label for="sampleDocumentType">Document Type</label>
-      <select
-        id="sampleDocumentType"
-        class="form-control form-control-sm"
-        [(ngModel)]="selectedDocumentType"
-        aria-label="Status"
-        title="Status"
-      >
-        <option
-          [value]="documentType"
-          *ngFor="let documentType of documentTypes"
-          >{{ documentType.description }}</option
-        >
-      </select>
+    <div style="max-width: 400px;">
+      <app-file-upload
+        (documentUploaded)="documentUploaded($event)"
+        [useEdms]="true"
+        accept=".pdf"
+      ></app-file-upload>
     </div>
   </div>
 </div>

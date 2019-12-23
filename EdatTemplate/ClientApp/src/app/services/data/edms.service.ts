@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { IEdmsDocumentType } from '../../model/model';
+import { IEdmsDocument } from '../../model/model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoadingService } from '../environment/loading.service';
 import { HttpConfigService } from '../http/http-config.service';
@@ -12,15 +12,17 @@ export class EdmsService {
     private loadingService: LoadingService
   ) {}
 
-  getDocumentTypes(
-    callback: (documentTypes: Array<IEdmsDocumentType>) => void,
+  add(
+    formData: FormData,
+    callback: (metadatas: IEdmsDocument[]) => void,
     errorCallback?: (error: string) => void
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<Array<IEdmsDocumentType>>(
-        'api/Edms/GetDocumentTypes',
-        this.httpConfigService.getOptions
+      .post<IEdmsDocument[]>(
+        '/api/Edms/UploadFiles',
+        formData,
+        this.httpConfigService.postOptions
       )
       .subscribe(
         result => {
