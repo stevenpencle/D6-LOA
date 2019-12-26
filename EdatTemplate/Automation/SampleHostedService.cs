@@ -28,19 +28,26 @@ namespace EdatTemplate.Automation
             var serviceLoopCount = 0;
             while (!cancellationToken.IsCancellationRequested)
             {
-                using (var serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                try
                 {
-                    //     using (var entityContext = serviceScope.ServiceProvider.GetService<EntityContext>())
-                    //     {
-                    //         using (var transaction = entityContext.Database.BeginTransaction())
-                    //         {
-                    //             //do something   
-                    //             //await SendEmail(); 
-                    //         }
-                    //     }
+                    using (var serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                    {
+                        //     using (var entityContext = serviceScope.ServiceProvider.GetService<EntityContext>())
+                        //     {
+                        //         using (var transaction = entityContext.Database.BeginTransaction())
+                        //         {
+                        //             //do something
+                        //             //await SendEmail();
+                        //         }
+                        //     }
+                    }
+                    serviceLoopCount += 1;
+                    Debug.Write($"SampleHostedService task executed {serviceLoopCount} times!{Environment.NewLine}");
                 }
-                serviceLoopCount += 1;
-                Debug.Write($"SampleHostedService task executed {serviceLoopCount} times!{Environment.NewLine}");
+                catch (Exception exception)
+                {
+                    await Task.FromException(exception);
+                }
                 //repeat the task every 10 seconds
                 await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
             }
@@ -54,7 +61,7 @@ namespace EdatTemplate.Automation
             {
                 Body = emailBody,
                 Subject = emailSubject,
-                //Tos = 
+                //Tos =
             };
             await _emailService.SendEmailAsync(emailMessage);
         }

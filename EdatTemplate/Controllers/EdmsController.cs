@@ -53,37 +53,41 @@ namespace EdatTemplate.Controllers
             //EDMS Configuration : Meadata/properties this information will be specific to your application's use case
             var properties = new List<EdmsDocumentProperty> {
                 new EdmsDocumentProperty {
-                    Name = "FRST_NM",
-                    MaxLength = 30,
-                    Value = "John",
+                    Name = "FINPROJ",
+                    Value = "11111111111",
                     IsRequired = true
                 },
-                new EdmsDocumentProperty {
-                    Name = "LAST_NM",
-                    MaxLength = 30,
-                    Value = "Doe",
-                    IsRequired = true
-                },
-                new EdmsDocumentProperty {
-                    Name = "ST_PERS_POS_ID",
-                    Value = "010101",
-                    IsRequired = true
-                },
+                // new EdmsDocumentProperty {
+                //     Name = "DOCNAME",
+                //     Value = "Sample",
+                //     IsRequired = true
+                // },
+                // new EdmsDocumentProperty {
+                //     Name = "TYPIST_ID",
+                //     Value = "TESTID",
+                //     IsRequired = true
+                // },
+                // new EdmsDocumentProperty {
+                //     Name = "APP_ID",
+                //     Value = "ACROBAT",
+                //     IsRequired = true
+                // },
                 new EdmsDocumentProperty {
                     Name = "AUTHOR_ID",
-                    Value = "ITP_USER",
+                    Value = "TESTID",
                     IsRequired = true
                 }
             };
             var types = await _edmsService.GetDocumentTypes();
-            var documentType = types.Any() ? types.Where(i => i.Id == "ODO012").FirstOrDefault() : null;
+            //var documentType = types.Any() ? types.Where(i => i.Id == "ODO012").FirstOrDefault() : null;
+            var documentType = types.Any() ? types.First() : null;
             var documentMetaData = new EdmsDocumentMetadata
             {
                 Properties = properties,
                 Name = fileName,
                 DocumentType = documentType,
                 Extension = "pdf",
-                FormName = "ODOT_PROF",
+                FormName = "ENTRPRSE_PROFILE",
             };
             return documentMetaData;
         }
