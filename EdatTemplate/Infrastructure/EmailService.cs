@@ -12,7 +12,7 @@ namespace EdatTemplate.Infrastructure
 {
     public class EmailService : IEmailService
     {
-        private readonly IWebHostEnvironment _environment; 
+        private readonly IWebHostEnvironment _environment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SendGridConfig _sendGridConfig;
 
@@ -34,7 +34,7 @@ namespace EdatTemplate.Infrastructure
                 return false;
             }
             var hasOverrideEmailAddresses = false;
-            if (_sendGridConfig.OverrideToEmailAddresses != null) 
+            if (_sendGridConfig.OverrideToEmailAddresses != null)
             {
                 var emailList = _sendGridConfig.OverrideToEmailAddresses.ToList();
                 if (emailList.Count > 0)
@@ -74,10 +74,10 @@ namespace EdatTemplate.Infrastructure
             var sendGridMessage = new SendGridMessage
             {
                 From = string.IsNullOrEmpty(emailMessage.From)
-                    ? new EmailAddress(_sendGridConfig.DoNotReplyEmailAddress) 
+                    ? new EmailAddress(_sendGridConfig.DoNotReplyEmailAddress)
                     : new EmailAddress(emailMessage.From),
                 Subject = emailMessage.Subject,
-                HtmlContent = emailMessage.Body
+                HtmlContent = $"<div>{emailMessage.Body}</div>"
             };
             if (!emailMessage.Tos.Any())
             {
