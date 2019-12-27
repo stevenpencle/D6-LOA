@@ -38,12 +38,13 @@
     "ngx-mask": "^8.1.6",
     "ngx-spinner": "^8.0.3",
     "rxjs": "^6.5.3",
+    "signature_pad": "^3.0.0-beta.3",
     "web-animations-js": "^2.3.2",
     "xlsx": "^0.15.1",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.803.17",
+    "@angular-devkit/build-angular": "^0.803.21",
     "@angular/cli": "^8.3.17",
     "@angular/compiler-cli": "^8.2.13",
     "@angular/language-service": "^8.2.13",

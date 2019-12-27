@@ -31,6 +31,7 @@ import { ChartToTableComponent } from './app/components/common/chart-to-table/ch
 import { DateFieldComponent } from './app/components/common/date-field/date-field.component';
 import { FieldValidationMessageComponent } from './app/components/common/field-validation-message/field-validation-message.component';
 import { ToastsContainerComponent } from './app/components/common/toasts-container/toasts-container.component';
+import { SignatureFieldComponent } from './app/components/common/signature-field/signature-field.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -62,6 +63,7 @@ import { SampleDataComponent } from './app/features/administration/sample/sample
 import { SampleChartsComponent } from './app/features/administration/sample/sample-charts.component';
 import { SamplePdfDocumentComponent } from './app/features/administration/sample/sample-pdf-document.component';
 import { SampleEdmsComponent } from './app/features/administration/sample/sample-edms.component';
+import { SampleSignatureComponent } from './app/features/administration/sample/sample-signature.component';
 // ** SAMPLE END
 
 @NgModule({
@@ -81,6 +83,7 @@ import { SampleEdmsComponent } from './app/features/administration/sample/sample
     ServerErrorComponent,
     ChartToTableComponent,
     ToastsContainerComponent,
+    SignatureFieldComponent,
     // features
     // ** administration
     // ** SAMPLE START
@@ -91,7 +94,8 @@ import { SampleEdmsComponent } from './app/features/administration/sample/sample
     SampleEdmsComponent,
     SampleDataComponent,
     SampleChartsComponent,
-    SamplePdfDocumentComponent
+    SamplePdfDocumentComponent,
+    SampleSignatureComponent
     // ** SAMPLE END
   ],
   imports: [
