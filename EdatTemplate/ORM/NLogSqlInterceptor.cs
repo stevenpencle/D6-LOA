@@ -40,7 +40,7 @@ namespace EdatTemplate.ORM
 
         private void Log(DbCommand command)
         {
-            //this method creats an executable SQL script (Logs/sql.log) for DBAs to review the SQL of the application
+            //this method creates an executable SQL script (Logs/sql.log) for DBAs to review the SQL of the application
             var sb = new StringBuilder();
             var commandText = $"{command.CommandText} ";
             if (_entityFrameworkConfig.DeduplicateLoggedCommands)
@@ -58,7 +58,7 @@ namespace EdatTemplate.ORM
             {
                 sb.AppendLine("--Parameters:");
             }
-            
+
             foreach (DbParameter param in command.Parameters)
             {
                 var sqlParam = (SqlParameter)param;
@@ -92,11 +92,11 @@ namespace EdatTemplate.ORM
                 commandText = commandText.Replace($" @{sqlParam.ParameterName};", $" {parameterName};");
                 commandText = commandText.Replace($",@{sqlParam.ParameterName};", $",{parameterName};");
                 sb.AppendLine($"declare {parameterName} {parameterType} {(sqlParam.Size > 0 ? "(" + sqlParam.Size + ")" : "")}");
-                if (sqlParam.SqlValue.ToString().ToLower() == "null") 
+                if (sqlParam.SqlValue.ToString().ToLower() == "null")
                 {
                     sb.AppendLine($"set {parameterName} = NULL");
                 }
-                else 
+                else
                 {
                     sb.AppendLine($"set {parameterName} = '{sqlParam.SqlValue}'");
                 }

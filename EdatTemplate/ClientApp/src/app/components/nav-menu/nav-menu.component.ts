@@ -35,7 +35,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.httpService.get<IAuthProviderConfig>(
-      'api/security/getauthproviderconfig',
+      'api/security/getAuthProviderConfig',
       result => {
         this.allowB2C = result.allowB2C;
         this.canImpersonate = result.allowImpersonation;
@@ -89,7 +89,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   notAuthorized(): void {
-    this.httpService.get('api/security/notauthorized', () => {});
+    this.httpService.get('api/security/notAuthorized', () => {});
   }
 
   changeRole(role: string): void {

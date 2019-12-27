@@ -122,7 +122,7 @@ namespace EdatTemplate
                     : "DbConnection";
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString(connectionString));
             });
-            //configure Hosted Srvices
+            //configure Hosted Services
             var automationConfig = Configuration.GetSection("AutomationConfig").Get<AutomationConfig>();
             services.AddSingleton(automationConfig);
             if (automationConfig.RunTasks)

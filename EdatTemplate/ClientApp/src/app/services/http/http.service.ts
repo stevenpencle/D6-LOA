@@ -62,7 +62,10 @@ export class HttpService implements OnDestroy {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<TResult>(this.environmentService.baseUrl + api, this.httpConfigService.getOptions)
+      .get<TResult>(
+        this.environmentService.baseUrl + api,
+        this.httpConfigService.getOptions
+      )
       .subscribe(
         result => {
           completed();
@@ -86,7 +89,11 @@ export class HttpService implements OnDestroy {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<TResult>(this.environmentService.baseUrl + api, payload, this.httpConfigService.postOptions)
+      .post<TResult>(
+        this.environmentService.baseUrl + api,
+        payload,
+        this.httpConfigService.postOptions
+      )
       .subscribe(
         result => {
           completed();
@@ -136,7 +143,7 @@ export class HttpService implements OnDestroy {
     }
     if (httpErrorResponse.status === 403) {
       if (this.token == null) {
-        window.location.replace('security/adlogin');
+        window.location.replace('security/adLogin');
       } else {
         this.router.navigateByUrl('/not-authorized');
       }

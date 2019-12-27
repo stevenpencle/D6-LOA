@@ -16,6 +16,6 @@ platformBrowserDynamic()
       window['ngRef'].destroy();
     }
     window['ngRef'] = ref;
-    // Otherise, log the boot error
+    // Otherwise, log the boot error
   })
   .catch(err => console.log(err));

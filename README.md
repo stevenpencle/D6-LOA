@@ -17,7 +17,7 @@
      - [Security](#model---security)
      - [View](#model---view)
    - [NET Core Server Application](#net-core-server-application)
-   - [Bootstrapper](#server---bootstapper)
+   - [Bootstrapper](#server---bootstrapper)
      - [Security](#server---security)
      - [ORM](#server---orm)
      - [Infrastructure](#server---infrastructure)
@@ -70,7 +70,7 @@ Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets
 
 ![alt text](Documentation/secrets_json.png "secrets.json file you will need")
 
-An explaination of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
+An explanation of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
 
 ### PowerShell Installer
 
@@ -153,7 +153,7 @@ OPTIONAL: You may want to remove any of the core architecture features that your
 - Components for header, footer, and navigation
 - Service for async http request and response handling
 - Security service and route guard
-- Base service for subsription based (observable) services (data stores)
+- Base service for subscription based (observable) services (data stores)
 - Data navigation service with helper components to handle sorting, filtering, and paging through large data sets
 - SRS (Staff) service and staff picker component to handle FDOT staff selections (with example)
 - Complete CRUD example for client and server architecture patterns
@@ -204,13 +204,13 @@ The _View_ namespace is where types that represent transient state messages betw
 - **EdatHeader** Describes the image resources and links for the standard FDOT application header. This is a singleton type that is deserialized from _appsettings.json_.
 - **EmailMessage** Describes the structure of an email message for use with the _EmailController_.
 - **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
-- **StringRequest and StringReponse** Represents any string data payload between client and server.
+- **StringRequest and StringResponse** Represents any string data payload between client and server.
 
 ### NET Core Server Application
 
 The .NET Core Server Application is responsible for handling requests from the client application, evaluating security concerns for those requests, validating that entity state changes adhere to business rules, synchronizing state changes with the data store, and managing access to Azure PaaS services. The server application uses _NuGet_ as the standard package management service.
 
-#### Server - Bootstapper
+#### Server - Bootstrapper
 
 The _Program_ class handles pre-start host configuration and creates an instance of the _Startup_ class to configure application aspects like _Entity Framework_, _Open ID_ identity providers, and service dependency injection.
 
@@ -271,7 +271,7 @@ The _Controllers_ namespace contains the APIs for the endpoints exposed by the s
 
 **FIREWALL** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
 
-- **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage. You will probably not use this contoller if you just send emails from the server application (other controllers or business services). In that case, just inject the IEmailService and use it directly.
+- **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage. You will probably not use this controller if you just send emails from the server application (other controllers or business services). In that case, just inject the IEmailService and use it directly.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
 - **Site** API for retrieving global site data like header and footer resources.
 - **Staff** API for accessing the _IStaffService_.
@@ -351,7 +351,7 @@ Store services extend the _Store_ abstract class. This class implements two subs
 
 **A note about store services:** Store services use the _RxJS_ library which is an integral part of Angular. The subject of a store services is a _BehaviorSubject_ type which is an Observable and Observer. Components that use store services should implement _OnInit_ and must implement _OnDestroy_. Typically, you will subscribe to the store service in the _ngOnInit()_ method to 'observe' the service's subject and provide a callback to handle state change notifications for that subject.
 
-**A note about Observables and store services:** Observables come in two flavors; finite and infinite. Many Angular services (like Http and ActivatedRoute) return finite Observables in that Angular handles unsubscribing when the operation completes (i.e. an HTTP call finishes or a route is changed). All store services manage infinite Observables, meaning that the Observable represents some type of application state over a non-deterministic amount of time. These types of Observables must be unsubscribed from to avoid a memory leak in the client application. The abstact _Store_ class handles the unsubscribe for all services that extend from it. The _safeSubscribe(Map)_ methods protect the actual Observable and instead return only a representation of the current state (the value of the Observable) to the Observer callback in the component whenever the Observable state changes. So components never have access to the actual Observable. Your custom store services that extend from _Store_ do have access to the Observable and have the sole responsibility for mutating the Observable's state. If your store service manages an entire object graph (typical scenario) and you have components that only need to be notified of changes to a sub-set of the graph, you should subscribe with the _safeSubscribeMap_ method and pass a predicate to project only the state your component is interested in. Your component will only be notified of changes to state for objects in the projection. In other words, _safeSubscribeMap_ allows a component to subscribe to only a part of the Observable managed by your store service. The _safeSubscribe_ method always subscribes to the root Observable of the store service.
+**A note about Observables and store services:** Observables come in two flavors; finite and infinite. Many Angular services (like Http and ActivatedRoute) return finite Observables in that Angular handles unsubscribing when the operation completes (i.e. an HTTP call finishes or a route is changed). All store services manage infinite Observables, meaning that the Observable represents some type of application state over a non-deterministic amount of time. These types of Observables must be unsubscribed from to avoid a memory leak in the client application. The abstract _Store_ class handles the unsubscribe for all services that extend from it. The _safeSubscribe(Map)_ methods protect the actual Observable and instead return only a representation of the current state (the value of the Observable) to the Observer callback in the component whenever the Observable state changes. So components never have access to the actual Observable. Your custom store services that extend from _Store_ do have access to the Observable and have the sole responsibility for mutating the Observable's state. If your store service manages an entire object graph (typical scenario) and you have components that only need to be notified of changes to a sub-set of the graph, you should subscribe with the _safeSubscribeMap_ method and pass a predicate to project only the state your component is interested in. Your component will only be notified of changes to state for objects in the projection. In other words, _safeSubscribeMap_ allows a component to subscribe to only a part of the Observable managed by your store service. The _safeSubscribe_ method always subscribes to the root Observable of the store service.
 
 #### Client - components
 
@@ -359,7 +359,7 @@ Store services extend the _Store_ abstract class. This class implements two subs
 
 The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_ or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. Any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
 
-**A note about component state:** Components only manage their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberatly scoped (usually global).
+**A note about component state:** Components only manage their own state. This is typically just state that tracks user actions or state assigned from the evaluation of a store service's subject and is used to hide or show certain sections of the component's template. Component state is always transient whereas service state is always deliberately scoped (usually global).
 
 ##### app
 
@@ -367,7 +367,7 @@ The _app_ component is the main component of the client application and is the '
 
 ##### common
 
-Common components are utility components that serve very specific technical puposes unrelated the business domain of the application.
+Common components are utility components that serve very specific technical purposes unrelated the business domain of the application.
 
 - **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data to meet accessibility requirements.
 - **date-field** An alternate component to the _ng-Bootstrap_ datepicker. This component is a standard textbox with a date format mask that binds to a _momentjs_ object.

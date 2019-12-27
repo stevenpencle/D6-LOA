@@ -110,7 +110,7 @@ export abstract class Store<T> {
   /**
    * Call to replay all state changes of the observable. The allowStoreReplay must be true in the environment.dev.ts file. This is a development feature only to assist with seeing the changes made to the observable over time.
    *
-   * @param replayCallbackFormatter The callback that receives each (next T) state change that has occured. the developer should provide console.log formatting in the callback.
+   * @param replayCallbackFormatter The callback that receives each (next T) state change that has occurred. the developer should provide console.log formatting in the callback.
    */
   replayState(replayCallbackFormatter: (state: T) => void): void {
     if (environment.production || !environment.allowStoreReplay) {
@@ -135,7 +135,7 @@ export abstract class Store<T> {
    * Call to replay a projection of state changes of the observable. The allowStoreReplay must be true in the environment.dev.ts file. This is a development feature only to assist with seeing the changes made to the observable over time.
    *
    * @param projection The projection expression that narrows what part of the replay state to observe.
-   * @param replayCallbackFormatter The callback that receives each (next T) state change that has occured for the projection. the developer should provide console.log formatting in the callback.
+   * @param replayCallbackFormatter The callback that receives each (next T) state change that has occurred for the projection. the developer should provide console.log formatting in the callback.
    */
   replayStateMap<P>(
     projection: (value: T) => P,

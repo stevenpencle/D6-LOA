@@ -24,26 +24,31 @@ export class SecurityService extends Store<IClientToken> {
       return;
     }
     const completed = this.loadingService.show();
-    this.httpClient.get<IClientToken>('api/security/gettoken', this.httpConfigService.getOptions).subscribe(
-      result => {
-        completed();
-        this.setState(result);
-        this.token$ = this.state$;
-        if (callback) {
-          callback();
-        }
-      },
-      (httpErrorResponse: HttpErrorResponse) => {
-        completed();
-        if (httpErrorResponse.status === 401) {
-          this.setState(null);
+    this.httpClient
+      .get<IClientToken>(
+        'api/security/getToken',
+        this.httpConfigService.getOptions
+      )
+      .subscribe(
+        result => {
+          completed();
+          this.setState(result);
           this.token$ = this.state$;
           if (callback) {
             callback();
           }
+        },
+        (httpErrorResponse: HttpErrorResponse) => {
+          completed();
+          if (httpErrorResponse.status === 401) {
+            this.setState(null);
+            this.token$ = this.state$;
+            if (callback) {
+              callback();
+            }
+          }
         }
-      }
-    );
+      );
   }
 
   removeToken(): void {

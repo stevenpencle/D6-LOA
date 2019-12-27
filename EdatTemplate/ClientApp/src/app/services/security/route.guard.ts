@@ -29,7 +29,10 @@ export class RouteGuard implements CanActivate, OnDestroy {
     const tokenObservable =
       this.token$ !== undefined
         ? this.token$
-        : this.httpClient.get<IClientToken>('api/security/gettoken', this.httpConfigService.getOptions);
+        : this.httpClient.get<IClientToken>(
+            'api/security/getToken',
+            this.httpConfigService.getOptions
+          );
     return tokenObservable.pipe(
       map(result => {
         if (result !== undefined && result !== null) {
@@ -73,7 +76,7 @@ export class RouteGuard implements CanActivate, OnDestroy {
               })
             );
           }
-          window.location.replace('security/adlogin');
+          window.location.replace('security/adLogin');
           return false;
         }
       })

@@ -73,7 +73,7 @@ namespace EdatTemplate.ORM
         {
             //add boiler-plate behavior (audit properties and behavior)
             modelBuilder.ShadowProperties();
-            //reflectivly apply UTC date converter to all dates to make sure all dates are stored in SQL Server as UTC
+            //reflectively apply UTC date converter to all dates to make sure all dates are stored in SQL Server as UTC
             foreach (var pb in modelBuilder.Model
                 .GetEntityTypes()
                 .SelectMany(t => t.GetProperties())
