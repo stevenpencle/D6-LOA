@@ -70,6 +70,8 @@ namespace EdatTemplate
             services.AddSingleton<IStaffService, StaffService>();
             //edms service api wrapper
             services.AddSingleton<IEdmsService, EdmsService>();
+            //signature service api wrapper
+            services.AddSingleton<ISignatureService, SignatureService>();
             //add auth provider configuration for security controller
             var authProviderConfig = Configuration.GetSection("Security:AuthProviderConfig").Get<AuthProviderConfig>();
             services.AddSingleton(authProviderConfig);

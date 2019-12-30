@@ -39,7 +39,7 @@ namespace EdatTemplate.Infrastructure
             throw new Exception(errorXml);
         }
 
-        public async Task<IEnumerable<EdmsDocumentType>> GetDocumentTypes()
+        public async Task<IEnumerable<EdmsDocumentType>> GetDocumentTypesAsync()
         {
             var token = await GetAuthenticationTokenFromApi();
             var url = $"{_edmsApiConfig.ProductUri}/documentTypes?authenticationToken={token}";
@@ -53,7 +53,7 @@ namespace EdatTemplate.Infrastructure
             return null;
         }
 
-        public async Task<string> AddNewDocument(string fileName, byte[] bytes, EdmsDocumentMetadata metadata)
+        public async Task<string> AddNewDocumentAsync(string fileName, byte[] bytes, EdmsDocumentMetadata metadata)
         {
             var token = await GetAuthenticationTokenFromApi();
             var url = $"{_edmsApiConfig.ProductUri}/addNewDocument?authenticationToken={token}";
@@ -77,7 +77,7 @@ namespace EdatTemplate.Infrastructure
             return data;
         }
 
-        public async Task<string> AddNewVersion(int documentId, string fileName, byte[] bytes)
+        public async Task<string> AddNewVersionAsync(int documentId, string fileName, byte[] bytes)
         {
             var token = await GetAuthenticationTokenFromApi();
             var url = $"{_edmsApiConfig.ProductUri}/document/{documentId}/addVersion?authenticationToken={token}";
@@ -96,7 +96,7 @@ namespace EdatTemplate.Infrastructure
             return data;
         }
 
-        public async Task<byte[]> GetDocument(int documentId)
+        public async Task<byte[]> GetDocumentAsync(int documentId)
         {
             var token = await GetAuthenticationTokenFromApi();
             var url = $"{_edmsApiConfig.ProductUri}/document/{documentId}?authenticationToken={token}";

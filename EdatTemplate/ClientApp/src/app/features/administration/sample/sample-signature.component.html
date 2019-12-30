@@ -1,7 +1,19 @@
 <div class="row">
   <div class="col">
-    <div style="width: 300px; height: 150px;">
-      <app-signature-field penRGB="rgb(66, 133, 244)"></app-signature-field>
+    <div *ngIf="sig != null">
+      <img [src]="sig" alt="signature" />
+    </div>
+    <div
+      [hidden]="sig != null"
+      class="border border-secondary rounded"
+      style="width: 310px; padding-left: 5px; padding-top: 5px; margin-bottom: 15px;"
+    >
+      <div style="width: 300px; height: 150px;">
+        <app-signature-field penRGB="rgb(66, 133, 244)"></app-signature-field>
+      </div>
+      <div class="text-muted small text-center">
+        please sign above
+      </div>
     </div>
   </div>
 </div>
@@ -11,7 +23,7 @@
       <span class="fas fa-eraser"></span>&nbsp;Clear
     </button>
     &nbsp;&nbsp;
-    <button class="btn btn-sm btn-primary" (click)="save()">
+    <button *ngIf="sig == null" class="btn btn-sm btn-primary" (click)="save()">
       <span class="fas fa-pen"></span>&nbsp;Save
     </button>
   </div>

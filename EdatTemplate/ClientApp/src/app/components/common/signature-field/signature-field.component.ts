@@ -32,7 +32,6 @@ export class SignatureFieldComponent implements AfterContentInit {
     canvas.height = canvasContainer.clientHeight;
     canvas.width = canvasContainer.clientWidth;
     this.signaturePad = new SignaturePad(canvas, this.options);
-    this.signaturePad.clear();
     this.resizeCanvas();
     window.addEventListener('resize', () => {
       this.resizeCanvas();
@@ -57,7 +56,10 @@ export class SignatureFieldComponent implements AfterContentInit {
   }
 
   private resizeCanvas(): void {
-    const ratio: number = Math.max(window.devicePixelRatio || 1, 1);
+    // TODO: do we need to adjust canvas size based on the pixel density of the device?
+    // const ratio: number = Math.max(window.devicePixelRatio || 1, 1);
+    const ratio = 1;
+    // END TODO:
     const canvas = this.signatureCanvas.nativeElement;
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;

@@ -39,7 +39,7 @@ namespace EdatTemplate.Controllers
                         using (var ms = new MemoryStream())
                         {
                             await stream.CopyToAsync(ms);
-                            var response = await _edmsService.AddNewDocument(file.FileName, ms.ToArray(), documentMetaData);
+                            var response = await _edmsService.AddNewDocumentAsync(file.FileName, ms.ToArray(), documentMetaData);
                             edmsDocuments.Add(JsonConvert.DeserializeObject<EdmsDocument>(response));
                         }
                     }
@@ -78,7 +78,7 @@ namespace EdatTemplate.Controllers
                     IsRequired = true
                 }
             };
-            var types = await _edmsService.GetDocumentTypes();
+            var types = await _edmsService.GetDocumentTypesAsync();
             //var documentType = types.Any() ? types.Where(i => i.Id == "ODO012").FirstOrDefault() : null;
             var documentType = types.Any() ? types.First() : null;
             var documentMetaData = new EdmsDocumentMetadata
