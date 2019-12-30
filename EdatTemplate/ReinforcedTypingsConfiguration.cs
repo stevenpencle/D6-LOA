@@ -34,6 +34,7 @@ namespace EdatTemplate
                 // view models
                 typeof(StringRequest),
                 typeof(StringResponse),
+                typeof(SignatureRequest),
                 typeof(EdatHeader),
                 typeof(EdatFooter),
                 typeof(DocumentMetadata),

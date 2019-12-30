@@ -2,14 +2,12 @@ using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.View;
 using EdatTemplate.ORM;
 using EdatTemplate.Security;
-using EdatTemplate.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,18 +18,12 @@ namespace EdatTemplate.Controllers
     public class SampleController : Controller
     {
         private readonly EntityContext _context;
-        private readonly IBlobStorageProvider _blobStorageProvider;
-        private readonly ISignatureService _signatureService;
         public SampleController
         (
-            EntityContext context,
-            IBlobStorageProvider blobStorageProvider,
-            ISignatureService signatureService
+            EntityContext context
         )
         {
             _context = context;
-            _blobStorageProvider = blobStorageProvider;
-            _signatureService = signatureService;
         }
 
         [Authorize(Policy = "AdminOrB2C", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
@@ -100,52 +92,6 @@ namespace EdatTemplate.Controllers
                 .AsNoTracking()
                 .ToListAsync();
             return l;
-        }
-
-        [Authorize(Policy = "AdminOrB2C", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        [HttpPost]
-        [Route("[action]")]
-        public async Task<DocumentMetadata> SaveSignature([FromBody] StringRequest request)
-        {
-            var metadatas = await _blobStorageProvider.ListBlobsAsync("signature");
-            if (metadatas.Any())
-            {
-                foreach (var metadata in metadatas)
-                {
-                    await _blobStorageProvider.DeleteBlobAsync(metadata.Id);
-                }
-            }
-            if (request.Data == null)
-            {
-                return null;
-            }
-            var image = _signatureService.ConvertPngDataUrlToImage(request.Data);
-            using (var ms = new MemoryStream(image))
-            {
-                var metadata = await _blobStorageProvider.UploadBlobAsync(ms, "signature", "signature.png", User.Identity.Name);
-                return metadata;
-            }
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<StringResponse> GetSignature()
-        {
-            var metadatas = await _blobStorageProvider.ListBlobsAsync("signature");
-            if (!metadatas.Any())
-            {
-                return new StringResponse
-                {
-                    Data = null
-                };
-            }
-            using (var ms = await _blobStorageProvider.GetBlobAsync(metadatas.First().Id))
-            {
-                return new StringResponse
-                {
-                    Data = _signatureService.ConvertImageToPngDataUrl(ms.ToArray())
-                };
-            }
         }
 
         [HttpGet]

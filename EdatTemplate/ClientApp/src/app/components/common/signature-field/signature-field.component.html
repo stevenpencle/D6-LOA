@@ -1,3 +1,41 @@
-<div #canvasContainer>
-  <canvas #signatureCanvas></canvas>
+<div class="row">
+  <div class="col">
+    <div *ngIf="sig != null">
+      <img [src]="sig" alt="signature" />
+    </div>
+    <div
+      [hidden]="sig != null"
+      class="border border-secondary rounded"
+      style="width: 310px; padding-left: 5px; padding-top: 5px; margin-bottom: 15px;"
+    >
+      <div style="width: 300px; height: 150px;">
+        <div #canvasContainer>
+          <canvas #signatureCanvas></canvas>
+        </div>
+      </div>
+      <div class="text-muted small text-center">
+        please sign above
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col text-right">
+    <div style="width: 300px;">
+      <hr *ngIf="sig != null" />
+      <button class="btn btn-sm btn-light" (click)="clear()">
+        <span class="fas fa-eraser"></span>&nbsp;Clear
+      </button>
+      <span *ngIf="sig == null">
+        &nbsp;&nbsp;
+      </span>
+      <button
+        *ngIf="sig == null"
+        class="btn btn-sm btn-primary"
+        (click)="save()"
+      >
+        <span class="fas fa-pen"></span>&nbsp;Save
+      </button>
+    </div>
+  </div>
 </div>
