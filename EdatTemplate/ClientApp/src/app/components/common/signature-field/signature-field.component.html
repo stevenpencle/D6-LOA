@@ -1,14 +1,31 @@
 <div class="row">
   <div class="col">
     <div *ngIf="sig != null">
-      <img [src]="sig" alt="signature" />
+      <img
+        [src]="sig"
+        alt="signature"
+        [ngStyle]="{
+          width: width.toString() + 'px',
+          height: height.toString() + px
+        }"
+      />
     </div>
     <div
-      [hidden]="sig != null"
       class="border border-secondary rounded"
-      style="width: 310px; padding-left: 5px; padding-top: 5px; margin-bottom: 15px;"
+      [ngStyle]="{
+        width: (width + 10).toString() + 'px',
+        'padding-left': '5px',
+        'padding-top': '5px',
+        'margin-bottom': '15px',
+        display: readOnly || sig != null ? 'none' : 'block'
+      }"
     >
-      <div style="width: 300px; height: 150px;">
+      <div
+        [ngStyle]="{
+          width: width.toString() + 'px',
+          height: height.toString() + 'px'
+        }"
+      >
         <div #canvasContainer>
           <canvas #signatureCanvas></canvas>
         </div>
@@ -19,9 +36,9 @@
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row" *ngIf="!readOnly">
   <div class="col text-right">
-    <div style="width: 300px;">
+    <div [ngStyle]="{ width: width.toString() + 'px' }">
       <hr *ngIf="sig != null" />
       <button class="btn btn-sm btn-light" (click)="clear()">
         <span class="fas fa-eraser"></span>&nbsp;Clear

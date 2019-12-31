@@ -1,9 +1,12 @@
 <div class="row">
   <div class="col">
     <app-signature-field
+      [width]="300"
+      [height]="100"
       penRGB="rgb(66, 133, 244)"
       signatureBlobFolder="signatures"
       [(signatureBlobId)]="signatureId"
+      [readOnly]="false"
     ></app-signature-field>
   </div>
 </div>

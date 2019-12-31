@@ -21,8 +21,6 @@ import {
   templateUrl: './signature-field.component.html'
 })
 export class SignatureFieldComponent implements AfterContentInit, OnInit {
-  @ViewChild('canvasContainer', { static: true })
-  private canvasContainer: ElementRef<HTMLDivElement>;
   @ViewChild('signatureCanvas', { static: true })
   private signatureCanvas: ElementRef<HTMLCanvasElement>;
   private signaturePad: SignaturePad;
@@ -32,6 +30,9 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
   // inputs
   @Input() penRGB: string;
   @Input() signatureBlobFolder: string;
+  @Input() width = 300;
+  @Input() height = 150;
+  @Input() readOnly = false;
   // model
   private blobId = '';
   @Output() signatureBlobIdChange: EventEmitter<string> = new EventEmitter<
@@ -50,13 +51,12 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
   ngAfterContentInit(): void {
     this.options.penColor =
       this.penRGB !== null && this.penRGB !== '' ? this.penRGB : 'rgb(0, 0, 0)';
-    this.options.onEnd = () => {};
     const canvas = this.signatureCanvas.nativeElement;
-    const canvasContainer = this.canvasContainer.nativeElement;
-    canvas.height = canvasContainer.clientHeight;
-    canvas.width = canvasContainer.clientWidth;
     this.signaturePad = new SignaturePad(canvas, this.options);
-    this.signaturePad.clear();
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+    });
+    this.resizeCanvas();
   }
 
   load(): void {
@@ -76,6 +76,9 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
   }
 
   clear(): void {
+    if (this.readOnly) {
+      return;
+    }
     this.signaturePad.clear();
     this.httpService.post<ISignatureRequest, IDocumentMetadata>(
       'api/Signature/Save',
@@ -95,10 +98,13 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
   }
 
   save(): void {
-    if (this.isEmpty()) {
+    if (this.readOnly) {
+      return;
+    }
+    if (this.signaturePad.isEmpty()) {
       console.log('signature is blank');
     } else {
-      const pngDataUrl = this.toPngDataURL();
+      const pngDataUrl = this.signaturePad.toDataURL();
       this.httpService.post<ISignatureRequest, IDocumentMetadata>(
         'api/Signature/Save',
         {
@@ -116,15 +122,14 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
     }
   }
 
-  public isEmpty(): boolean {
-    return this.signaturePad.isEmpty();
-  }
-
-  public toPngDataURL(): string {
-    return this.signaturePad.toDataURL();
-  }
-
-  public fromPngDataURL(data: string): void {
-    this.signaturePad.fromDataURL(data);
+  private resizeCanvas(): void {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const canvas = this.signatureCanvas.nativeElement;
+    canvas.width = this.width * ratio;
+    canvas.height = this.height * ratio;
+    canvas.style.height = this.height.toString() + 'px';
+    canvas.style.width = this.width.toString() + 'px';
+    canvas.getContext('2d').scale(ratio, ratio);
+    this.signaturePad.clear();
   }
 }
