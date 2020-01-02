@@ -26,14 +26,14 @@ namespace EdatTemplate.Controllers
         [Authorize(Roles = ApplicationRoles.Admin, AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> AddOrUpdateSampleMap([FromBody] SampleMap sampleMap)
+        public async Task<IActionResult> AddOrUpdate([FromBody] SampleMapFeature sampleMapFeature)
         {
             //clear model state
             ModelState.Clear();
             //validate entity level validations - entity data annotations and entity validate() method
-            TryValidateModel(sampleMap);
+            TryValidateModel(sampleMapFeature);
             //add or update the entity
-            var tracker = sampleMap.Id == 0 ? await _context.SampleMaps.AddAsync(sampleMap) : _context.SampleMaps.Update(sampleMap);
+            var tracker = sampleMapFeature.Id == 0 ? await _context.SampleMapFeatures.AddAsync(sampleMapFeature) : _context.SampleMapFeatures.Update(sampleMapFeature);
             await _context.SaveChangesAsync();
             //return the serialized entity
             return new ObjectResult(tracker.Entity);
@@ -41,9 +41,9 @@ namespace EdatTemplate.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<IEnumerable<SampleMap>> GetSampleMapCoordinate()
+        public async Task<IEnumerable<SampleMapFeature>> Load()
         {
-            var l = await _context.SampleMaps.AsNoTracking().ToListAsync();
+            var l = await _context.SampleMapFeatures.AsNoTracking().ToListAsync();
             return l;
         }
     }

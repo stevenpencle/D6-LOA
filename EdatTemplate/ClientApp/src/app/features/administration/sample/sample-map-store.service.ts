@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 import * as linq from 'linq';
 import { Store } from 'src/app/services/store/store.service';
-import { ISampleMap, IStringResponse } from 'src/app/model/model';
+import { ISampleMapFeature, IStringResponse } from 'src/app/model/model';
 import {
   HttpService,
   ModelStateValidations
 } from 'src/app/services/http/http.service';
 
 @Injectable()
-export class SampleMapStoreService extends Store<ISampleMap[]> {
+export class SampleMapStoreService extends Store<ISampleMapFeature[]> {
   constructor(private httpService: HttpService) {
-    super('SampleMapStoreService', new Array<ISampleMap>());
+    super('SampleMapStoreService', new Array<ISampleMapFeature>());
   }
 
   update(
-    sample: ISampleMap,
+    sampleMapFeature: ISampleMapFeature,
     callback?: () => void,
     errorCallback?: (errors: ModelStateValidations) => void
   ): void {
-    this.httpService.post<ISampleMap, ISampleMap>(
-      'api/Sample/AddOrUpdateSample',
-      sample,
+    this.httpService.post<ISampleMapFeature, ISampleMapFeature>(
+      'api/SampleMap/AddOrUpdate',
+      sampleMapFeature,
       result => {
         this.setState([
           ...linq
             .from(this.getState())
-            .where(x => x.id !== sample.id)
+            .where(x => x.id !== sampleMapFeature.id)
             .toArray(),
           result
         ]);
@@ -42,19 +42,19 @@ export class SampleMapStoreService extends Store<ISampleMap[]> {
   }
 
   remove(
-    sample: ISampleMap,
+    sampleMapFeature: ISampleMapFeature,
     callback?: () => void,
     errorCallback?: (errors: ModelStateValidations) => void
   ): void {
-    this.httpService.post<ISampleMap, IStringResponse>(
-      'api/Sample/RemoveSample',
-      sample,
+    this.httpService.post<ISampleMapFeature, IStringResponse>(
+      'api/SampleMap/Remove',
+      sampleMapFeature,
       result => {
         console.log(result.data);
         this.setState([
           ...linq
             .from(this.getState())
-            .where(x => x.id !== sample.id)
+            .where(x => x.id !== sampleMapFeature.id)
             .toArray()
         ]);
         if (callback) {
@@ -70,13 +70,13 @@ export class SampleMapStoreService extends Store<ISampleMap[]> {
   }
 
   add(
-    sampleMap: ISampleMap,
+    sampleMapFeature: ISampleMapFeature,
     callback?: () => void,
     errorCallback?: (errors: ModelStateValidations) => void
   ): void {
-    this.httpService.post<ISampleMap, ISampleMap>(
-      'api/Sample/AddOrUpdateSampleMap',
-      sampleMap,
+    this.httpService.post<ISampleMapFeature, ISampleMapFeature>(
+      'api/SampleMap/AddOrUpdate',
+      sampleMapFeature,
       result => {
         this.setState([...this.getState(), result]);
         if (callback) {
@@ -95,8 +95,8 @@ export class SampleMapStoreService extends Store<ISampleMap[]> {
     callback?: () => void,
     errorCallback?: (errors: ModelStateValidations) => void
   ): void {
-    this.httpService.get<ISampleMap[]>(
-      'api/Sample/GetSampleMapCoordinate',
+    this.httpService.get<ISampleMapFeature[]>(
+      'api/SampleMap/Load',
       result => {
         this.setState([...result]);
         if (callback) {

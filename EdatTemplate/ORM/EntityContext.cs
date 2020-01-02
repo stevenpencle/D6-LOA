@@ -25,7 +25,7 @@ namespace EdatTemplate.ORM
         public virtual DbSet<FdotAppUser> FdotAppUsers { get; set; }
         public virtual DbSet<PublicAppUser> PublicAppUsers { get; set; }
         public virtual DbSet<Sample> Samples { get; set; }
-        public virtual DbSet<SampleMap> SampleMaps { get; set; }
+        public virtual DbSet<SampleMapFeature> SampleMapFeatures { get; set; }
 
         public EntityContext(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
         {
@@ -167,13 +167,13 @@ namespace EdatTemplate.ORM
                         .IsUnique()
                         .HasName("IX_Sample_Name");
             // SampleMap
-            modelBuilder.Entity<SampleMap>()
+            modelBuilder.Entity<SampleMapFeature>()
                         .ToTable("EDATTB0003_SampleMap")
                         .HasKey(x => x.Id);
-            modelBuilder.Entity<SampleMap>()
+            modelBuilder.Entity<SampleMapFeature>()
                         .Property(x => x.Id)
                         .HasColumnName("SampleMapId");
-            modelBuilder.Entity<SampleMap>()
+            modelBuilder.Entity<SampleMapFeature>()
                         .Property(x => x.MapCoordinates)
                         .HasColumnType("varchar(8000)");
             //call base
