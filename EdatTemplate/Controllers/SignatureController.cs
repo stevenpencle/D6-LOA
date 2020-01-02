@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace EdatTemplate.Controllers
 {
 
+    [Authorize(Policy = "AdminOrB2C", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class SignatureController : Controller
     {
@@ -24,7 +25,6 @@ namespace EdatTemplate.Controllers
             _signatureService = signatureService;
         }
 
-        [Authorize(Policy = "AdminOrB2C", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [HttpPost]
         [Route("[action]")]
         public async Task<DocumentMetadata> Save([FromBody] SignatureRequest request)

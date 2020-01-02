@@ -64,6 +64,8 @@ import { SampleChartsComponent } from './app/features/administration/sample/samp
 import { SamplePdfDocumentComponent } from './app/features/administration/sample/sample-pdf-document.component';
 import { SampleEdmsComponent } from './app/features/administration/sample/sample-edms.component';
 import { SampleSignatureComponent } from './app/features/administration/sample/sample-signature.component';
+import { SampleMapComponent } from './app/features/administration/sample/sample-map.component';
+import { SampleMapStoreService } from './app/features/administration/sample/sample-map-store.service';
 // ** SAMPLE END
 
 @NgModule({
@@ -95,7 +97,8 @@ import { SampleSignatureComponent } from './app/features/administration/sample/s
     SampleDataComponent,
     SampleChartsComponent,
     SamplePdfDocumentComponent,
-    SampleSignatureComponent
+    SampleSignatureComponent,
+    SampleMapComponent
     // ** SAMPLE END
   ],
   imports: [
@@ -130,6 +133,7 @@ import { SampleSignatureComponent } from './app/features/administration/sample/s
     // ** administration
     // ** SAMPLE START
     SampleStoreService,
+    SampleMapStoreService,
     // ** SAMPLE END
     { provide: NgbDateAdapter, useClass: NgbMomentDatePickerAdapter }
   ],
