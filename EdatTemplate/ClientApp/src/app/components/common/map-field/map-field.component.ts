@@ -82,7 +82,7 @@ export class MapFieldComponent implements AfterContentInit {
     );
   }
 
-  saveMap(): void {
+  save(): void {
     if (this.readOnly) {
       return;
     }
