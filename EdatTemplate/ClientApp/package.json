@@ -34,7 +34,6 @@
     "jspdf": "^1.5.3",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
-    "leaflet-draw-ng": "^1.0.402",
     "leaflet-styleeditor": "^0.1.14",
     "linq": "^3.2.1",
     "lodash": "^4.17.15",

@@ -12,15 +12,10 @@ import {
   TileLayer,
   FeatureGroup,
   geoJSON,
-  control,
   Control,
-  ControlOptions,
   DrawOptions,
-  PathOptions,
   Draw
 } from 'leaflet';
-// import * as L from 'leaflet';
-// import { featureGroup } from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet-styleeditor';
 import { stringify, parse } from 'wellknown';
@@ -166,72 +161,56 @@ export class SampleMapComponent implements OnInit, AfterContentInit, OnDestroy {
     this.map.addControl(drawControl);
 
     this.map.on(Draw.Event.CREATED, e => {
-      // const type = e.type;
-      const layer = e.propagatedFrom;
-      console.log(layer);
+      const layer = (e as any).layer;
       editableLayers.addLayer(layer);
       this.GeoJson = editableLayers.toGeoJSON();
       layer.options.id = layer._leaflet_id;
       this.Options.push(layer.options);
-      console.log(this.wktMap, this.Options);
       this.updateMap();
     });
 
     this.map.on(Draw.Event.EDITED, e => {
-      // const layers = e.layers;
-      // layers.eachLayer(layer => {
-      //   console.log(layer);
-      //   if (layer instanceof L.Rectangle) {
-      //     console.log('im an instance of L rectangle');
-      //   }
-      //   if (layer instanceof L.Polygon) {
-      //     console.log('im an instance of L polygon');
-      //   }
-      //   if (layer instanceof L.Polyline) {
-      //     console.log('im an instance of L polyline');
-      //   }
-      //   editableLayers.addLayer(layer);
-      //   layer.options.id = layer._leaflet_id;
-      //   this.Options.forEach((x, i) => {
-      //     if (x.id === layer._leaflet_id) {
-      //       this.Options[i] = layer.options;
-      //     }
-      //   });
-      //   this.GeoJson = editableLayers.toGeoJSON();
-      //   this.updateMap();
-      // });
+      const layers = (e as any).layers;
+      layers.eachLayer(layer => {
+        editableLayers.addLayer(layer);
+        layer.options.id = layer._leaflet_id;
+        this.Options.forEach((x, i) => {
+          if (x.id === layer._leaflet_id) {
+            this.Options[i] = layer.options;
+          }
+        });
+        this.GeoJson = editableLayers.toGeoJSON();
+        this.updateMap();
+      });
     });
 
     this.map.on(Draw.Event.DELETED, e => {
-      // const layers = e.layers;
-      // layers.eachLayer(layer => {
-      //   this.Options.forEach((x, i) => {
-      //     if (x.id === layer._leaflet_id) {
-      //       this.Options.splice(i, 1);
-      //     }
-      //   });
-      //   console.log('remove');
-      // });
-      // this.GeoJson = editableLayers.toGeoJSON();
-      // this.updateMap();
+      const layers = (e as any).layers;
+      layers.eachLayer((layer: { _leaflet_id: any }) => {
+        this.Options.forEach((x, i) => {
+          if (x.id === layer._leaflet_id) {
+            this.Options.splice(i, 1);
+          }
+        });
+      });
+      this.GeoJson = editableLayers.toGeoJSON();
+      this.updateMap();
     });
 
-    this.map.on('styleeditor:changed', element => {
-      // this.Options.forEach((x, i) => {
-      //   if (x.id === element.options.id) {
-      //     this.Options[i] = element.options;
-      //   }
-      // });
-      // this.GeoJson = editableLayers.toGeoJSON();
-      // this.updateMap();
-    });
+    // this.map.on('styleeditor:changed', element => {
+    //   this.Options.forEach((x, i) => {
+    //     if (x.id === element.options.id) {
+    //       this.Options[i] = element.options;
+    //     }
+    //   });
+    //   this.GeoJson = editableLayers.toGeoJSON();
+    //   this.updateMap();
+    // });
   }
 
   updateMap(): void {
     const wkt = new Array();
     for (let i = 0; i < this.GeoJson.features.length; i++) {
-      console.log(stringify(this.GeoJson.features[i].geometry));
-      console.log(this.Options[i]);
       wkt.push(
         stringify(this.GeoJson.features[i].geometry) +
           ',Options:' +
@@ -248,6 +227,10 @@ export class SampleMapComponent implements OnInit, AfterContentInit, OnDestroy {
         this.sampleMapFeature.mapCoordinates += '~' + this.json[i];
       }
     }
-    // this.addNewApplication();
+    this.sampleMapStoreService.add(
+      this.sampleMapFeature,
+      () => {},
+      () => {}
+    );
   }
 }
