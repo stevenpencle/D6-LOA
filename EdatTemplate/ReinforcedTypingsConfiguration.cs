@@ -22,7 +22,6 @@ namespace EdatTemplate
                 typeof(FdotAppUser),
                 typeof(PublicAppUser),
                 typeof(Sample),
-                typeof(SampleMapFeature),
                 // security models
                 typeof(ClientToken),
                 typeof(AuthProviderConfig),
@@ -36,6 +35,7 @@ namespace EdatTemplate
                 typeof(StringRequest),
                 typeof(StringResponse),
                 typeof(SignatureRequest),
+                typeof(MapRequest),
                 typeof(EdatHeader),
                 typeof(EdatFooter),
                 typeof(DocumentMetadata),

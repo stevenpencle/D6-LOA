@@ -1,19 +1,33 @@
 <div class="row">
   <div class="col">
-    <div #mapContainer class="map-container">
-      <div #mapFrame class="map-frame">
-        <div #mapArea class="map-area"></div>
-      </div>
+    <app-map-field
+      mapBlobFolder="maps"
+      [(mapBlobId)]="mapId"
+      [readOnly]="true"
+    ></app-map-field>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <div class="form-group">
+      <label for="mapBlob">Map BLOB ID</label>
+      <input
+        type="text"
+        class="form-control form-control-sm"
+        id="mapBlob"
+        name="mapBlob"
+        [(ngModel)]="mapId"
+        placeholder="Enter the map BLOB ID"
+        aria-placeholder="Enter the map BLOB ID"
+      />
     </div>
-    <br />
-    <button
-      type="button"
-      class="btn btn-sm btn-primary"
-      (click)="saveMap()"
-      aria-label="Save Map"
-      title="Save Map"
-    >
-      <span class="fas fa-save"></span> Save
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <button class="btn btn-sm btn-light" (click)="load()">
+      <span class="fas fa-play-circle"></span>&nbsp;Load
     </button>
   </div>
 </div>

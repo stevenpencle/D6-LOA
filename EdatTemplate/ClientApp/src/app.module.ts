@@ -32,6 +32,7 @@ import { DateFieldComponent } from './app/components/common/date-field/date-fiel
 import { FieldValidationMessageComponent } from './app/components/common/field-validation-message/field-validation-message.component';
 import { ToastsContainerComponent } from './app/components/common/toasts-container/toasts-container.component';
 import { SignatureFieldComponent } from './app/components/common/signature-field/signature-field.component';
+import { MapFieldComponent } from './app/components/common/map-field/map-field.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -65,7 +66,6 @@ import { SamplePdfDocumentComponent } from './app/features/administration/sample
 import { SampleEdmsComponent } from './app/features/administration/sample/sample-edms.component';
 import { SampleSignatureComponent } from './app/features/administration/sample/sample-signature.component';
 import { SampleMapComponent } from './app/features/administration/sample/sample-map.component';
-import { SampleMapStoreService } from './app/features/administration/sample/sample-map-store.service';
 // ** SAMPLE END
 
 @NgModule({
@@ -86,6 +86,7 @@ import { SampleMapStoreService } from './app/features/administration/sample/samp
     ChartToTableComponent,
     ToastsContainerComponent,
     SignatureFieldComponent,
+    MapFieldComponent,
     // features
     // ** administration
     // ** SAMPLE START
@@ -133,7 +134,6 @@ import { SampleMapStoreService } from './app/features/administration/sample/samp
     // ** administration
     // ** SAMPLE START
     SampleStoreService,
-    SampleMapStoreService,
     // ** SAMPLE END
     { provide: NgbDateAdapter, useClass: NgbMomentDatePickerAdapter }
   ],
