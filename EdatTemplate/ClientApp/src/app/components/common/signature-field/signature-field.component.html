@@ -36,7 +36,7 @@
     </div>
   </div>
 </div>
-<div class="row" *ngIf="!readOnly">
+<div class="row" *ngIf="!readOnly && showSaveAndClear">
   <div class="col text-right">
     <div [ngStyle]="{ width: width.toString() + 'px' }">
       <hr *ngIf="sig != null" />

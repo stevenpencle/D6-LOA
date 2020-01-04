@@ -32,6 +32,7 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
   @Input() signatureBlobFolder: string;
   @Input() width = 300;
   @Input() height = 150;
+  @Input() showSaveAndClear = true;
   @Input() readOnly = false;
   // model
   private blobId = '';
@@ -101,7 +102,7 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
     if (this.readOnly) {
       return;
     }
-    if (this.signaturePad.isEmpty()) {
+    if (this.isEmpty()) {
       console.log('signature is blank');
     } else {
       const pngDataUrl = this.signaturePad.toDataURL();
@@ -120,6 +121,10 @@ export class SignatureFieldComponent implements AfterContentInit, OnInit {
       );
       console.log(pngDataUrl);
     }
+  }
+
+  isEmpty(): boolean {
+    return this.signaturePad.isEmpty();
   }
 
   private resizeCanvas(): void {

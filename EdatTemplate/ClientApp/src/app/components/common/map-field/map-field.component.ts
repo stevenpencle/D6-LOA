@@ -37,12 +37,13 @@ export class MapFieldComponent implements AfterContentInit {
   private mapArea: ElementRef<HTMLDivElement>;
   map: Map;
   editableLayers: FeatureGroup = new FeatureGroup();
-  json: any;
-  GeoJson: any;
+  json: Array<string>;
+  geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
   Options = [];
   mapJson: string = null;
   // inputs
   @Input() mapBlobFolder: string;
+  @Input() showSave = true;
   @Input() readOnly = false;
   // model
   private blobId = '';
@@ -86,11 +87,13 @@ export class MapFieldComponent implements AfterContentInit {
     if (this.readOnly) {
       return;
     }
-    if (this.json !== undefined) {
+    if (this.json !== undefined && this.json !== null && this.json.length > 0) {
       this.mapJson = this.json[0];
       for (let i = 1; i < this.json.length; i++) {
         this.mapJson += '~' + this.json[i];
       }
+    } else {
+      this.mapJson = '';
     }
     this.httpService.post<IMapRequest, IDocumentMetadata>(
       'api/map/Save',
@@ -110,10 +113,10 @@ export class MapFieldComponent implements AfterContentInit {
     if (this.readOnly) {
       return;
     }
-    const wkt = new Array();
-    for (let i = 0; i < this.GeoJson.features.length; i++) {
+    const wkt = new Array<string>();
+    for (let i = 0; i < this.geoJson.features.length; i++) {
       wkt.push(
-        stringify(this.GeoJson.features[i].geometry) +
+        stringify(this.geoJson.features[i].geometry) +
           ',Options:' +
           JSON.stringify(this.Options[i])
       );
@@ -215,7 +218,7 @@ export class MapFieldComponent implements AfterContentInit {
   private drawCreated(event: LeafletEvent): void {
     const layer = (event as any).layer;
     this.editableLayers.addLayer(layer);
-    this.GeoJson = this.editableLayers.toGeoJSON();
+    this.geoJson = this.editableLayers.toGeoJSON() as GeoJSON.FeatureCollection;
     layer.options.id = layer._leaflet_id;
     this.Options.push(layer.options);
     this.updateMap();
@@ -231,7 +234,7 @@ export class MapFieldComponent implements AfterContentInit {
           this.Options[i] = layer.options;
         }
       });
-      this.GeoJson = this.editableLayers.toGeoJSON();
+      this.geoJson = this.editableLayers.toGeoJSON() as GeoJSON.FeatureCollection;
       this.updateMap();
     });
   }
@@ -245,7 +248,7 @@ export class MapFieldComponent implements AfterContentInit {
         }
       });
     });
-    this.GeoJson = this.editableLayers.toGeoJSON();
+    this.geoJson = this.editableLayers.toGeoJSON() as GeoJSON.FeatureCollection;
     this.updateMap();
   }
 

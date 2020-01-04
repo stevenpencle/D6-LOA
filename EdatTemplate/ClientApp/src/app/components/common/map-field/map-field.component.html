@@ -4,7 +4,7 @@
   </div>
 </div>
 <br />
-<div *ngIf="!readOnly">
+<div *ngIf="!readOnly && showSave" class="text-right">
   <button
     type="button"
     class="btn btn-sm btn-primary"
@@ -12,6 +12,6 @@
     aria-label="Save Map"
     title="Save Map"
   >
-    <span class="fas fa-save"></span> Save
+    <span class="fas fa-map-marked"></span> Save
   </button>
 </div>
