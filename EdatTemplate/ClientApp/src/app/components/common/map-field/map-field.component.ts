@@ -32,13 +32,16 @@ export class MapFieldComponent implements AfterContentInit {
   // vars
   map: L.Map;
   featureGroup: L.FeatureGroup = new L.FeatureGroup();
-  json: Array<string>;
   geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
   options = [];
-  mapJson: string = null;
+  mapJson: Array<string> = [];
   loadedLayers: Array<string> = [];
   // inputs
   @Input() mapBlobFolder: string;
+  @Input() styleEditorColors: Array<string> = ['#ff0000', '#00ff00', '#0000ff'];
+  @Input() baseMapUri =
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+  @Input() initialLatLng: L.LatLngExpression = [30.439794, -84.290886];
   @Input() showSave = true;
   @Input() readOnly = false;
   // model
@@ -88,7 +91,7 @@ export class MapFieldComponent implements AfterContentInit {
               });
             } else {
               this.loadedLayers.push(this.blobId);
-              this.mapJson = response.data;
+              this.mapJson = JSON.parse(response.data);
               this.addLayersToMap();
               this.toastService.show('Layer loaded', {
                 classname: 'bg-success text-light',
@@ -105,20 +108,12 @@ export class MapFieldComponent implements AfterContentInit {
     if (this.readOnly) {
       return;
     }
-    if (this.json !== undefined && this.json !== null && this.json.length > 0) {
-      this.mapJson = this.json[0];
-      for (let i = 1; i < this.json.length; i++) {
-        this.mapJson += '~' + this.json[i];
-      }
-    } else {
-      this.mapJson = '';
-    }
     this.httpService.post<IMapRequest, IDocumentMetadata>(
       'api/map/Save',
       {
         currentMapId: this.blobId,
         mapBlobStorageFolder: this.mapBlobFolder,
-        mapGeoJson: this.mapJson
+        mapGeoJson: JSON.stringify(this.mapJson)
       },
       response => {
         this.blobId = response.id;
@@ -140,18 +135,15 @@ export class MapFieldComponent implements AfterContentInit {
           JSON.stringify(this.options[i])
       );
     }
-    this.json = wkt;
+    this.mapJson = wkt;
   }
 
   private initializeBaseMap(): void {
     this.map = new L.Map(this.mapArea.nativeElement, {
-      center: [30.439794, -84.290886],
+      center: this.initialLatLng,
       zoom: 12
     });
-    // TODO: add to appSettings
-    const baseMapUrl =
-      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
-    const baseMapLayer = new L.TileLayer(baseMapUrl, {
+    const baseMapLayer = new L.TileLayer(this.baseMapUri, {
       maxZoom: 18
     });
     this.map.addLayer(baseMapLayer);
@@ -175,13 +167,11 @@ export class MapFieldComponent implements AfterContentInit {
     // add feature group to map
     this.map.addLayer(this.featureGroup);
     if (!this.readOnly) {
-      // TODO: add style options to component
       // add style editor control
       const styleEditor = (L.control as any).styleEditor({
         position: 'topleft',
         useGrouping: false,
-        colorRamp: ['#1abc9c', '#2ecc71', '#3498db'],
-        // markers: ['circle-stroked', 'circle', 'square-stroked', 'square'],
+        colorRamp: this.styleEditorColors,
         openOnLeafletDraw: false
       });
       this.map.addControl(styleEditor);
@@ -207,7 +197,7 @@ export class MapFieldComponent implements AfterContentInit {
   }
 
   private addLayersToMap(): void {
-    const items = this.mapJson === null ? [] : this.mapJson.split('~');
+    const items = this.mapJson;
     let drawItem: string = null;
     for (let i = 0; i < items.length; i++) {
       const itemOptions = items[i].split(', options: ')[1];
