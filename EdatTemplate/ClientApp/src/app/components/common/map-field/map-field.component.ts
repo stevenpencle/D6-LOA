@@ -7,21 +7,11 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import {
-  Map,
-  TileLayer,
-  FeatureGroup,
-  geoJSON,
-  Control,
-  DrawOptions,
-  Draw,
-  LeafletEvent,
-  control
-} from 'leaflet';
+import * as L from 'leaflet';
 import 'leaflet-draw';
+import 'leaflet-search';
 import 'leaflet-styleeditor';
 import { GeoSearchControl, EsriProvider } from 'leaflet-geosearch';
-import 'leaflet-search';
 import { stringify, parse } from 'wellknown';
 import { HttpService } from 'src/app/services/http/http.service';
 import {
@@ -29,7 +19,6 @@ import {
   IStringResponse,
   IDocumentMetadata
 } from 'src/app/model/model';
-import * as L from 'leaflet';
 
 @Component({
   selector: 'app-map-field',
@@ -39,17 +28,13 @@ import * as L from 'leaflet';
 export class MapFieldComponent implements AfterContentInit {
   @ViewChild('mapArea', { static: true })
   private mapArea: ElementRef<HTMLDivElement>;
-  map: Map;
-  featureGroup: FeatureGroup = new FeatureGroup();
+  // vars
+  map: L.Map;
+  featureGroup: L.FeatureGroup = new L.FeatureGroup();
   json: Array<string>;
   geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
   options = [];
   mapJson: string = null;
-
-  // geoJsonLayer: GeoJSON.GeoJSON<any>;
-  searchLayers: any = [];
-  searchControlAdded = false;
-
   // inputs
   @Input() mapBlobFolder: string;
   @Input() showSave = true;
@@ -64,10 +49,8 @@ export class MapFieldComponent implements AfterContentInit {
   constructor(private httpService: HttpService) {}
 
   ngAfterContentInit() {
-    // base map configuration
     this.initializeBaseMap();
     this.configureMap();
-    // load saved map layers
     this.load();
   }
 
@@ -132,51 +115,59 @@ export class MapFieldComponent implements AfterContentInit {
   }
 
   private initializeBaseMap(): void {
-    this.map = new Map(this.mapArea.nativeElement, {
+    this.map = new L.Map(this.mapArea.nativeElement, {
       center: [30.439794, -84.290886],
       zoom: 12
     });
     // TODO: add to appSettings
     const baseMapUrl =
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
-    const baseMapLayer = new TileLayer(baseMapUrl, {
+    const baseMapLayer = new L.TileLayer(baseMapUrl, {
       maxZoom: 18
     });
     this.map.addLayer(baseMapLayer);
   }
 
   private configureMap(): void {
-    // TODO: add style options to component
-    const styleEditor = (control as any).styleEditor({
-      position: 'topleft',
-      useGrouping: false,
-      colorRamp: ['#1abc9c', '#2ecc71', '#3498db'],
-      openOnLeafletDraw: false
+    // add feature search control
+    const searchControl = new (L.Control as any).Search({
+      layer: this.featureGroup,
+      initial: false,
+      propertyName: 'popupContent'
     });
-    this.map.addControl(styleEditor);
-
+    this.map.addControl(searchControl);
+    // add address search control
     const provider = new EsriProvider();
     const geoSearchControl = new GeoSearchControl({
       provider: provider,
       style: 'bar'
     });
     this.map.addControl(geoSearchControl);
-
+    // add feature group to map
     this.map.addLayer(this.featureGroup);
     if (!this.readOnly) {
+      // TODO: add style options to component
+      // add style editor control
+      const styleEditor = (L.control as any).styleEditor({
+        position: 'topleft',
+        useGrouping: false,
+        colorRamp: ['#1abc9c', '#2ecc71', '#3498db'],
+        openOnLeafletDraw: false
+      });
+      this.map.addControl(styleEditor);
       // add draw controls
-      const drawControl = new Control.Draw(
+      const drawControl = new L.Control.Draw(
         this.getDrawConstructorOptions(this.featureGroup)
       );
       this.map.addControl(drawControl);
       // add draw handlers
-      this.map.on(Draw.Event.CREATED, e => {
+      this.map.on(L.Draw.Event.CREATED, e => {
         this.drawCreated(e);
       });
-      this.map.on(Draw.Event.EDITED, e => {
+      this.map.on(L.Draw.Event.EDITED, e => {
         this.drawEdited(e);
       });
-      this.map.on(Draw.Event.DELETED, e => {
+      this.map.on(L.Draw.Event.DELETED, e => {
         this.drawDeleted(e);
       });
       this.map.on('styleeditor:changed', element => {
@@ -187,11 +178,11 @@ export class MapFieldComponent implements AfterContentInit {
 
   private addLayersToMap(): void {
     const items = this.mapJson.split('~');
-    let drawItem: any = null;
+    let drawItem: string = null;
     for (let i = 0; i < items.length; i++) {
       const itemOptions = items[i].split(', options: ')[1];
       drawItem = items[i].split(', options: ')[0];
-      const geoJsonLayer = geoJSON(parse(drawItem) as any, {
+      const geoJsonLayer = L.geoJSON(parse(drawItem) as any, {
         onEachFeature: (_feature, layer) => {
           let itemOptionsObj: any = null;
           try {
@@ -214,32 +205,11 @@ export class MapFieldComponent implements AfterContentInit {
           this.featureGroup.addLayer(layer);
         }
       });
-      this.searchLayers.push(geoJsonLayer);
       this.map.addLayer(geoJsonLayer);
-    }
-
-    // if (drawItem !== null) {
-    //   const coordinates = (parse(drawItem) as any).coordinates;
-    //   if (coordinates.length === 2) {
-    //     this.map.flyTo([coordinates[1], coordinates[0]], 16);
-    //   } else if (coordinates.length > 2) {
-    //     this.map.flyTo([coordinates[0][1], coordinates[0][0]], 16);
-    //   }
-    // }
-
-    const searchLayers = L.featureGroup(this.searchLayers);
-    const searchControl = new (L.Control as any).Search({
-      layer: searchLayers,
-      initial: false,
-      propertyName: 'popupContent'
-    });
-    if (this.searchControlAdded === false) {
-      this.map.addControl(searchControl);
-      this.searchControlAdded = true;
     }
   }
 
-  private drawCreated(event: LeafletEvent): void {
+  private drawCreated(event: L.LeafletEvent): void {
     const layer = (event as any).layer;
     this.featureGroup.addLayer(layer);
     this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
@@ -248,7 +218,7 @@ export class MapFieldComponent implements AfterContentInit {
     this.updateMap();
   }
 
-  private drawEdited(event: LeafletEvent): void {
+  private drawEdited(event: L.LeafletEvent): void {
     const layers = (event as any).layers;
     layers.eachLayer((layer: any) => {
       this.featureGroup.addLayer(layer);
@@ -263,7 +233,7 @@ export class MapFieldComponent implements AfterContentInit {
     });
   }
 
-  private drawDeleted(event: LeafletEvent): void {
+  private drawDeleted(event: L.LeafletEvent): void {
     const layers = (event as any).layers;
     layers.eachLayer((layer: { _leaflet_id: any }) => {
       this.options.forEach((x, i) => {
@@ -287,9 +257,9 @@ export class MapFieldComponent implements AfterContentInit {
   }
 
   private getDrawConstructorOptions(
-    featureGroup: FeatureGroup
-  ): Control.DrawConstructorOptions {
-    const polyline: DrawOptions.PolylineOptions = {
+    featureGroup: L.FeatureGroup
+  ): L.Control.DrawConstructorOptions {
+    const polyline: L.DrawOptions.PolylineOptions = {
       metric: true,
       feet: false,
       shapeOptions: {
@@ -297,10 +267,10 @@ export class MapFieldComponent implements AfterContentInit {
       },
       repeatMode: true
     };
-    const polygon: DrawOptions.PolygonOptions = {
+    const polygon: L.DrawOptions.PolygonOptions = {
       allowIntersection: false
     };
-    const rectangle: DrawOptions.RectangleOptions = {
+    const rectangle: L.DrawOptions.RectangleOptions = {
       shapeOptions: {
         stroke: true,
         weight: 4,
@@ -310,7 +280,7 @@ export class MapFieldComponent implements AfterContentInit {
         fillOpacity: 0.2
       }
     };
-    const controlDrawOptions: Control.DrawOptions = {
+    const controlDrawOptions: L.Control.DrawOptions = {
       polyline: polyline,
       polygon: polygon,
       circle: false,
@@ -318,10 +288,10 @@ export class MapFieldComponent implements AfterContentInit {
       rectangle: rectangle,
       marker: false
     };
-    const controlEditOptions: Control.EditOptions = {
+    const controlEditOptions: L.Control.EditOptions = {
       featureGroup: featureGroup
     };
-    const opts: Control.DrawConstructorOptions = {
+    const opts: L.Control.DrawConstructorOptions = {
       position: 'topright',
       draw: controlDrawOptions,
       edit: controlEditOptions
