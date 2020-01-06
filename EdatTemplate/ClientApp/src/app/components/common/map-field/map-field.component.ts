@@ -20,6 +20,8 @@ import {
 } from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet-styleeditor';
+import { GeoSearchControl, EsriProvider } from 'leaflet-geosearch';
+import 'leaflet-search';
 import { stringify, parse } from 'wellknown';
 import { HttpService } from 'src/app/services/http/http.service';
 import {
@@ -27,6 +29,7 @@ import {
   IStringResponse,
   IDocumentMetadata
 } from 'src/app/model/model';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-map-field',
@@ -42,6 +45,11 @@ export class MapFieldComponent implements AfterContentInit {
   geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
   options = [];
   mapJson: string = null;
+
+  // geoJsonLayer: GeoJSON.GeoJSON<any>;
+  searchLayers: any = [];
+  searchControlAdded = false;
+
   // inputs
   @Input() mapBlobFolder: string;
   @Input() showSave = true;
@@ -146,6 +154,14 @@ export class MapFieldComponent implements AfterContentInit {
       openOnLeafletDraw: false
     });
     this.map.addControl(styleEditor);
+
+    const provider = new EsriProvider();
+    const geoSearchControl = new GeoSearchControl({
+      provider: provider,
+      style: 'bar'
+    });
+    this.map.addControl(geoSearchControl);
+
     this.map.addLayer(this.featureGroup);
     if (!this.readOnly) {
       // add draw controls
@@ -175,15 +191,13 @@ export class MapFieldComponent implements AfterContentInit {
     for (let i = 0; i < items.length; i++) {
       const itemOptions = items[i].split(', options: ')[1];
       drawItem = items[i].split(', options: ')[0];
-      geoJSON(parse(drawItem) as any, {
+      const geoJsonLayer = geoJSON(parse(drawItem) as any, {
         onEachFeature: (_feature, layer) => {
           let itemOptionsObj: any = null;
           try {
             itemOptionsObj = JSON.parse(itemOptions);
-            const setStyleFunc = (layer as any).setStyle;
-            if (setStyleFunc !== undefined) {
-              // FIXME: parsing style object error
-              setStyleFunc(itemOptionsObj);
+            if ((layer as any).setStyle !== undefined) {
+              (layer as any).setStyle(itemOptionsObj);
               this.options[i] = itemOptionsObj;
             }
             if (
@@ -199,15 +213,29 @@ export class MapFieldComponent implements AfterContentInit {
           }
           this.featureGroup.addLayer(layer);
         }
-      }).addTo(this.map);
+      });
+      this.searchLayers.push(geoJsonLayer);
+      this.map.addLayer(geoJsonLayer);
     }
-    if (drawItem !== null) {
-      const coordinates = (parse(drawItem) as any).coordinates;
-      // if (coordinates.length === 2) {
-      //   this.map.flyTo([coordinates[1], coordinates[0]], 12);
-      // } else if (coordinates.length > 2) {
-      this.map.flyTo([coordinates[0][1], coordinates[0][0]], 12);
-      // }
+
+    // if (drawItem !== null) {
+    //   const coordinates = (parse(drawItem) as any).coordinates;
+    //   if (coordinates.length === 2) {
+    //     this.map.flyTo([coordinates[1], coordinates[0]], 16);
+    //   } else if (coordinates.length > 2) {
+    //     this.map.flyTo([coordinates[0][1], coordinates[0][0]], 16);
+    //   }
+    // }
+
+    const searchLayers = L.featureGroup(this.searchLayers);
+    const searchControl = new (L.Control as any).Search({
+      layer: searchLayers,
+      initial: false,
+      propertyName: 'popupContent'
+    });
+    if (this.searchControlAdded === false) {
+      this.map.addControl(searchControl);
+      this.searchControlAdded = true;
     }
   }
 
@@ -222,7 +250,7 @@ export class MapFieldComponent implements AfterContentInit {
 
   private drawEdited(event: LeafletEvent): void {
     const layers = (event as any).layers;
-    layers.eachLayer(layer => {
+    layers.eachLayer((layer: any) => {
       this.featureGroup.addLayer(layer);
       layer.options.id = layer._leaflet_id;
       this.options.forEach((x, i) => {
