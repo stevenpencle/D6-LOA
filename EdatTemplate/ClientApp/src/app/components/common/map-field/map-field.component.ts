@@ -19,6 +19,7 @@ import {
   IStringResponse,
   IDocumentMetadata
 } from 'src/app/model/model';
+import { ToastService } from 'src/app/services/environment/toast.service';
 
 @Component({
   selector: 'app-map-field',
@@ -35,6 +36,7 @@ export class MapFieldComponent implements AfterContentInit {
   geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
   options = [];
   mapJson: string = null;
+  loadedLayers: Array<string> = [];
   // inputs
   @Input() mapBlobFolder: string;
   @Input() showSave = true;
@@ -46,7 +48,10 @@ export class MapFieldComponent implements AfterContentInit {
     this.blobId = value;
   }
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private toastService: ToastService
+  ) {}
 
   ngAfterContentInit() {
     this.initializeBaseMap();
@@ -56,20 +61,43 @@ export class MapFieldComponent implements AfterContentInit {
 
   load(): void {
     if (this.blobId !== null && this.blobId !== '') {
-      this.httpService.post<IMapRequest, IStringResponse>(
-        'api/Map/Load',
-        {
-          currentMapId: this.blobId,
-          mapBlobStorageFolder: this.mapBlobFolder,
-          mapGeoJson: null
-        },
-        response => {
-          if (response.data !== null) {
-            this.mapJson = response.data;
-            this.addLayersToMap();
-          }
+      let loaded = false;
+      this.loadedLayers.find(blobId => {
+        if (this.blobId === blobId) {
+          loaded = true;
         }
-      );
+      });
+      if (loaded) {
+        this.toastService.show('Layer is already loaded!', {
+          classname: 'bg-warning text-light',
+          delay: 5000
+        });
+      } else {
+        this.httpService.post<IMapRequest, IStringResponse>(
+          'api/Map/Load',
+          {
+            currentMapId: this.blobId,
+            mapBlobStorageFolder: this.mapBlobFolder,
+            mapGeoJson: null
+          },
+          response => {
+            if (response.data === null) {
+              this.toastService.show('Layer not found!', {
+                classname: 'bg-danger text-light',
+                delay: 5000
+              });
+            } else {
+              this.loadedLayers.push(this.blobId);
+              this.mapJson = response.data;
+              this.addLayersToMap();
+              this.toastService.show('Layer loaded', {
+                classname: 'bg-success text-light',
+                delay: 5000
+              });
+            }
+          }
+        );
+      }
     }
   }
 
@@ -94,6 +122,7 @@ export class MapFieldComponent implements AfterContentInit {
       },
       response => {
         this.blobId = response.id;
+        this.loadedLayers.push(this.blobId);
         this.mapBlobIdChange.emit(this.blobId);
       }
     );
@@ -152,6 +181,7 @@ export class MapFieldComponent implements AfterContentInit {
         position: 'topleft',
         useGrouping: false,
         colorRamp: ['#1abc9c', '#2ecc71', '#3498db'],
+        // markers: ['circle-stroked', 'circle', 'square-stroked', 'square'],
         openOnLeafletDraw: false
       });
       this.map.addControl(styleEditor);
@@ -177,7 +207,7 @@ export class MapFieldComponent implements AfterContentInit {
   }
 
   private addLayersToMap(): void {
-    const items = this.mapJson.split('~');
+    const items = this.mapJson === null ? [] : this.mapJson.split('~');
     let drawItem: string = null;
     for (let i = 0; i < items.length; i++) {
       const itemOptions = items[i].split(', options: ')[1];
