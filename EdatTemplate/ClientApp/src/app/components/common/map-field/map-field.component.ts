@@ -15,7 +15,8 @@ import {
   Control,
   DrawOptions,
   Draw,
-  LeafletEvent
+  LeafletEvent,
+  control
 } from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet-styleeditor';
@@ -36,10 +37,10 @@ export class MapFieldComponent implements AfterContentInit {
   @ViewChild('mapArea', { static: true })
   private mapArea: ElementRef<HTMLDivElement>;
   map: Map;
-  editableLayers: FeatureGroup = new FeatureGroup();
+  featureGroup: FeatureGroup = new FeatureGroup();
   json: Array<string>;
   geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
-  Options = [];
+  options = [];
   mapJson: string = null;
   // inputs
   @Input() mapBlobFolder: string;
@@ -57,30 +58,28 @@ export class MapFieldComponent implements AfterContentInit {
   ngAfterContentInit() {
     // base map configuration
     this.initializeBaseMap();
+    this.configureMap();
     // load saved map layers
-    if (this.blobId !== null && this.blobId !== '') {
-      this.load();
-      this.configureMap();
-    } else {
-      this.configureMap();
-    }
+    this.load();
   }
 
   load(): void {
-    this.httpService.post<IMapRequest, IStringResponse>(
-      'api/Map/Load',
-      {
-        currentMapId: this.blobId,
-        mapBlobStorageFolder: this.mapBlobFolder,
-        mapGeoJson: null
-      },
-      response => {
-        if (response.data !== null) {
-          this.mapJson = response.data;
-          this.addLayersToMap();
+    if (this.blobId !== null && this.blobId !== '') {
+      this.httpService.post<IMapRequest, IStringResponse>(
+        'api/Map/Load',
+        {
+          currentMapId: this.blobId,
+          mapBlobStorageFolder: this.mapBlobFolder,
+          mapGeoJson: null
+        },
+        response => {
+          if (response.data !== null) {
+            this.mapJson = response.data;
+            this.addLayersToMap();
+          }
         }
-      }
-    );
+      );
+    }
   }
 
   save(): void {
@@ -117,8 +116,8 @@ export class MapFieldComponent implements AfterContentInit {
     for (let i = 0; i < this.geoJson.features.length; i++) {
       wkt.push(
         stringify(this.geoJson.features[i].geometry) +
-          ',Options:' +
-          JSON.stringify(this.Options[i])
+          ', options: ' +
+          JSON.stringify(this.options[i])
       );
     }
     this.json = wkt;
@@ -129,6 +128,7 @@ export class MapFieldComponent implements AfterContentInit {
       center: [30.439794, -84.290886],
       zoom: 12
     });
+    // TODO: add to appSettings
     const baseMapUrl =
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
     const baseMapLayer = new TileLayer(baseMapUrl, {
@@ -138,18 +138,19 @@ export class MapFieldComponent implements AfterContentInit {
   }
 
   private configureMap(): void {
-    // const styleEditor = (control as any).styleEditor({
-    //   position: 'topleft',
-    //   useGrouping: false,
-    //   colorRamp: ['#1abc9c', '#2ecc71', '#3498db'],
-    //   openOnLeafletDraw: false
-    // });
-    // this.map.addControl(styleEditor);
-    this.map.addLayer(this.editableLayers);
+    // TODO: add style options to component
+    const styleEditor = (control as any).styleEditor({
+      position: 'topleft',
+      useGrouping: false,
+      colorRamp: ['#1abc9c', '#2ecc71', '#3498db'],
+      openOnLeafletDraw: false
+    });
+    this.map.addControl(styleEditor);
+    this.map.addLayer(this.featureGroup);
     if (!this.readOnly) {
       // add draw controls
       const drawControl = new Control.Draw(
-        this.getDrawConstructorOptions(this.editableLayers)
+        this.getDrawConstructorOptions(this.featureGroup)
       );
       this.map.addControl(drawControl);
       // add draw handlers
@@ -162,15 +163,9 @@ export class MapFieldComponent implements AfterContentInit {
       this.map.on(Draw.Event.DELETED, e => {
         this.drawDeleted(e);
       });
-      // this.map.on('styleeditor:changed', element => {
-      //   this.Options.forEach((x, i) => {
-      //     if (x.id === element.options.id) {
-      //       this.Options[i] = element.options;
-      //     }
-      //   });
-      //   this.GeoJson = editableLayers.toGeoJSON();
-      //   this.updateMap();
-      // });
+      this.map.on('styleeditor:changed', element => {
+        this.styleChanged(element);
+      });
     }
   }
 
@@ -178,18 +173,19 @@ export class MapFieldComponent implements AfterContentInit {
     const items = this.mapJson.split('~');
     let drawItem: any = null;
     for (let i = 0; i < items.length; i++) {
-      const itemOptions = items[i].split(',Options:')[1];
-      drawItem = items[i].split(',Options:')[0];
+      const itemOptions = items[i].split(', options: ')[1];
+      drawItem = items[i].split(', options: ')[0];
       geoJSON(parse(drawItem) as any, {
         onEachFeature: (_feature, layer) => {
-          // const setStyleFunc = (layer as any).setStyle;
-          // if (setStyleFunc !== undefined) {
-          //   setStyleFunc(JSON.parse(itemOptions));
-          //   this.Options[i] = JSON.parse(itemOptions);
-          // }
           let itemOptionsObj: any = null;
           try {
             itemOptionsObj = JSON.parse(itemOptions);
+            const setStyleFunc = (layer as any).setStyle;
+            if (setStyleFunc !== undefined) {
+              // FIXME: parsing style object error
+              setStyleFunc(itemOptionsObj);
+              this.options[i] = itemOptionsObj;
+            }
             if (
               layer.bindPopup !== undefined &&
               itemOptionsObj.popupContent !== undefined
@@ -201,40 +197,40 @@ export class MapFieldComponent implements AfterContentInit {
             console.log('JSON Parse Error:');
             console.log(e);
           }
-          this.editableLayers.addLayer(layer);
+          this.featureGroup.addLayer(layer);
         }
       }).addTo(this.map);
     }
     if (drawItem !== null) {
       const coordinates = (parse(drawItem) as any).coordinates;
-      if (coordinates.length === 2) {
-        this.map.flyTo([coordinates[1], coordinates[0]], 12);
-      } else if (coordinates.length > 2) {
-        this.map.flyTo([coordinates[0][1], coordinates[0][0]], 12);
-      }
+      // if (coordinates.length === 2) {
+      //   this.map.flyTo([coordinates[1], coordinates[0]], 12);
+      // } else if (coordinates.length > 2) {
+      this.map.flyTo([coordinates[0][1], coordinates[0][0]], 12);
+      // }
     }
   }
 
   private drawCreated(event: LeafletEvent): void {
     const layer = (event as any).layer;
-    this.editableLayers.addLayer(layer);
-    this.geoJson = this.editableLayers.toGeoJSON() as GeoJSON.FeatureCollection;
+    this.featureGroup.addLayer(layer);
+    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
     layer.options.id = layer._leaflet_id;
-    this.Options.push(layer.options);
+    this.options.push(layer.options);
     this.updateMap();
   }
 
   private drawEdited(event: LeafletEvent): void {
     const layers = (event as any).layers;
     layers.eachLayer(layer => {
-      this.editableLayers.addLayer(layer);
+      this.featureGroup.addLayer(layer);
       layer.options.id = layer._leaflet_id;
-      this.Options.forEach((x, i) => {
+      this.options.forEach((x, i) => {
         if (x.id === layer._leaflet_id) {
-          this.Options[i] = layer.options;
+          this.options[i] = layer.options;
         }
       });
-      this.geoJson = this.editableLayers.toGeoJSON() as GeoJSON.FeatureCollection;
+      this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
       this.updateMap();
     });
   }
@@ -242,13 +238,23 @@ export class MapFieldComponent implements AfterContentInit {
   private drawDeleted(event: LeafletEvent): void {
     const layers = (event as any).layers;
     layers.eachLayer((layer: { _leaflet_id: any }) => {
-      this.Options.forEach((x, i) => {
+      this.options.forEach((x, i) => {
         if (x.id === layer._leaflet_id) {
-          this.Options.splice(i, 1);
+          this.options.splice(i, 1);
         }
       });
     });
-    this.geoJson = this.editableLayers.toGeoJSON() as GeoJSON.FeatureCollection;
+    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
+    this.updateMap();
+  }
+
+  private styleChanged(element: any): void {
+    this.options.forEach((x, i) => {
+      if (x.id === (element as any).options.id) {
+        this.options[i] = (element as any).options;
+      }
+    });
+    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
     this.updateMap();
   }
 
