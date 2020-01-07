@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -51,6 +52,13 @@ namespace EdatTemplate.Controllers
         private async Task<EdmsDocumentMetadata> ConfigureMetaData(string fileName)
         {
             //EDMS Configuration : Meadata/properties this information will be specific to your application's use case
+            var documentTypeId = "AV001";
+            var types = await _edmsService.GetDocumentTypesAsync();
+            var documentType = types.Any() ? types.First(x => x.Id == documentTypeId) : null;
+            if (documentType == null)
+            {
+                throw new ApplicationException($"Invalid Document Type: {documentTypeId}");
+            }
             var properties = new List<EdmsDocumentProperty> {
                 new EdmsDocumentProperty {
                     Name = "FINPROJ",
@@ -58,18 +66,13 @@ namespace EdatTemplate.Controllers
                     IsRequired = true
                 },
                 // new EdmsDocumentProperty {
-                //     Name = "DOCNAME",
-                //     Value = "Sample",
+                //     Name = "DOCUMGRP",
+                //     Value = "AV01",
                 //     IsRequired = true
                 // },
                 // new EdmsDocumentProperty {
-                //     Name = "TYPIST_ID",
-                //     Value = "TESTID",
-                //     IsRequired = true
-                // },
-                // new EdmsDocumentProperty {
-                //     Name = "APP_ID",
-                //     Value = "ACROBAT",
+                //     Name = "DOCUMTYPE_ID",
+                //     Value = documentType.Id,
                 //     IsRequired = true
                 // },
                 new EdmsDocumentProperty {
@@ -78,9 +81,6 @@ namespace EdatTemplate.Controllers
                     IsRequired = true
                 }
             };
-            var types = await _edmsService.GetDocumentTypesAsync();
-            //var documentType = types.Any() ? types.Where(i => i.Id == "ODO012").FirstOrDefault() : null;
-            var documentType = types.Any() ? types.First() : null;
             var documentMetaData = new EdmsDocumentMetadata
             {
                 Properties = properties,

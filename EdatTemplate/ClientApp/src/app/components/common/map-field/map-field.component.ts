@@ -59,14 +59,14 @@ export class MapFieldComponent implements AfterContentInit {
   ngAfterContentInit() {
     this.initializeBaseMap();
     this.configureMap();
-    this.load();
+    this.load(this.blobId);
   }
 
-  load(): void {
-    if (this.blobId !== null && this.blobId !== '') {
+  load(blobId: string): void {
+    if (blobId !== null && blobId !== '') {
       let loaded = false;
-      this.loadedLayers.find(blobId => {
-        if (this.blobId === blobId) {
+      this.loadedLayers.find(id => {
+        if (blobId === id) {
           loaded = true;
         }
       });
@@ -79,7 +79,7 @@ export class MapFieldComponent implements AfterContentInit {
         this.httpService.post<IMapRequest, IStringResponse>(
           'api/Map/Load',
           {
-            currentMapId: this.blobId,
+            currentMapId: blobId,
             mapBlobStorageFolder: this.mapBlobFolder,
             mapGeoJson: null
           },
@@ -90,7 +90,7 @@ export class MapFieldComponent implements AfterContentInit {
                 delay: 5000
               });
             } else {
-              this.loadedLayers.push(this.blobId);
+              this.loadedLayers.push(blobId);
               this.mapJson = JSON.parse(response.data);
               this.addLayersToMap();
               this.toastService.show('Layer loaded', {
