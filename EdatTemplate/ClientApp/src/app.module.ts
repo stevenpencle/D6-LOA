@@ -33,6 +33,7 @@ import { FieldValidationMessageComponent } from './app/components/common/field-v
 import { ToastsContainerComponent } from './app/components/common/toasts-container/toasts-container.component';
 import { SignatureFieldComponent } from './app/components/common/signature-field/signature-field.component';
 import { MapFieldComponent } from './app/components/common/map-field/map-field.component';
+import { EdmsFileUploadComponent } from './app/components/common/edms-file-upload/edms-file-upload.component';
 
 // services
 import { EnvironmentService } from './app/services/environment/environment.service';
@@ -87,6 +88,7 @@ import { SampleMapComponent } from './app/features/administration/sample/sample-
     ToastsContainerComponent,
     SignatureFieldComponent,
     MapFieldComponent,
+    EdmsFileUploadComponent,
     // features
     // ** administration
     // ** SAMPLE START

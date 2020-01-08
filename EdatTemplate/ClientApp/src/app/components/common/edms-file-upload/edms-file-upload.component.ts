@@ -5,26 +5,25 @@
   Output,
   EventEmitter
 } from '@angular/core';
-import { IDocumentMetadata } from '../../../model/model';
-import { BlobService } from '../../../services/data/blob.service';
+import { IEdmsDocument } from '../../../model/model';
+import { EdmsService } from 'src/app/services/data/edms.service';
 
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html'
+  selector: 'app-edms-file-upload',
+  templateUrl: './edms-file-upload.component.html'
 })
-export class FileUploadComponent {
+export class EdmsFileUploadComponent {
   hasErrors = false;
   errorMessage = '';
   filesToUpload: Array<File> = [];
   selectedFileNames: string[] = [];
   isLoadingData: Boolean = false;
-  @ViewChild('fileUpload', { static: false })
-  fileUploadVar: any;
-  @Input() blobDirectory: string;
-  @Output() documentUploaded = new EventEmitter<IDocumentMetadata[]>();
+  @ViewChild('fileUpload', { static: false }) fileUploadVar: any;
+  @Output() documentUploaded = new EventEmitter<IEdmsDocument[]>();
   @Input() accept: string;
+  @Input() documentTypeId: string;
 
-  constructor(private blobService: BlobService) {}
+  constructor(private edmsService: EdmsService) {}
 
   fileChangeEvent(fileInput: any) {
     this.clearErrors();
@@ -62,29 +61,22 @@ export class FileUploadComponent {
     this.clearErrors();
     if (this.filesToUpload.length > 0) {
       this.isLoadingData = true;
-      const directory =
-        this.blobDirectory == null
-          ? ''
-          : this.blobDirectory
-              .toString()
-              .toLowerCase()
-              .trim();
       const formData: FormData = new FormData();
       for (let i = 0; i < this.filesToUpload.length; i++) {
         formData.append(
-          directory,
+          this.documentTypeId,
           this.filesToUpload[i],
           this.filesToUpload[i].name
         );
       }
-      this.blobService.add(
+      this.edmsService.add(
         formData,
-        metadatas => {
+        edmsDocuments => {
           this.errorMessage = '';
           this.isLoadingData = false;
           this.selectedFileNames = [];
           this.filesToUpload = [];
-          this.documentUploaded.emit(metadatas);
+          this.documentUploaded.emit(edmsDocuments);
         },
         (error: string) => {
           this.errorMessage = error;

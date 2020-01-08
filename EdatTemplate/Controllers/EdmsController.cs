@@ -33,7 +33,7 @@ namespace EdatTemplate.Controllers
             {
                 foreach (var file in files)
                 {
-                    var documentMetaData = await ConfigureMetaData(file.FileName);
+                    var documentMetaData = await ConfigureMetaData(file.Name, file.FileName);
                     documentMetaData.FileSize = file.Length;
                     using (var stream = file.OpenReadStream())
                     {
@@ -49,35 +49,22 @@ namespace EdatTemplate.Controllers
             return edmsDocuments;
         }
 
-        private async Task<EdmsDocumentMetadata> ConfigureMetaData(string fileName)
+        private async Task<EdmsDocumentMetadata> ConfigureMetaData(string documentTypeId, string fileName)
         {
-            //EDMS Configuration : Meadata/properties this information will be specific to your application's use case
-            var documentTypeId = "AV001";
+            // EDMS Configuration : Meadata/properties this information will be specific to your application's use case
+            // In this example, we're using the aviation document group and type (e.g. AV001)
             var types = await _edmsService.GetDocumentTypesAsync();
             var documentType = types.Any() ? types.First(x => x.Id == documentTypeId) : null;
             if (documentType == null)
             {
                 throw new ApplicationException($"Invalid Document Type: {documentTypeId}");
             }
-            var properties = new List<EdmsDocumentProperty> {
+            // for aviation, the financial project number is required metadata
+            var properties = new List<EdmsDocumentProperty>
+            {
                 new EdmsDocumentProperty {
                     Name = "FINPROJ",
                     Value = "11111111111",
-                    IsRequired = true
-                },
-                // new EdmsDocumentProperty {
-                //     Name = "DOCUMGRP",
-                //     Value = "AV01",
-                //     IsRequired = true
-                // },
-                // new EdmsDocumentProperty {
-                //     Name = "DOCUMTYPE_ID",
-                //     Value = documentType.Id,
-                //     IsRequired = true
-                // },
-                new EdmsDocumentProperty {
-                    Name = "AUTHOR_ID",
-                    Value = "TESTID",
                     IsRequired = true
                 }
             };

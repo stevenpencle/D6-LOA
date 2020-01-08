@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col">
     <div style="max-width: 400px;">
-      <app-file-upload
+      <app-edms-file-upload
         (documentUploaded)="documentUploaded($event)"
-        [useEdms]="true"
+        documentTypeId="AV001"
         accept=".pdf"
-      ></app-file-upload>
+      ></app-edms-file-upload>
     </div>
   </div>
 </div>
