@@ -14,13 +14,13 @@ export class EdmsService {
 
   add(
     formData: FormData,
-    callback: (metadatas: IEdmsDocument[]) => void,
+    callback: (metadata: IEdmsDocument) => void,
     errorCallback?: (error: string) => void
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IEdmsDocument[]>(
-        '/api/Edms/UploadFiles',
+      .post<IEdmsDocument>(
+        '/api/Edms/AddDocument',
         formData,
         this.httpConfigService.postOptions
       )
@@ -35,6 +35,56 @@ export class EdmsService {
           if (errorCallback) {
             errorCallback(httpErrorResponse.message);
           }
+        }
+      );
+  }
+
+  update(
+    formData: FormData,
+    callback: (metadata: IEdmsDocument) => void,
+    errorCallback?: (error: string) => void
+  ): void {
+    const completed = this.loadingService.show();
+    this.httpClient
+      .post<IEdmsDocument>(
+        '/api/Edms/AddDocumentVersion',
+        formData,
+        this.httpConfigService.postOptions
+      )
+      .subscribe(
+        result => {
+          completed();
+          callback(result);
+        },
+        (httpErrorResponse: HttpErrorResponse) => {
+          completed();
+          console.error(httpErrorResponse.message);
+          if (errorCallback) {
+            errorCallback(httpErrorResponse.message);
+          }
+        }
+      );
+  }
+
+  get(id: number, fileName: string): void {
+    const completed = this.loadingService.show();
+    this.httpClient
+      .get<Blob>('api/Edms/GetDocument?id=' + id, {
+        responseType: 'blob' as 'json',
+        headers: {
+          'ng-api-call': 'true',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
+        }
+      })
+      .subscribe(
+        result => {
+          completed();
+          saveAs(result, fileName);
+        },
+        () => {
+          completed();
         }
       );
   }

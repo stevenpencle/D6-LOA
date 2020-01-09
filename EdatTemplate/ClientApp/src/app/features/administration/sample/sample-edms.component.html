@@ -1,9 +1,41 @@
 <div class="row">
+  <div class="col-lg-2 col-md-4 col-sm-12">
+    EDMS Document ID: {{ edmsDocument.id }}
+  </div>
+</div>
+<br />
+<div *ngIf="edmsDocument.id != null && edmsDocument.id > 0" class="row">
+  <div class="col">
+    <button
+      type="button"
+      class="btn btn-sm btn-light"
+      title="file download size: {{ edmsDocument.fileSize }} bytes"
+      (click)="getDocument(edmsDocument.id, edmsDocument.name)"
+    >
+      Download</button
+    >&nbsp;
+    <button
+      type="button"
+      class="btn btn-sm btn-light"
+      title="Reset"
+      (click)="reset()"
+    >
+      Reset
+    </button>
+  </div>
+</div>
+<br />
+<div class="row">
   <div class="col">
     <div style="max-width: 400px;">
       <app-edms-file-upload
         (documentUploaded)="documentUploaded($event)"
         documentTypeId="AV001"
+        [existingEdmsDocumentId]="
+          edmsDocument.id == null || edmsDocument.id == 0
+            ? null
+            : edmsDocument.id
+        "
         accept=".pdf"
       ></app-edms-file-upload>
     </div>

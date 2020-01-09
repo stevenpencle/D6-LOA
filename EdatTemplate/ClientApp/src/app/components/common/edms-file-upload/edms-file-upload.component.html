@@ -21,18 +21,15 @@
       "
       (change)="fileChangeEvent($event)"
       placeholder="Upload file..."
-      multiple
       [accept]="accept"
     />
-    <label class="custom-file-label" for="customFile"
-      >Choose files (maximum of 3)</label
-    >
+    <label class="custom-file-label" for="customFile">Choose a file</label>
   </div>
   <br />
   <div *ngIf="filesToUpload?.length > 0">
     <br />
     <p class="small">
-      <strong>{{ filesToUpload?.length }} files selected</strong>
+      <strong>File selected</strong>
     </p>
   </div>
   <div>
@@ -66,6 +63,11 @@
       [disabled]="filesToUpload?.length == 0"
     >
       <span class="fas fa-upload"></span>&nbsp;Upload
+      {{
+        existingEdmsDocumentId == null || existingEdmsDocumentId == 0
+          ? 'New Document'
+          : 'New Version'
+      }}
     </button>
   </div>
 </div>

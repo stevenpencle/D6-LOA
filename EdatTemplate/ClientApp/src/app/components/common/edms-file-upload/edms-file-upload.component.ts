@@ -7,6 +7,7 @@
 } from '@angular/core';
 import { IEdmsDocument } from '../../../model/model';
 import { EdmsService } from 'src/app/services/data/edms.service';
+import { isInteger } from 'lodash';
 
 @Component({
   selector: 'app-edms-file-upload',
@@ -19,9 +20,10 @@ export class EdmsFileUploadComponent {
   selectedFileNames: string[] = [];
   isLoadingData: Boolean = false;
   @ViewChild('fileUpload', { static: false }) fileUploadVar: any;
-  @Output() documentUploaded = new EventEmitter<IEdmsDocument[]>();
+  @Output() documentUploaded = new EventEmitter<IEdmsDocument>();
   @Input() accept: string;
-  @Input() documentTypeId: string;
+  @Input() documentTypeId: string | null = null;
+  @Input() existingEdmsDocumentId: number | null = null;
 
   constructor(private edmsService: EdmsService) {}
 
@@ -49,9 +51,9 @@ export class EdmsFileUploadComponent {
     if (this.filesToUpload.length === 0) {
       this.hasErrors = true;
       this.errorMessage = 'Please select at least 1 file to upload.';
-    } else if (this.filesToUpload.length > 3) {
+    } else if (this.filesToUpload.length > 1) {
       this.hasErrors = true;
-      this.errorMessage = 'Please select a maximum of 3 files to upload.';
+      this.errorMessage = 'Please select a maximum of 1 file to upload.';
     } else {
       this.uploadFiles();
     }
@@ -62,29 +64,63 @@ export class EdmsFileUploadComponent {
     if (this.filesToUpload.length > 0) {
       this.isLoadingData = true;
       const formData: FormData = new FormData();
-      for (let i = 0; i < this.filesToUpload.length; i++) {
-        formData.append(
-          this.documentTypeId,
-          this.filesToUpload[i],
-          this.filesToUpload[i].name
-        );
-      }
-      this.edmsService.add(
-        formData,
-        edmsDocuments => {
-          this.errorMessage = '';
-          this.isLoadingData = false;
-          this.selectedFileNames = [];
-          this.filesToUpload = [];
-          this.documentUploaded.emit(edmsDocuments);
-        },
-        (error: string) => {
-          this.errorMessage = error;
-          this.isLoadingData = false;
-          this.selectedFileNames = [];
-          this.filesToUpload = [];
+
+      if (this.filesToUpload.length === 1) {
+        if (
+          this.existingEdmsDocumentId !== null &&
+          isInteger(this.existingEdmsDocumentId)
+        ) {
+          formData.append(
+            this.existingEdmsDocumentId.toString(),
+            this.filesToUpload[0],
+            this.filesToUpload[0].name
+          );
+          this.edmsService.update(
+            formData,
+            edmsDocument => {
+              this.errorMessage = '';
+              this.isLoadingData = false;
+              this.selectedFileNames = [];
+              this.filesToUpload = [];
+              this.documentUploaded.emit(edmsDocument);
+            },
+            (error: string) => {
+              this.errorMessage = error;
+              this.isLoadingData = false;
+              this.selectedFileNames = [];
+              this.filesToUpload = [];
+            }
+          );
+        } else {
+          if (this.documentTypeId !== null) {
+            formData.append(
+              this.documentTypeId,
+              this.filesToUpload[0],
+              this.filesToUpload[0].name
+            );
+            this.edmsService.add(
+              formData,
+              edmsDocument => {
+                this.errorMessage = '';
+                this.isLoadingData = false;
+                this.selectedFileNames = [];
+                this.filesToUpload = [];
+                this.documentUploaded.emit(edmsDocument);
+              },
+              (error: string) => {
+                this.errorMessage = error;
+                this.isLoadingData = false;
+                this.selectedFileNames = [];
+                this.filesToUpload = [];
+              }
+            );
+          } else {
+            throw Error(
+              'Either an existing EDMS document ID or valid EDMS document type must be provided'
+            );
+          }
         }
-      );
+      }
     }
   }
 }

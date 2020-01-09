@@ -25,28 +25,61 @@ namespace EdatTemplate.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IEnumerable<EdmsDocument>> UploadFiles()
+        public async Task<EdmsDocument> AddDocument()
         {
-            var edmsDocuments = new List<EdmsDocument>();
+            var edmsDocument = new EdmsDocument();
             var files = HttpContext.Request.Form.Files;
-            if (files.Count > 0)
+            if (files.Count == 1)
             {
-                foreach (var file in files)
+                var file = files[0];
+                var documentMetaData = await ConfigureMetaData(file.Name, file.FileName);
+                documentMetaData.FileSize = file.Length;
+                using (var stream = file.OpenReadStream())
                 {
-                    var documentMetaData = await ConfigureMetaData(file.Name, file.FileName);
-                    documentMetaData.FileSize = file.Length;
-                    using (var stream = file.OpenReadStream())
+                    using (var ms = new MemoryStream())
                     {
-                        using (var ms = new MemoryStream())
-                        {
-                            await stream.CopyToAsync(ms);
-                            var response = await _edmsService.AddNewDocumentAsync(file.FileName, ms.ToArray(), documentMetaData);
-                            edmsDocuments.Add(JsonConvert.DeserializeObject<EdmsDocument>(response));
-                        }
+                        await stream.CopyToAsync(ms);
+                        var response = await _edmsService.AddNewDocumentAsync(file.FileName, ms.ToArray(), documentMetaData);
+                        edmsDocument = JsonConvert.DeserializeObject<EdmsDocument>(response);
                     }
                 }
             }
-            return edmsDocuments;
+            return edmsDocument;
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<EdmsDocument> AddDocumentVersion()
+        {
+            var edmsDocument = new EdmsDocument();
+            var files = HttpContext.Request.Form.Files;
+            if (files.Count == 1)
+            {
+                var file = files[0];
+                using (var stream = file.OpenReadStream())
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(ms);
+                        var documentId = int.Parse(file.Name);
+                        var response = await _edmsService.AddNewVersionAsync(documentId, file.FileName, ms.ToArray());
+                        edmsDocument = JsonConvert.DeserializeObject<EdmsDocument>(response);
+                    }
+                }
+            }
+            return edmsDocument;
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<IActionResult> GetDocument(int id)
+        {
+            var blob = await _edmsService.GetDocumentAsync(id);
+            if (blob == null)
+            {
+                return NotFound();
+            }
+            return File(blob, "application/octet-stream");
         }
 
         private async Task<EdmsDocumentMetadata> ConfigureMetaData(string documentTypeId, string fileName)
