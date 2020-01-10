@@ -4,10 +4,11 @@
       This template application is an Single Page Application (SPA) architecture
       based on
       <a href="https://docs.microsoft.com/en-us/dotnet/core/" target="blank"
-        >.NET Core</a
+        >.NET Core 3.1.100</a
       >
       (server app) and
-      <a href="https://angular.io/" target="_blank">Angular</a> (client app).
+      <a href="https://angular.io/" target="_blank">Angular 8.2.14</a> (client
+      app).
     </p>
   </h5>
   <h6 class="text-muted">
@@ -143,6 +144,10 @@
           <br />
           <code> Common Component: staff-picker.component.(ts|html)</code><br />
           <code> Data Service: email.service.ts</code>
+          <br />
+          <code> API: EmailController.cs</code>
+          <br />
+          <code> Infrastructure Service: EmailService.cs</code>
         </div>
         <h6 class="card-subtitle mb-2 text-muted">
           This component demonstrates the use of the email service to send an
@@ -153,6 +158,10 @@
             >(Arculus)</a
           >
           server-side.
+          <br /><br />
+          Even though the sample usage uses the Angular email service to
+          demonstrate sending an email, the recommended approach is to only send
+          emails from server controllers using the .NET email service.
         </h6>
         <hr />
         <app-sample-email></app-sample-email>
@@ -168,11 +177,15 @@
         <br />
         <code> Common Component: file-upload.component.(ts|html)</code><br />
         <code> Data Service: blob.service.ts</code>
+        <br />
+        <code> API: StorageController.cs</code>
+        <br />
+        <code> Infrastructure Service: BlobStorageProvider.cs</code>
       </div>
       <h6 class="card-subtitle mb-2 text-muted">
-        This component demonstrates the use of the BLOB storage service to store
-        documents and files. The BLOB storage service uses Azure BLOB Storage
-        server-side. You will need the
+        This component demonstrates the use of the file-upload component and
+        BLOB storage service to store documents and files. The BLOB storage
+        service uses Azure BLOB Storage server-side. You will need the
         <a
           href="https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator"
           target="_blank"
@@ -191,11 +204,23 @@
       <div class="card-title">
         <code> Sample Component: sample-edms.component.(ts|html)</code>
         <br />
+        <code> Common Component: edms-file-upload.component.(ts|html)</code
+        ><br />
         <code> Data Service: edms.service.ts</code>
+        <br />
+        <code> API: EdmsController.cs</code>
+        <br />
+        <code> Infrastructure Service: EdmsService.cs</code>
       </div>
       <h6 class="card-subtitle mb-2 text-muted">
-        This component demonstrates the use of the EDMS service to manage
-        enterprise documents. The EDMS service uses the Arculus EDMS server-side
+        This component demonstrates the use of the edms-file-upload component
+        and supporting services to interface with the FDOT EDMS system for the
+        storage and retrieval of enterprise documents. All EDMS servers (Central
+        Office and District) are supported. The EDMS service uses the Arculus
+        EDMS API. The template application implementation provides the
+        following: creating a new document from an uploaded file, adding a new
+        version to an existing EDMS document from an uploaded file, and
+        downloading an existing document in the EDMS system.
       </h6>
       <hr />
       <app-sample-edms></app-sample-edms>
@@ -208,7 +233,7 @@
       <div class="card-title">
         <code> Sample Component: sample-pdf-document.component.(ts|html)</code>
         <br />
-        <code> PDF Document Service: pdf-document.service.ts </code><br />
+        <code> Data Service: pdf-document.service.ts </code><br />
       </div>
       <h6 class="card-subtitle mb-2 text-muted">
         This component demonstrates a service that uses the
@@ -234,9 +259,20 @@
         <br />
         <code>Common Component: signature-field.component.(ts|html)</code>
         <br />
+        <code> API: SignatureController.cs</code>
+        <br />
+        <code> Infrastructure Service: BlobStorageProvider.cs</code>
       </div>
       <h6 class="card-subtitle mb-2 text-muted">
-        This component demonstrates...
+        This component demonstrates the signature-field component which captures
+        a signature drawing on a canvas. It uses the
+        <a href="https://github.com/szimek/signature_pad" target="_blank"
+          >signature_pad</a
+        >
+        library for the drawing implementation and BLOB storage as a data store.
+        It uses a BLOB ID (string) as the model, and will load a previously
+        saved signature (as an image) and save a new signature drawing to a new
+        BLOB. It also supports a read-only mode.
       </h6>
       <hr />
       <app-sample-signature></app-sample-signature>
@@ -244,16 +280,30 @@
   </div>
   <br />
   <div class="card">
-    <div class="card-header">Sample Map Component (In-Progress)</div>
+    <div class="card-header">Sample Map Component</div>
     <div class="card-body">
       <div class="card-title">
         <code> Sample Component: sample-map.component.(ts|html)</code>
         <br />
         <code>Common Component: map-field.component.(ts|html)</code>
         <br />
+        <code> API: MapController.cs</code>
+        <br />
+        <code> Infrastructure Service: BlobStorageProvider.cs</code>
       </div>
       <h6 class="card-subtitle mb-2 text-muted">
-        This component demonstrates...
+        This component demonstrates the map-field component which captures and
+        displays geo-spatial data. The component uses the
+        <a href="https://leafletjs.com/" target="_blank">leaflet</a> library and
+        plugins for the map and BLOB storage as a data store. It uses a BLOB ID
+        (string) as the model, and will load one or more previously saved
+        feature collections to the map and save a new feature collection of
+        features currently on the map to a new BLOB. It also supports a
+        read-only mode. <br /><br />
+        The component map supports the following: drawing (line, polygon,
+        square) features, editing feature styles (line color, line style, fill
+        color, and description), deleting features, searching feature
+        descriptions, and ESRI address search.
       </h6>
       <hr />
       <app-sample-map></app-sample-map>
