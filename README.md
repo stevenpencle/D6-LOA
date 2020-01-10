@@ -49,18 +49,20 @@ This is a template starter application with an Angular.io SPA front-end and .NET
 
 ### Install the Following Tools
 
-1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 2.2
+1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 3.1.100
 2. [VS Code](https://code.visualstudio.com/)
 3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
 4. Node.js and NPM: [https://nodejs.org/en/](https://nodejs.org/en/)
 5. SQL Server and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017)
-6. Visual Studio 2017 (optional, but provides better server-side debugging) - make sure all updates are installed
+6. Visual Studio 2019 (optional, but provides better server-side debugging) - make sure all updates are installed
 
 ### Prerequisite Configuration - 1 Time Setup
 
 VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
 
 ![alt text](Documentation/vscode_extensions.png "VS Code extensions")
+
+Public GIST ID for the Settings Sync extension: 573094cd2d2d12bf89d3d590ab59a674
 
 VS Code or Command Terminal - Verify that you have the latest .NET Core SDK
 
