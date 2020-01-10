@@ -32,7 +32,13 @@ namespace EdatTemplate.Controllers
             if (files.Count == 1)
             {
                 var file = files[0];
-                var documentMetaData = await ConfigureMetaData(file.Name, file.FileName);
+                var types = await _edmsService.GetDocumentTypesAsync();
+                var documentType = types.Any() ? types.First(x => x.Id == file.Name) : null;
+                if (documentType == null)
+                {
+                    throw new ApplicationException($"Invalid Document Type: {file.Name}");
+                }
+                var documentMetaData = ConfigureMetaData(documentType, file.FileName);
                 documentMetaData.FileSize = file.Length;
                 using (var stream = file.OpenReadStream())
                 {
@@ -82,16 +88,10 @@ namespace EdatTemplate.Controllers
             return File(blob, "application/octet-stream");
         }
 
-        private async Task<EdmsDocumentMetadata> ConfigureMetaData(string documentTypeId, string fileName)
+        private EdmsDocumentMetadata ConfigureMetaData(EdmsDocumentType documentType, string fileName)
         {
-            // EDMS Configuration : Meadata/properties this information will be specific to your application's use case
-            // In this example, we're using the aviation document group and type (e.g. AV001)
-            var types = await _edmsService.GetDocumentTypesAsync();
-            var documentType = types.Any() ? types.First(x => x.Id == documentTypeId) : null;
-            if (documentType == null)
-            {
-                throw new ApplicationException($"Invalid Document Type: {documentTypeId}");
-            }
+            // EDMS Configuration : Metadata/properties this information will be specific to your application's use case
+            // In this example, we're using the aviation document group and type (e.g. AV001) passed from the angular component
             // for aviation, the financial project number is required metadata
             var properties = new List<EdmsDocumentProperty>
             {

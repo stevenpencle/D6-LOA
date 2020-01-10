@@ -12,8 +12,10 @@ namespace EdatTemplate.Infrastructure
 {
     public class EdmsService : IEdmsService
     {
-        private readonly static HttpClient _client = new HttpClient();
+        private static readonly HttpClient _client = new HttpClient();
         private readonly EdmsApiConfig _edmsApiConfig;
+        private static IEnumerable<EdmsDocumentType> _documentTypes = null;
+        private static readonly object Lock = new object();
         public EdmsService(EdmsApiConfig edmsApiConfig)
         {
             _edmsApiConfig = edmsApiConfig;
@@ -41,16 +43,28 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<IEnumerable<EdmsDocumentType>> GetDocumentTypesAsync()
         {
+            // this method caches the document types from the EDMS service
+            if (_documentTypes != null)
+            {
+                return _documentTypes;
+            }
             var token = await GetAuthenticationTokenFromApi();
             var url = $"{_edmsApiConfig.ProductUri}/documentTypes?authenticationToken={token}";
             var response = await _client.GetAsync(url);
             var data = await response.Content.ReadAsStringAsync();
-            var sl = JsonConvert.DeserializeObject<IEnumerable<EdmsDocumentType>>(data).ToList();
-            if (sl.Any())
+            lock (Lock)
             {
-                return sl.OrderBy(x => x.Id);
+                if (_documentTypes != null)
+                {
+                    return _documentTypes;
+                }
+                var sl = JsonConvert.DeserializeObject<IEnumerable<EdmsDocumentType>>(data).ToList();
+                if (sl.Any())
+                {
+                    _documentTypes = sl.OrderBy(x => x.Id);
+                }
             }
-            return null;
+            return _documentTypes;
         }
 
         public async Task<string> AddNewDocumentAsync(string fileName, byte[] bytes, EdmsDocumentMetadata metadata)
