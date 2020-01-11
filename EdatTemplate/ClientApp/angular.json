@@ -43,7 +43,11 @@
             "progress": true,
             "polyfills": "src/polyfills.ts",
             "assets": ["src/assets"],
-            "styles": ["src/styles/styles.scss"],
+            "styles": [
+              "src/styles/styles.scss",
+              "node_modules/leaflet/dist/images/marker-shadow.png",
+              "node_modules/leaflet/dist/images/marker-icon-2x.png"
+            ],
             "scripts": []
           },
           "configurations": {
