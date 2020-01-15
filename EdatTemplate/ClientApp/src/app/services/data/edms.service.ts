@@ -75,7 +75,7 @@ export class EdmsService {
           'ng-api-call': 'true',
           'Cache-Control': 'no-cache',
           Pragma: 'no-cache',
-          Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
+          Expires: 'Sat, 01 Jan 2020 00:00:00 GMT'
         }
       })
       .subscribe(

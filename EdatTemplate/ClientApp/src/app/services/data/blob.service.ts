@@ -19,7 +19,10 @@ export class BlobService {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<IDocumentMetadata[]>('api/Storage/GetFileList?directory=' + directory, this.httpConfigService.getOptions)
+      .get<IDocumentMetadata[]>(
+        'api/Storage/GetFileList?directory=' + directory,
+        this.httpConfigService.getOptions
+      )
       .subscribe(
         result => {
           completed();
@@ -40,7 +43,7 @@ export class BlobService {
           'ng-api-call': 'true',
           'Cache-Control': 'no-cache',
           Pragma: 'no-cache',
-          Expires: 'Sat, 01 Jan 2019 00:00:00 GMT'
+          Expires: 'Sat, 01 Jan 2020 00:00:00 GMT'
         }
       })
       .subscribe(
@@ -61,7 +64,11 @@ export class BlobService {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IDocumentMetadata[]>('/api/Storage/UploadFiles', formData, this.httpConfigService.postOptions)
+      .post<IDocumentMetadata[]>(
+        '/api/Storage/UploadFiles',
+        formData,
+        this.httpConfigService.postOptions
+      )
       .subscribe(
         result => {
           completed();
@@ -80,7 +87,11 @@ export class BlobService {
   remove(id: string, callback: (response: string) => void): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IStringResponse>('api/Storage/RemoveFile', { data: id }, this.httpConfigService.postOptions)
+      .post<IStringResponse>(
+        'api/Storage/RemoveFile',
+        { data: id },
+        this.httpConfigService.postOptions
+      )
       .subscribe(
         result => {
           completed();
@@ -95,7 +106,11 @@ export class BlobService {
   removeAll(directory: string, callback: (response: string) => void): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IStringResponse>('api/Storage/RemoveFiles', { data: directory }, this.httpConfigService.postOptions)
+      .post<IStringResponse>(
+        'api/Storage/RemoveFiles',
+        { data: directory },
+        this.httpConfigService.postOptions
+      )
       .subscribe(
         result => {
           completed();
