@@ -9,6 +9,7 @@ import { SecurityService } from '../../services/security/security.service';
 import { HttpService } from '../../services/http/http.service';
 import * as linq from 'linq';
 import { IAuthProviderConfig } from '../../model/model';
+import { EnvironmentService } from 'src/app/services/environment/environment.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -27,8 +28,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   allowB2C = false;
   isB2CAuthenticated = false;
   collapsed = true;
+  showSamples = false;
 
   constructor(
+    private environmentService: EnvironmentService,
     private securityService: SecurityService,
     private httpService: HttpService
   ) {}
@@ -41,6 +44,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         this.canImpersonate = result.allowImpersonation;
       }
     );
+    this.environmentService.safeSubscribe(this, environmentData => {
+      this.showSamples = environmentData.header.showSamples;
+    });
     this.securityService.safeSubscribe(
       this,
       token => {

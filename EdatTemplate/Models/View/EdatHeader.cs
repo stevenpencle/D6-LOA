@@ -13,6 +13,7 @@
         public string Performance { get; set; }
         public string Projects { get; set; }
         public bool ShowEnvironmentWarning { get; set; }
+        public bool ShowSamples { get; set; }
 
     }
 }

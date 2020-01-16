@@ -25,24 +25,28 @@ export class EnvironmentService extends Store<EnvironmentData> {
       this.baseUrl = ele[0].href;
     }
     const completedHeader = this.loadingService.show();
-    this.httpClient.get<IEdatHeader>('api/site/GetHeader', this.httpConfigService.getOptions).subscribe(
-      result => {
-        this.setState({ header: result, footer: this.getState().footer });
-        completedHeader();
-      },
-      () => {
-        completedHeader();
-      }
-    );
+    this.httpClient
+      .get<IEdatHeader>('api/site/GetHeader', this.httpConfigService.getOptions)
+      .subscribe(
+        result => {
+          this.setState({ header: result, footer: this.getState().footer });
+          completedHeader();
+        },
+        () => {
+          completedHeader();
+        }
+      );
     const completedFooter = this.loadingService.show();
-    this.httpClient.get<IEdatFooter>('api/site/GetFooter', this.httpConfigService.getOptions).subscribe(
-      result => {
-        this.setState({ header: this.getState().header, footer: result });
-        completedFooter();
-      },
-      () => {
-        completedFooter();
-      }
-    );
+    this.httpClient
+      .get<IEdatFooter>('api/site/GetFooter', this.httpConfigService.getOptions)
+      .subscribe(
+        result => {
+          this.setState({ header: this.getState().header, footer: result });
+          completedFooter();
+        },
+        () => {
+          completedFooter();
+        }
+      );
   }
 }
