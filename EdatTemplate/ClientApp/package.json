@@ -25,8 +25,8 @@
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
     "@fortawesome/fontawesome-free": "^5.12.0",
-    "@ng-bootstrap/ng-bootstrap": "^5.1.4",
-    "@swimlane/ngx-charts": "^13.0.1",
+    "@ng-bootstrap/ng-bootstrap": "^5.1.5",
+    "@swimlane/ngx-charts": "^13.0.2",
     "classlist.js": "^1.1.20150312",
     "detect-browser": "^4.8.0",
     "file-saver": "^2.0.2",
@@ -35,7 +35,7 @@
     "leaflet-draw": "^1.0.4",
     "leaflet-geosearch": "^2.7.0",
     "leaflet-search": "^2.9.8",
-    "leaflet-styleeditor": "^0.1.14",
+    "leaflet-styleeditor": "^0.1.16",
     "linq": "^3.2.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -50,8 +50,8 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.21",
-    "@angular/cli": "^8.3.21",
+    "@angular-devkit/build-angular": "^0.803.23",
+    "@angular/cli": "^8.3.23",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",
     "@types/file-saver": "^2.0.1",
@@ -61,10 +61,10 @@
     "@types/leaflet-draw": "^1.0.1",
     "@types/leaflet-geosearch": "^2.7.1",
     "@types/lodash": "^4.14.149",
-    "@types/node": "^13.1.4",
+    "@types/node": "^13.1.7",
     "@types/wellknown": "^0.5.0",
     "codelyzer": "^5.2.1",
-    "ts-node": "^8.5.4",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
     "typescript": "3.5.3"
   }
