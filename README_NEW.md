@@ -25,7 +25,7 @@ The sample code has been isolated to a single folder in the client (Angular) app
 
 1. [SQL Server Developer](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017) - latest versions
 2. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 3.1.100
-3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) - latest versions
+3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and (optionally) [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) - latest versions
 4. [Node.js and NPM](https://nodejs.org/en/) - latest LTS version
 5. [Angular CLI](https://cli.angular.io/) - currently using version 8.2.14
 6. [VS Code](https://code.visualstudio.com/) - latest version
