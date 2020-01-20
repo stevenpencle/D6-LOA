@@ -31,11 +31,23 @@
      - [Bootstrapper](#client---bootstrapper)
      - [app module](#client---app-module)
      - [app-routing module](#client---app-routing-module)
-     - [services](#client---services)
-     - [components](#client---components)
-     - [features](#client---features)
+     - [Services](#client---services)
+     - [Stores](#client---stores)
+     - [Components](#client---components)
+4. [Configuration Files](#configuration-files)
+   - [.NET Core global.json](#.net-core-global.json)
+   - [.NET Core appsettings.json](#.net-core-appsettings.json)
+   - [ClientApp angular.json](#clientapp-angular.json)
+   - [ClientApp package.json](#clientapp-package.json)
+5. [ETA Security Model](#security-model)
+6. [Command Line Interface](#command-line-interface)
+   - [dotnet](#dotnet)
+   - [npm](#npm)
+   - [ng](#ng)
 
 ## Introduction
+
+PLEASE READ THE COMPLETE DOCUMENT - A lot of time and effort was spent documenting the EDAT Template Application architecture pattern and how to get started with a new application. If you ask a question that is clearly a covered topic, you will be kindly directed to READ THE DOCUMENT. If you have questions that are not covered here, please ask. We would like to continue to add missing information and clear up anything confusing.
 
 Welcome to the EDAT Template Application (ETA). The ETA is a Single Page Application (SPA) architecture developed with Angular and .NET Core. The ETA is not a framework, but it incorporates many open-source frameworks and software libraries into a robust architecure pattern for developing web applications for the FDOT. To use the ETA for developing an application, you need experience with the core web languages HTML, CSS, and JavaScript (TypeScript). You also need an understanding of specific software frameworks like .NET Core and Angular. The ETA, being a SPA, should be thought of as 2 separate applications (a client Angular application and a server .NET Core application).
 
@@ -64,17 +76,17 @@ _Visual Studio 2019 is optional, but provides better server-side debugging. If y
 
 ### Prerequisite Configuration
 
-The **[1 TIME]** notation will mark the sections or items that are only necessary the first time you create an ETA application and are not necessary to repeat each time you start a new application.
+The **[ 1 TIME ]** notation will mark the sections or items that are only necessary the first time you create an ETA application and are not necessary to repeat each time you start a new application.
 
 #### VS Code Configuration
 
 There are several VS Code extensions and settings customizations that will make developing applications based on the ETA much easier.
 
-##### Install Fira Code Font [1 TIME]
+##### Install Fira Code Font [ 1 TIME ]
 
 Installing the [Fira Code Font](https://github.com/tonsky/FiraCode) is highly recommended. Once you follow the directions below to configure your VS Code, it will attempt to use this font first. While not required, this font is helpful in that it was developed specifically for coding. The problem statement from their website is: _"Programmers use a lot of symbols, often encoded with several characters. For the human brain, sequences like ->, <= or := are single logical tokens, even if they take two or three characters on the screen. Your eye spends a non-zero amount of energy to scan, parse and join multiple characters into a single logical one. Ideally, all programming languages should be designed with full-fledged Unicode symbols for operators, but that’s not the case yet."_
 
-##### Install Settings Sync and Configure VS Code [1 TIME]
+##### Install Settings Sync and Configure VS Code [ 1 TIME ]
 
 In VS Code, click "Extensions" on the left menu and search the marketplace for "Settings Sync" and click "Install."
 
@@ -96,7 +108,7 @@ Type "sync" in the textbox and select `Sync: Download Settings`. This will begin
 
 ![alt text](Documentation/images/settings-sync-download-settings.png "Settings Sync - Download Settings")
 
-#### Request secrets.json [1 TIME]
+#### Request secrets.json [ 1 TIME ]
 
 Contact Randy `randy.lee@dot.state.fl.us` to obtain the secrets.json file for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git (the ETA's gitignore file is already set to ignore it). This file must be distributed to each developer via FDOT's File Transfer Appliance (FTA) and not via email.
 
@@ -164,7 +176,7 @@ Once the installer completes, you should see the results of the Angular build.
 
 ![alt text](Documentation/images/vscode-azure-blob-container-update.png "Azure BLOB container name update")
 
-##### Set the User Secrets for the New Application [1 TIME]
+##### Set the User Secrets for the New Application [ 1 TIME ]
 
 - Save the secrets.json file that you were sent via FTA to the project folder. The .gitignore file is already configured to ignore this file, but please verify (it will be dimmed as compared to the other files). The secrets.json file doesn't need to be added to the project, but it makes the next steps easier. See the image below.
 
@@ -188,7 +200,7 @@ The .NET Core compiler will look for these secrets and combine them with the pro
 
 ### Run the New Application
 
-- Install a development certificate for HTTPS **[1 TIME]**.
+- Install a development certificate for HTTPS **[ 1 TIME ]**.
   - In the VS Code terminal, type `dotnet dev-certs https --clean` and hit `Enter`. You will need to confirm the certificate removal by clicking through a Window's dialog (or two).
   - In the VS Code terminal, type `dotnet dev-certs https --trust` and hit `Enter`. You will need to confirm the certificate install by clicking through a Window's dialog.
 - Start the Azure Storage Emulator - `Windows Key`, type `Azure Storage Emulator` and hit `Enter`. You can exit the command window once the emulator is started, and it will continue to run in the background until you exit the process or restart your workstation.
@@ -215,7 +227,7 @@ The recommended approach to adding the source code to Git is:
 
 ## ETA Architecture
 
-![alt text](Documentation/images/eta-architecture.jpg "ETA Architecture")
+![alt text](Documentation/images/eta-architecture.png "ETA Architecture")
 
 ### General Overview
 
@@ -342,7 +354,7 @@ The _app.module_ imports the component declarations, other module imports (inclu
 
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a _RouteData_ object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
-#### Client - services
+#### Client - Services
 
 The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). ETA only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is generally the service scope you want, but there may be cases when you want a component to have its own instance of a service.
 
@@ -374,13 +386,9 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 - **route-guard** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
 - **security** Provides a means to access the principal's _ClientToken_ from the _Security_ controller. This service maintains the client application's state of the _ClientToken_ and is a observable store service.
 
-##### store
+#### Client - Stores
 
-- **store** Abstract class that all observable store services should extend from. This service provides access to an Observable for services that extend from it, and it provides a safe subscribe method for components to receive state change notifications about the Observable. The _Store_ service was based on the following pattern, but has been extended to provide better protection from memory leak risk... [State management in Angular with observable store services](https://jurebajt.com/state-management-in-angular-with-observable-store-services/)
-
-##### {Your Store Services}
-
-Your store services that represent the state management of your application's data should be placed in the _features_ folder.
+Store services that represent the state management of your application's data should be placed in the _features_ folder.
 
 Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model's state in the client application, and this is the most typical type of custom service you will implement. Your application model entities should always be managed by store services, and the same entity type should never be the subject of more than one store service (directly or indirectly). This is how we ensure a single source of truth in the client application.
 
@@ -390,7 +398,11 @@ Store services extend the _Store_ abstract class. This class implements two subs
 
 **A note about Observables and store services:** Observables come in two flavors; finite and infinite. Many Angular services (like Http and ActivatedRoute) return finite Observables in that Angular handles unsubscribing when the operation completes (i.e. an HTTP call finishes or a route is changed). All store services manage infinite Observables, meaning that the Observable represents some type of application state over a non-deterministic amount of time. These types of Observables must be unsubscribed from to avoid a memory leak in the client application. The abstract _Store_ class handles the unsubscribe for all services that extend from it. The _safeSubscribe(Map)_ methods protect the actual Observable and instead return only a representation of the current state (the value of the Observable) to the Observer callback in the component whenever the Observable state changes. So components never have access to the actual Observable. Your custom store services that extend from _Store_ do have access to the Observable and have the sole responsibility for mutating the Observable's state. If your store service manages an entire object graph (typical scenario) and you have components that only need to be notified of changes to a sub-set of the graph, you should subscribe with the _safeSubscribeMap_ method and pass a predicate to project only the state your component is interested in. Your component will only be notified of changes to state for objects in the projection. In other words, _safeSubscribeMap_ allows a component to subscribe to only a part of the Observable managed by your store service. The _safeSubscribe_ method always subscribes to the root Observable of the store service.
 
-#### Client - components
+##### store
+
+The store abstract class that all observable store services should extend from. This service provides access to an Observable for services that extend from it, and it provides a safe subscribe method for components to receive state change notifications about the Observable. The _Store_ service was based on the following pattern, but has been extended to provide better protection from memory leak risk... [State management in Angular with observable store services](https://jurebajt.com/state-management-in-angular-with-observable-store-services/)
+
+#### Client - Components
 
 The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_ or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. Any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
 
@@ -435,10 +447,6 @@ The _not-authorized_ component is where the _http_ service re-routes a user when
 
 The _server-error_ component's sole purpose is to render the detailed .NET Core error page in an iframe for debugging. This is a development-only component.
 
-##### {Your Components}
-
-Your components that represent the functions and views of your application should be placed in the _features_ folder.
-
-#### Client - features
+##### Client - features
 
 The _features_ folder is where should place the components and store services that represent the business domain of your application. You should break up features by 'areas' that represent distinct sections or functionality within your application.
