@@ -231,7 +231,7 @@ The recommended approach to adding the source code to Git is:
 
 ### General Overview
 
-Think of development using ETA as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services or controllers making requests to server API controllers (please see the _http_ service section to determine appropriate usage). The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+Think of development using ETA as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client stores or controllers making requests to server API controllers (please see the _http_ service section to determine appropriate usage). The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 ### Model
 
@@ -247,9 +247,22 @@ The _Domain_ namespace is where entities that represent the business domain are 
 
 - **IAuditedEntity** The interface that entities that require last update audit fields should implement.
 - **Staff** The object type returned by the _StaffService_.
+- **AppUser** The abstract entity type that represents a known user in the application.
+- **FdotAppUser** A super-class of AppUser that represents a user that authenticates with a FDOT AD account.
+- **PublicAppUser** A super-class of AppUser that represents a user that authenticates with a FDOT B2C account.
 - **{Your Entities}** Entities that represent the business domain of your application.
 
-**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in a distributed application, the data store (Azure SQL), the application server (NET Core application), and the client (Angular application). Since these are separate state representations, it is the developer's responsibility to have only a single representation of state in each tier and to manage their synchronization. The _Domain_ model is the representation of the state structure across all application tiers, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
+**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in a distributed application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations, it is the developer's responsibility to have only a single representation of state in each tier and to manage their synchronization. The _Domain_ model is the representation of the state structure across all application tiers, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _Stores_ section.
+
+#### Model - Edms
+
+The Edms namespace is where types that represent the data structures necessary to interface with the FDOT's Enterprise Document Management System (EDMS) are defined.
+
+- **EdmsDocument** Describes a document record in EDMS with the collection of versions available.
+- **EdmsDocumentMetadata** Describes metadata about a document in EDMS. It contains information like the name, file size, document type, and a collection of user-defined properties.
+- **EdmsDocumentProperty** Describes a user-defined property name-value pair for a document in EDMS.
+- **EdmsDocumentType** Describes a grouping of documents in EDMS.
+- **EdmsDocumentVersion** Describes a version (current or previous) of a document in EDMS.
 
 #### Model - Security
 
@@ -267,6 +280,8 @@ The _View_ namespace is where types that represent transient state messages betw
 - **EdatHeader** Describes the image resources and links for the standard FDOT application header. This is a singleton type that is deserialized from _appsettings.json_.
 - **EmailMessage** Describes the structure of an email message for use with the _EmailController_.
 - **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
+- **MapRequest** Describes the information about a GeoJSON record contained in BLOB storage.
+- **SignatureRequest** Describes the information about a data-url encoded image for a signature record contained in BLOB storage.
 - **StringRequest and StringResponse** Represents any string data payload between client and server.
 
 ### .NET Core Server Application
@@ -305,6 +320,8 @@ The _Infrastructure_ namespace is where the services that communicate with other
 
 - **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
 - **BlobStorageProvider** Service implementation for interfacing with Azure Storage.
+- **EdmsApiConfig** Describes the EdmsService endpoints and client configuration for accessing the Arculus EDMS service. This is a singleton type that is deserialized from _appsettings.json_.
+- **EdmsService** Service implementation for interfacing with the EDMS service on Arculus.
 - **EmailService** Service implementation for interfacing with the SendGrid service on Azure.
 - **FdotCoreApisConfig** Describes the Arculus service endpoints and client configuration for accessing the FDOT enterprise services. This is a singleton type that is deserialized from _appsettings.json_.
 - **SendGridConfig** Describes the connection details for using the SendGrid service on Azure. This is a singleton type that is deserialized from _appsettings.json_.
@@ -315,17 +332,23 @@ The _Infrastructure_ namespace is where the services that communicate with other
 The _Services_ namespace is where the interface contracts that describe the _Infrastructure_ service implementations are located.
 
 - **IBlobStorageProvider** Interface for _Infrastructure BlobStorageProvider_.
+- **IEdmsService** Interface for _Infrastructure EdmsService_.
 - **IEmailService** Interface for _Infrastructure EmailService_.
+- **ISignatureService** Interface for _Services SignatureService_.
 - **IStaffService** Interface for _Infrastructure StaffService_.
+- **SignatureService** Service for converting between data-url and binary image.
 
 #### Server - Controllers
 
 The _Controllers_ namespace contains the APIs for the endpoints exposed by the server application.
 
-**FIREWALL** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
+**Authorize()** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
 
+- **Edms** API for creating, retrieving, and versioning documents in the FDOT's EDMS.
 - **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage. You will probably not use this controller if you just send emails from the server application (other controllers or business services). In that case, just inject the IEmailService and use it directly.
+- **Map** API for saving and retrieving GeoJSON data stored in BLOB storage.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
+- **Signature** API for saving and retrieving data-url encoded signature images stored in BLOB storage.
 - **Site** API for retrieving global site data like header and footer resources.
 - **Staff** API for accessing the _IStaffService_.
 - **Storage** API for accessing the _IBlobStorageProvider_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage.
@@ -363,14 +386,18 @@ The _services_ folder is where all client services are located (except stores). 
 - **blob** Provides access to the server's _Storage_ controller. This service does not maintain any state.
 - **data-marshaler** Provides a means to pass string data from one component to another. This service maintains a string payload state.
 - **data-navigation** Provides a means to sort, filter, and page through a data array. This service does not maintain any state.
+- **edms** Provides access to the server's _Edms_ controller. This service does not maintain any state.
 - **email** Provides access to the server's _Email_ controller. This service does not maintain any state. You will probably not use this service if you only need to send emails from the server application. In that case, just inject the IEmailService into the server controller or business service and use it directly.
 - **excel-export** Provides a means to export a JSON data array to a Microsoft Excel file. This service does not maintain any state.
 - **ngbMomentDatePickerAdapter** Extension service for the ng-bootstrap date picker component to use moment.js objects instead of the proprietary structure.
+- **pdf-document** Provides a method to create a PDF document from an HTML template. This is just one example usage of the jsPDF library.
 - **staff** Provides access to the server's _Staff_ controller. This service does not maintain any state.
 
 ##### environment
 
-The _environment_ service provides a means for the Angular router to compose URLs by specifying the application root path ('/' is the default). This service does not maintain any state.
+- **environment** Provides a means for the Angular router to compose URLs by specifying the application root path ('/' is the default). This service does not maintain any state.
+- **loading** Provides a trigger for displaying a loading animation after a specified duration is exceeded on an asynchronous HTTP request.
+- **toast** Provides a trigger for displaying toast messages.
 
 ##### http
 
@@ -418,10 +445,15 @@ Common components are utility components that serve very specific technical purp
 
 - **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data to meet accessibility requirements.
 - **date-field** An alternate component to the _ng-Bootstrap_ datepicker. This component is a standard textbox with a date format mask that binds to a _momentjs_ object.
+- **edms-file-upload** Provides file uploading capabilities (new document and new version) to the FDOT's EDMS.
+- **field-validation-message** Provides a means to display an error message in the context of the field the error is related to.
 - **file-upload** Provides a view for selecting and uploading files.
 - **filter-field** Provides a view for entering string data to be applied as a filter to a property in an object array.
+- **map-field** Provides a means to view, draw, search, and annotate GIS data on a map.
+- **signature-field** Provides a means to display and capture a hand-drawn signature on a canvas.
 - **sort-button** Provides a view for sorting data ascending or descending.
 - **staff-picker** Provides a type-ahead select for FDOT staff (SRS).
+- **toasts-container** Provides an area to display messages from the toast service.
 
 ##### footer
 
