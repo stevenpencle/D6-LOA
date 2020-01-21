@@ -104,7 +104,9 @@ In VS Code, click the "Manage" gear button and select "Command Palette."
 
 ![alt text](Documentation/images/vscode-settings-command-palette.png "VS Code Command Palette")
 
-Type "sync" in the textbox and select `Sync: Download Settings`. This will begin the installation of several VS Code extensions and apply a specific configuration. Once the synchronization completes, please close and reopen VS Code. At this point, you can adjust VS Code to your own preferences for themes and settings. This configuration is just to get you started with a great set of required or helpful extensions and a good theme and configuration.
+Type "sync" in the textbox and select `Sync: Advanced Options` then `Sync: Download Settings from Public GIST` then type "sync" in the textbox and select `Sync: Download Settings`.
+
+This will begin the installation of several VS Code extensions and apply a specific configuration. Once the synchronization completes, please close and reopen VS Code. At this point, you can adjust VS Code to your own preferences for themes and settings. This configuration is just to get you started with a great set of required or helpful extensions and a good theme and configuration.
 
 ![alt text](Documentation/images/settings-sync-download-settings.png "Settings Sync - Download Settings")
 
