@@ -1,182 +1,243 @@
 # Table of Contents
 
 1. [Introduction](#introduction)
-   - [FAQ](#faq)
 2. [Getting Started](#getting-started)
-   - [Install the Tools](#install-the-following-tools)
-   - [Prerequisite Configuration](#prerequisite-configuration---1-time-setup)
-   - [PowerShell Installer](#powershell-installer)
-   - [Run the Template Application](#run-template)
-   - [Removing the Sample Code](#removing-the-sample-code)
-3. [Manual New Application Steps](#manual-steps-to-create-a-new-application-from-the-template)
-4. [Features](#features)
-5. [Template Application Architecture](#template-application-architecture)
+   - [Install the Tools](<#install-the-following-tools-(in-order)>)
+   - [Prerequisite Configuration](#prerequisite-configuration)
+     - [VS Code Configuration](#vs-code-configuration)
+     - [Request secrets.json](#request-secrets.json-[1-time])
+   - [Start a New Application](#start-a-new-application)
+     - [Download the PowerShell Clone Script](#download-the-powershell-clone-script)
+     - [Create a New Application](#create-a-new-application)
+     - [Open the New Application](#open-the-new-application-in-vs-code)
+     - [Set the User Secrets](#set-the-user-secrets-for-the-new-application-[1-time])
+   - [Run the New Application](#run-the-new-application)
+   - [Import the Source Code to Git](#import-the-source-code-to-git)
+3. [ETA Architecture](#eta-architecture)
    - [Overview](#general-overview)
    - [Model](#model)
      - [Domain](#model---domain)
      - [Security](#model---security)
      - [View](#model---view)
-   - [NET Core Server Application](#net-core-server-application)
-   - [Bootstrapper](#server---bootstrapper)
+   - [.NET Core Server Application](#.net-core-server-application)
+     - [Bootstrapper](#server---bootstrapper)
      - [Security](#server---security)
      - [ORM](#server---orm)
      - [Infrastructure](#server---infrastructure)
      - [Services](#server---services)
      - [Controllers](#server---controllers)
+     - [Automation](#server---automation)
    - [Angular Client Application](#angular-client-application)
      - [Bootstrapper](#client---bootstrapper)
      - [app module](#client---app-module)
      - [app-routing module](#client---app-routing-module)
-     - [services](#client---services)
-     - [components](#client---components)
-     - [features](#client---features)
-6. [Questions](#questions)
+     - [Services](#client---services)
+     - [Stores](#client---stores)
+     - [Components](#client---components)
+4. [Configuration Files](#configuration-files) - Updating documentation on the topics below is in progess
+   - [.NET Core global.json](#.net-core-global.json)
+   - [.NET Core appsettings.json](#.net-core-appsettings.json)
+   - [ClientApp angular.json](#clientapp-angular.json)
+   - [ClientApp package.json](#clientapp-package.json)
+5. [ETA Security Model](#eta-security-model)
+6. [Command Line Interface](#command-line-interface)
+   - [dotnet](#dotnet)
+   - [npm](#npm)
+   - [ng](#ng)
 
 ## Introduction
 
-This is a template starter application with an Angular.io SPA front-end and .NET Core back-end.
+PLEASE READ THE COMPLETE DOCUMENT - A lot of time and effort was spent documenting the EDAT Template Application architecture pattern and how to get started with a new application. If you ask a question that is clearly a covered topic, you will be kindly directed to READ THE DOCUMENT. If you have questions that are not covered here, please ask. We would like to continue to add missing information and clear up anything confusing.
 
-![alt text](Documentation/edat_template.png "EDAT Template")
+Welcome to the EDAT Template Application (ETA). The ETA is a Single Page Application (SPA) architecture developed with Angular and .NET Core. The ETA is not a framework, but it incorporates many open-source frameworks and software libraries into a robust architecure pattern for developing web applications for the FDOT. To use the ETA for developing an application, you need experience with the core web languages HTML, CSS, and JavaScript (TypeScript). You also need an understanding of specific software frameworks like .NET Core and Angular. The ETA, being a SPA, should be thought of as 2 separate applications (a client Angular application and a server .NET Core application).
 
-### FAQ
+The ETA was developed for the specific purpose of standardizing the EDAT team's approach to building web applications. It contains several samples that demonstrate common coding techniques typically needed in the business applications we develop. These samples demonstrate the reusable components and services that are available for use in your application. These components and services are focused on leveraging Azure platform services (e.g. authentication and BLOB storage), and FDOT infrastructure (e.g. SRS, EDMS, GIS). Most of the components and services are plug-and-play and will not require any code modification to use within your application.
 
-- Is this a low-code or no-code solution? - No. You must know how to code and be familiar with languages, frameworks and libraries like HTML, CSS, TypeScript, C# ASP.NET Core, Angular, Bootstrap, and Entity Framework Core.
-- Is this a framework? - No. This is an application architecture that is composed of other frameworks to demonstrate specific patterns and techniques for quickly building business applications at the FDOT.
-- Why have this template available? - We want to have a standard approach so that when we build applications we are doing it the same way. When somebody leaves and the new person comes in, we pick it up and understand what’s going on.
-- When will we start implementing this solution/approach? - Immediately
+The sample code has been isolated to a single folder in the client (Angular) application and a single API controller in the server (.NET Core) application. The sample code can be removed from your application, but it is recommended to keep the samples intact until you no longer need them for reference. You can easily remove the sample menu item from the ETA by setting the "EdatHeader.ShowSamples" property to false in the appsettings.json file. Many aspects of the application's behavior is governed by appsettings.json. This will not remove the sample code, but it will remove the link to the samples in the application. With a few minor re-branding tasks like creating a logo and favicon.ico and adding some content to the landing page, and you're ready to start adding components and controllers for your application.
+
+![alt text](Documentation/images/eta.png "EDAT Template Application")
 
 ## Getting Started
 
-### Install the Following Tools
+### Install the Following Tools (in order)
 
-1. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 3.1.100
-2. [VS Code](https://code.visualstudio.com/)
-3. [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/)
-4. Node.js and NPM: [https://nodejs.org/en/](https://nodejs.org/en/)
-5. SQL Server and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017)
-6. Visual Studio 2019 (optional, but provides better server-side debugging) - make sure all updates are installed
+The default installation is all that is needed for all of the required software below. No customization is necessary.
 
-### Prerequisite Configuration - 1 Time Setup
+1. [Google Chrome](https://www.google.com/chrome/?brand=CHBD&gclid=Cj0KCQiA04XxBRD5ARIsAGFygj-zVcWMKlPkx_upUXkyUoH-DbhKUATruLe4oAP8_IS-uWWaPvo-v48aAuJEEALw_wcB&gclsrc=aw.ds) and (optionally) [Augury](https://augury.rangle.io/)
+2. [Git for Windows](https://gitforwindows.org/) - latest version
+3. [SQL Server Developer](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017) - latest versions
+4. [.NET Core SDK](https://www.microsoft.com/net/download) - currently using .NET Core 3.1.100
+5. [Azure Storage Emulator (standalone installer)](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and (optionally) [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) - latest versions
+6. [Node.js and NPM](https://nodejs.org/en/) - latest LTS version
+7. [Angular CLI](https://cli.angular.io/) - currently using version 8.2.14
+8. [VS Code](https://code.visualstudio.com/) - latest version
 
-VS Code - Install the necessary extensions. The highlighted extensions are either required or highly recommended. The others are very useful.
+_Visual Studio 2019 is optional, but provides better server-side debugging. If you want to use Visual Studio, please make sure all updates are installed. VS Code is the recommended IDE for developing, but it can be slow when debugging .NET Core code. The ETA is configured for debugging in both VS Code (Node server) and Visual Studio (IIS development server), but they use the same port (44376). If you use Visual Studio for debugging, you will need to kill the IIS process before using the Node server again. Not doing so will result in an exception for the port already in use._
 
-![alt text](Documentation/vscode_extensions.png "VS Code extensions")
+### Prerequisite Configuration
 
-Public GIST ID for the Settings Sync extension: 573094cd2d2d12bf89d3d590ab59a674
+The **[ 1 TIME ]** notation will mark the sections or items that are only necessary the first time you create an ETA application and are not necessary to repeat each time you start a new application.
 
-VS Code or Command Terminal - Verify that you have the latest .NET Core SDK
+#### VS Code Configuration
 
-![alt text](Documentation/dotnet_config.png ".NET Core CLI Commands to verify SDK installation")
+There are several VS Code extensions and settings customizations that will make developing applications based on the ETA much easier.
 
-Contact Randy `randy.lee@dot.state.fl.us` to obtain the necessary client secrets for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git.
+##### Install Fira Code Font [ 1 TIME ]
 
-![alt text](Documentation/secrets_json.png "secrets.json file you will need")
+Installing the [Fira Code Font](https://github.com/tonsky/FiraCode) is highly recommended. Once you follow the directions below to configure your VS Code, it will attempt to use this font first. While not required, this font is helpful in that it was developed specifically for coding. The problem statement from their website is: _"Programmers use a lot of symbols, often encoded with several characters. For the human brain, sequences like ->, <= or := are single logical tokens, even if they take two or three characters on the screen. Your eye spends a non-zero amount of energy to scan, parse and join multiple characters into a single logical one. Ideally, all programming languages should be designed with full-fledged Unicode symbols for operators, but that’s not the case yet."_
 
-An explanation of user secrets... Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data. These services require a secret (password) for each application. The EDAT Template has been assigned secrets for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request secrets that are specific to your application.
+##### Install Settings Sync and Configure VS Code [ 1 TIME ]
 
-### PowerShell Installer
+In VS Code, click "Extensions" on the left menu and search the marketplace for "Settings Sync" and click "Install."
 
-#### Download and Run the [PowerShell Script](https://fdot.visualstudio.com/EDAT_Agile/_git/CloneTemplate) to Create a New Application from the Template
+![alt text](Documentation/images/settings-sync.png "Settings Sync extension installation")
 
-A special _Thank you!_ to Jim Quinn. There are instructions for how to use the script in the repository **README**. If you have any issues, please contact Jim - `james.quinn@dot.state.fl.us`
+In VS Code, click the "Manage" gear button and select "Settings."
 
-You will need to unblock the PowerShell script before you execute it!
+![alt text](Documentation/images/vscode-settings.png "VS Code Settings")
 
-![alt text](Documentation/powershell_security_setting.png "Allow the PowerShell script to execute")
+Under "Extensions" select "Code Settings Sync" and input the value `573094cd2d2d12bf89d3d590ab59a674` in the "Sync: Gist" textbox.
 
-#### Warning
+![alt text](Documentation/images/settings-sync-configuration.png "Settings Sync Configuration")
 
-This will take several minutes to complete due to the NPM package installation.
+In VS Code, click the "Manage" gear button and select "Command Palette."
 
-![alt text](Documentation/powershell_script_run.png "PowerShell script execution end")
+![alt text](Documentation/images/vscode-settings-command-palette.png "VS Code Command Palette")
 
-Save the secrets.json file in the `{your-project-name}` project folder. The .gitignore file is already configured to ignore this file, but please verify. See the image below for the project structure. Notice that the `{your-project-name}` project is the .NET Core project and the `ClientApp` folder contains the Angular application.
+Type "sync" in the textbox and select `Sync: Download Settings`. This will begin the installation of several VS Code extensions and apply a specific configuration. Once the synchronization completes, please close and reopen VS Code. At this point, you can adjust VS Code to your own preferences for themes and settings. This configuration is just to get you started with a great set of required or helpful extensions and a good theme and configuration.
 
-![alt text](Documentation/vscode_project_structure.png "Project structure")
+![alt text](Documentation/images/settings-sync-download-settings.png "Settings Sync - Download Settings")
 
-VS Code or Command Terminal - Use the `dotnet` CLI to set the user secrets.
+#### Request secrets.json [ 1 TIME ]
 
-![alt text](Documentation/set_user_secrets.png "Using dotnet CLI to save user secrets")
+Contact Randy `randy.lee@dot.state.fl.us` to obtain the secrets.json file for the Azure Identity Providers and APIs. This is a JSON file that will be stored on the developers workstation and NEVER committed to Git (the ETA's gitignore file is already set to ignore it). This file must be distributed to each developer via FDOT's File Transfer Appliance (FTA) and not via email.
+
+**Please go ahead and request the secrets.json file now even though you won't need them until a little later in the process.**
+
+The secrets.json file contains keys for the following settings:
+
+- `SendGridConfig:ClientSecret` - API key for the SendGrid Email Service
+- `Security:OpenIdConnectB2EOptions:ClientSecret` - Key for Azure AD Authentication Provider
+- `Security:OpenIdConnectB2COptions:ClientSecret` - Key for Azure B2C Authentication Provider
+- `FdotCoreApisConfig:ClientSecret` - API key for the Arculus common services (Staff, OrgCodes, DotCodes)
+- `EdmsApiConfig:Password` - Password for the EDMS service
+- `EdmsApiConfig:ClientSecret` - API key for the EDMS service
+
+As new services are added to the ETA in the future, it might be necessary to update the secrets.json. This documentation will be kept up to date, so if this documentation references secrets that you are missing on your workstation, you will need to request an updated set.
+
+##### An explanation of User Secrets
+
+Using the Azure platform requires access to services that provide things like identity management and authentication, SMTP (email), and FDOT enterprise data and resources. These services require an authorization key for each application. The ETA has been assigned keys for you to use during development. Once your application is ready to be deployed to Azure TEST, you will need to request keys that are unique to your application.
+
+The [.NET Core CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) will be used to read the secrets.json file and store the keys on your workstation, but before you can do that, you must first pull the ETA source code to your workstation. This is because the user secrets are stored on your workstation with a GUID identifier specified in the .NET Core project file. Once you do this one time, you will not need to repeat this process unless the user secrets are updated or the GUID in the project file changes. So you will be able to continue developing applications with the same user secrets as long as the project files specify the same GUID identifier.
+
+Go ahead and use the PowerShell installer to create a sandbox application from the ETA source and the instructions for setting the user secrets will follow after that.
+
+### Start a New Application
+
+#### Download the [PowerShell Clone Script](https://fdot.visualstudio.com/EDAT_Agile/_git/CloneTemplate)
+
+A special _thank you!_ to Jim Quinn for creating the installer. If you have any issues, please contact Jim via email - `james.quinn@dot.state.fl.us`
+
+Download the script from the Git repository.
+
+![alt text](Documentation/images/powershell-installer-download.png "PowerShell script download")
+
+View the file properties and unblock the PowerShell script.
+
+![alt text](Documentation/images/powershell-installer-unblock.png "Allow the PowerShell script to execute")
+
+##### Create a New Application
+
+The recommended approach for using the installer script is:
+
+- Create a new empty folder on your workstation and place the script in it.
+- Open PowerShell `Windows Start -> Type "PowerShell" -> Open`
+- Change the directory to the new folder you just created - type `cd "C:\Users\KNABCXX\Desktop\New Folder"`and hit `Enter`
+- Type `.\openEDAT_Template.ps1` and hit `Enter`
+- Enter a new name for the project (typically a 3 character abbreviation) and hit `Enter`
+- Wait for the script to complete. It will take several minutes for the script to clone the code from the Git repository, restore the NuGet packages, build the .NET Core project, install the npm packages, and build the Angular application.
+
+Once the installer completes, you should see the results of the Angular build.
+
+![alt text](Documentation/images/powershell-installer-complete.png "PowerShell script execution end")
+
+##### Open the New Application in VS Code
+
+- In VS Code select `File -> Open Folder`
+- Choose the folder that contains the solution file (XXX.sln)
+- Your file explorer view in VS Code should look like the image below with `.sln` file and the `.vscode` folder. If this is not what you see, you might have opened the project folder (one level too deep). If this is the case, select `File -> Close Folder` and try again. **You should always open the folder at the solution level in VS Code. Not doing so will cause problems when you attempt to run or debug the application.**
+
+![alt text](Documentation/images/vscode-open-project.png "Project structure")
+
+- Expand the project folder (it contains the `.csproj` file).
+- Open the `appsettings.json` file for editing, and locate the `AzureStorageConfig.ContainerName` setting.
+- Update the value so that it is all lower case and select `File -> Save`. Azure BLOB storage requires container names to be lower case. When you're done, it should look something like the image below.
+
+![alt text](Documentation/images/vscode-azure-blob-container-update.png "Azure BLOB container name update")
+
+##### Set the User Secrets for the New Application [ 1 TIME ]
+
+- Save the secrets.json file that you were sent via FTA to the project folder. The .gitignore file is already configured to ignore this file, but please verify (it will be dimmed as compared to the other files). The secrets.json file doesn't need to be added to the project, but it makes the next steps easier. See the image below.
+
+![alt text](Documentation/images/vscode-secrets-json.png "secrets.json added to project")
+
+- Select `Terminal -> New Terminal` and make sure the terminal is set to `PowerShell`.
+- Change the directory location to the project folder (`cd XXX`).
+- Type the command `type ./secrets.json | dotnet user-secrets set` and hit `Enter`
+- Verify the user secrets were successfully saved to the secret store with the command `dotnet user-secrets list`
+- Once completed, your terminal window should look similar to the image below.
+
+![alt text](Documentation/images/vscode-set-user-secrets.png "Using dotnet CLI to save user secrets")
 
 This will copy the secrets.json file to a folder in your profile's `AppData`
 
 ![alt text](Documentation/app_data_user_secrets.png "User secrets stored in AppData")
 
-The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the key in the project file.
+The .NET Core compiler will look for these secrets and combine them with the project's appsettings.json. The compiler looks for user secrets based on the GUID identifier in the project file.
 
-![alt text](Documentation/user_secrets_project_setting.png "User secrets key in project file")
+![alt text](Documentation/images/vscode-user-secrets-project-file.png "User secrets key in project file")
 
-### Run Template
+### Run the New Application
 
-VS Code - In the Debug Menu (Ctrl + Shift + D), select `ASP.Net Core & Browser` and Hit Play! VS Code will automatically execute the `dotnet build` and `ng serve` commands and start Chrome. You can debug the .NET Core code by setting breakpoints in VS Code and debug the Angular application in Chrome developer tools.
+- Install a development certificate for HTTPS **[ 1 TIME ]**.
+  - In the VS Code terminal, type `dotnet dev-certs https --clean` and hit `Enter`. You will need to confirm the certificate removal by clicking through a Window's dialog (or two).
+  - In the VS Code terminal, type `dotnet dev-certs https --trust` and hit `Enter`. You will need to confirm the certificate install by clicking through a Window's dialog.
+- Start the Azure Storage Emulator - `Windows Key`, type `Azure Storage Emulator` and hit `Enter`. You can exit the command window once the emulator is started, and it will continue to run in the background until you exit the process or restart your workstation.
+- In VS Code select the `Debug and Run` menu option on the left, select `ASP.NET Core & Browser` from the dropdown list, and hit `Start Debugging`
+- The application should launch in the Google Chrome browser. It might take a few minutes to startup because of all of the code compilation needed, so please be patient.
+- If you see the following exception in VS Code `Microsoft.Data.SqlClient.SqlException ... Verify that the instance name is correct and that SQL Server is configured to allow remote connections,` the `ConnectionStrings.DbConnection` value in `appsettings.json` is invalid. The ETA uses a `.` (period) for the `Server` parameter value which indicates your local SQL Server instance. There can be scenarios where a fully-qualified server name (machine name) is required. Change the `Server=` to your machine name (e.g. `DOTPCO357001`) and try again. If this still doesn't work, you might have multiple local SQL Server instances and will need to specify the instance name as well as the server name.
 
-![alt text](Documentation/vscode_debug.png "Run in VS Code")
+![alt text](Documentation/images/vscode-run-app.png "Run in VS Code")
 
-### Removing the Sample Code
+### Import the Source Code to Git
 
-At some point during development, or maybe even immediately after creating your application, you will probably want to remove the sample code. This can be done by following these steps:
+At this point, the source code can be added to Git. There are some housecleaning things you might want to do before, like:
 
-1. Navigate to the project directory.
-2. Delete the /Controllers/SampleController.cs file.
-3. Delete the /Models/Domain/Sample.cs file.
-4. Delete the /Models/Domain/Enums/StatusCode.cs file.
-5. Build the .NET Core app (dotnet build) and fix the errors by removing references to the types in the deleted files.
-6. Navigate to the project/ClientApp directory.
-7. Delete the /src/app/features/administration/sample folder.
-8. Remove the link to the Sample component in src/app/components/nav-menu.html.
-9. Build the client app (npm run build) and fix the errors by removing the imports and routes in app.module.ts and app-routing.module.ts.
-10. Delete the Documentation folder.
-11. Delete or update the contents of the README.md file.
+- Delete the `Documentation` folder and to content of the README.md file. This is the file and assets you're reading right now. It does have relevant information about the architecture of your application, so you might want to keep it if you think it will help other team members working on your application. In either case, you should consider adding helpful information specific to your application to the README.md.
+- Remove the sample code, if you would rather remove the code rather than just disabling it via appsettings.json.
 
-OPTIONAL: You may want to remove any of the core architecture features that your application doesn't require. For example, if you're not using Azure BLOB storage, you can remove the API controller, client storage service, file-upload.component, etc.
+The recommended approach to adding the source code to Git is:
 
-## Manual Steps to Create a New Application from the Template
+- Go to `DevOps -> Repos` and create a new repository.
+- Use Git Bash to clone the repository to your workstation.
+- Copy the contents of the new application (.sln level folder) to the new local repository folder you just cloned.
+- Delete the _old_ new application's folder created by the PowerShell script so you won't accidentally open it in VS Code :)
+- Commit and Push the application source.
 
-1. Rename the extract folder to `{your-project-name}`
-2. Rename the `EdatTemplate` folder to `{your-project-name}`
-3. Rename the `EdatTemplate.sln` file to `{your-project-name}.sln`
-4. Open the `{your-project-name}` folder
-5. Rename the `EdatTemplate.csproj` file to `{your-project-name}.csproj`
-6. VS Code - open the `{your-project-name}` folder
-7. VS Code - Edit -> Replace in Files `EdatTemplate` with `{your-project-name]` and select "Replace All" (Ctrl + ALt + Enter)
-8. VS Code (optional) - Set the `UserSecretsId` in the .NET Core project to a new value (usually a GUID) and reload new secrets for your new application. All applications deployed on Azure will require their own unique secrets, but developers can use the ones provided by Randy for local development.
-9. VS Code - Hit Play! This will run these commands in order...
-   - From `{your-project-name}` it runs `dotnet build` -> This restores NuGet packages, builds the .NET Core app, and generates the TypeScript model definition files (model.d.ts)
-   - From `{your-project-name}\ClientApp` it runs `npm install` -> This creates the `node_modules` folder and installs the NPM packages defined in the `package.json` file.
-   - From `{your-project-name}\ClientApp` it runs `ng serve` -> This builds the client app and starts the Angular-CLI server.
-10. Images are served from the `{your-project-name}\ClientApp\dist\assets` folder. Running in VS Code will not create this folder since the Angular-CLI server serves files from in-memory. To get get the images for your application, run `npm run build` from inside the `{your-project-name}\ClientApp` folder at least once.
+## ETA Architecture
 
-## Features
-
-- Azure AD-B2C identity providers
-- Unified client and server model. Synchronization handled with ReinforcedTypings on `dotnet build`
-- Themed, 508 compliant, and responsive design (Bootstrap 4) for FDOT standards
-- Role impersonation to assist with testing multiple application roles
-- Components for header, footer, and navigation
-- Service for async http request and response handling
-- Security service and route guard
-- Base service for subscription based (observable) services (data stores)
-- Data navigation service with helper components to handle sorting, filtering, and paging through large data sets
-- SRS (Staff) service and staff picker component to handle FDOT staff selections (with example)
-- Complete CRUD example for client and server architecture patterns
-- [Azure BLOB storage](https://azure.microsoft.com/en-us/services/storage/blobs/) service and component for document management (with example)
-- [ngx-charts](https://swimlane.github.io/ngx-charts/#/ngx-charts/bar-vertical) library is included for charts and graphs
-
-## Template Application Architecture
-
-![alt text](Documentation/template_architecture.jpg "Template Architecture")
+![alt text](Documentation/images/eta-architecture.png "ETA Architecture")
 
 ### General Overview
 
-Think of development using the Template Application Architecture as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client services or controllers making requests to server API controllers (please see the _http_ service section to determine appropriate usage). The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
+Think of development using ETA as creating two separate applications, a server application and a client application. The only aspect or information that is shared between the two is the model, and the only communication between the two is with client stores or controllers making requests to server API controllers (please see the _http_ service section to determine appropriate usage). The following is a detailed breakdown of the various tiers and components, and the responsibilities they have in the architecture.
 
 ### Model
 
-![alt text](Documentation/template_architecture_model.jpg "Model")
+The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain old CLR/Core objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. ETA uses the _Reinforced.Typings_ NuGet package to generate a TypeScript declaration file (\model.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
 
-The model can be thought of as "glue" code in that it represents the structure of information that is shared between the server and client applications and is what binds them together. The source code for the model resides in the .NET Core application _Model_ namespace, and the model classes are typically just _POCOs_ (plain old CLR/Core objects). The _Model_ namespace is further categorized by the scope namespaces of _Domain_, _Security_, and _View_. The Template Application Architecture uses the _ReinforcedTypings_ NuGet package to generate a TypeScript declaration file (\model.d.ts) that contains each model type during the MSBuild process. The _ReinforcedTypingsConfiguration.cs_ must be updated to add new model types to the code generation build step.
-
-**A note about enums:** Enums need to be placed in a regular TypeScript file (\model.enums.ts) instead of a declaration file to be treated as constant values. There are other methods to achieve this, but this is the implementation used by the Template Application Architecture. The _ReinforcedTypingsConfiguration.cs_ is already configured to generate enums this way, but make sure you add enums in the _builder.ExportAsEnums()_ method.
+**A note about enums:** Enums need to be placed in a regular TypeScript file (\model.enums.ts) instead of a declaration file to be treated as constant values. There are other methods to achieve this, but this is the implementation used by ETA. The _ReinforcedTypingsConfiguration.cs_ is already configured to generate enums this way, but make sure you add enums in the _builder.ExportAsEnums()_ method.
 
 **A note about ReinforcedTypings code generation failing to fire in the build process:** If _ReinforcedTypings_ stops generating the _Model_ types during the build, run `dotnet clean` in the .NET Core project. Then your _Model_ types should be generated on the next `dotnet build`.
 
@@ -186,9 +247,22 @@ The _Domain_ namespace is where entities that represent the business domain are 
 
 - **IAuditedEntity** The interface that entities that require last update audit fields should implement.
 - **Staff** The object type returned by the _StaffService_.
+- **AppUser** The abstract entity type that represents a known user in the application.
+- **FdotAppUser** A super-class of AppUser that represents a user that authenticates with a FDOT AD account.
+- **PublicAppUser** A super-class of AppUser that represents a user that authenticates with a FDOT B2C account.
 - **{Your Entities}** Entities that represent the business domain of your application.
 
-**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in a distributed application, the data store (Azure SQL), the application server (NET Core application), and the client (Angular application). Since these are separate state representations, it is the developer's responsibility to have only a single representation of state in each tier and to manage their synchronization. The _Domain_ model is the representation of the state structure across all application tiers, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _service stores_ section.
+**A note about application state:** It is critically important that there is a single source of truth (or single representation of state) in the application. Having multiple representations of the same state is the primary cause of application bugs and unnecessary complexity. There are three tiers where state must be managed in a distributed application, the data store (Azure SQL), the application server (.NET Core application), and the client (Angular application). Since these are separate state representations, it is the developer's responsibility to have only a single representation of state in each tier and to manage their synchronization. The _Domain_ model is the representation of the state structure across all application tiers, and _Entity Framework_ is the framework used to keep the state synchronized between the data store and application server. We will discuss how state is managed in the client application later in the _Stores_ section.
+
+#### Model - Edms
+
+The Edms namespace is where types that represent the data structures necessary to interface with the FDOT's Enterprise Document Management System (EDMS) are defined.
+
+- **EdmsDocument** Describes a document record in EDMS with the collection of versions available.
+- **EdmsDocumentMetadata** Describes metadata about a document in EDMS. It contains information like the name, file size, document type, and a collection of user-defined properties.
+- **EdmsDocumentProperty** Describes a user-defined property name-value pair for a document in EDMS.
+- **EdmsDocumentType** Describes a grouping of documents in EDMS.
+- **EdmsDocumentVersion** Describes a version (current or previous) of a document in EDMS.
 
 #### Model - Security
 
@@ -206,9 +280,11 @@ The _View_ namespace is where types that represent transient state messages betw
 - **EdatHeader** Describes the image resources and links for the standard FDOT application header. This is a singleton type that is deserialized from _appsettings.json_.
 - **EmailMessage** Describes the structure of an email message for use with the _EmailController_.
 - **GraphData, GraphDataPoint, and GraphSeries** Represents data used for binding to _ngx charts_ and _chart-to-table_ components.
+- **MapRequest** Describes the information about a GeoJSON record contained in BLOB storage.
+- **SignatureRequest** Describes the information about a data-url encoded image for a signature record contained in BLOB storage.
 - **StringRequest and StringResponse** Represents any string data payload between client and server.
 
-### NET Core Server Application
+### .NET Core Server Application
 
 The .NET Core Server Application is responsible for handling requests from the client application, evaluating security concerns for those requests, validating that entity state changes adhere to business rules, synchronizing state changes with the data store, and managing access to Azure PaaS services. The server application uses _NuGet_ as the standard package management service.
 
@@ -218,8 +294,6 @@ The _Program_ class handles pre-start host configuration and creates an instance
 
 #### Server - Security
 
-![alt text](Documentation/template_architecture_security.jpg "Security")
-
 The _Security_ namespace is where constants for roles, claims, and authentication types, and the Azure identity provider configurations and event handlers are located. These types include:
 
 - **ApplicationAuthenticationType, ApplicationClaims, and ApplicationsRoles** Constant value classes to ensure the integrity of security-related string keys used in the application.
@@ -227,8 +301,6 @@ The _Security_ namespace is where constants for roles, claims, and authenticatio
 - **OpenIdConnectB2COptions, OpenIdConnectB2EOptions, and OpenIdConnectOptions** Describes the configuration to be used for the identity providers in startup. These are singleton types that are deserialized from _appsettings.json_.
 
 #### Server - ORM
-
-![alt text](Documentation/template_architecture_orm.jpg "ORM")
 
 The _ORM_ namespace is where the _Entity Framework_ configuration, DbContext, and helpers are located.
 
@@ -240,16 +312,16 @@ The _ORM_ namespace is where the _Entity Framework_ configuration, DbContext, an
 
 **A note about repositories:** There are none. The primary purpose for the repository pattern is to hide the entity query and serialization details. This is typically necessary to accommodate good automated unit tests where repository mocks are used to test other business logic. _Entity Framework_ does not provide an abstraction of the DbContext or DbSet, but it does provide an "InMemory" database option with transactional scope to facilitate testing. This eliminates the need to mock repositories, so they are not used. If you prefer, you are welcome to use a repository pattern, but I find that it just adds an unnecessary tier to the application.
 
-**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, the Template Application Architecture has it disabled by default. Always eager load the data you need for the request in the query.
+**A note about lazy loading:** Don't do it, it is an anti-pattern. While _Entity Framework_ supports lazy loading, ETA has it disabled by default. Always eager load the data you need for the request in the query.
 
 #### Server - Infrastructure
-
-![alt text](Documentation/template_architecture_infrastructure.jpg "Infrastructure")
 
 The _Infrastructure_ namespace is where the services that communicate with other services external to the application are located. You should place services that interface with Azure PaaS services or other enterprise services here. These services should never be instantiated directly but should instead be coupled with an interface and dependency injected where needed. The goal here is to hide the implementation details as much as possible from the application since the application is not in control of potential changes to the external services.
 
 - **AzureStorageConfig** Describes the connection details for the application's Azure Storage container. This is a singleton type that is deserialized from _appsettings.json_.
 - **BlobStorageProvider** Service implementation for interfacing with Azure Storage.
+- **EdmsApiConfig** Describes the EdmsService endpoints and client configuration for accessing the Arculus EDMS service. This is a singleton type that is deserialized from _appsettings.json_.
+- **EdmsService** Service implementation for interfacing with the EDMS service on Arculus.
 - **EmailService** Service implementation for interfacing with the SendGrid service on Azure.
 - **FdotCoreApisConfig** Describes the Arculus service endpoints and client configuration for accessing the FDOT enterprise services. This is a singleton type that is deserialized from _appsettings.json_.
 - **SendGridConfig** Describes the connection details for using the SendGrid service on Azure. This is a singleton type that is deserialized from _appsettings.json_.
@@ -257,32 +329,32 @@ The _Infrastructure_ namespace is where the services that communicate with other
 
 #### Server - Services
 
-![alt text](Documentation/template_architecture_services.jpg "Services")
-
 The _Services_ namespace is where the interface contracts that describe the _Infrastructure_ service implementations are located.
 
 - **IBlobStorageProvider** Interface for _Infrastructure BlobStorageProvider_.
+- **IEdmsService** Interface for _Infrastructure EdmsService_.
 - **IEmailService** Interface for _Infrastructure EmailService_.
+- **ISignatureService** Interface for _Services SignatureService_.
 - **IStaffService** Interface for _Infrastructure StaffService_.
+- **SignatureService** Service for converting between data-url and binary image.
 
 #### Server - Controllers
 
-![alt text](Documentation/template_architecture_controllers.jpg "Controllers")
-
 The _Controllers_ namespace contains the APIs for the endpoints exposed by the server application.
 
-**FIREWALL** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
+**Authorize()** Controllers have the sole responsibility for enforcing security concerns within the application. Make sure you use the _Authorize()_ attribute and evaluate the current principal's role appropriately to restrict access to API methods in your application!
 
+- **Edms** API for creating, retrieving, and versioning documents in the FDOT's EDMS.
 - **Email** API for sending an email via the _IEmailService_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage. You will probably not use this controller if you just send emails from the server application (other controllers or business services). In that case, just inject the IEmailService and use it directly.
+- **Map** API for saving and retrieving GeoJSON data stored in BLOB storage.
 - **Security** API for retrieving a _ClientToken_ and impersonation (in development). Unlike the other controllers, the _Security_ controller also exposes some synchronous endpoints for redirecting to the _Open ID_ identity providers for authentication.
+- **Signature** API for saving and retrieving data-url encoded signature images stored in BLOB storage.
 - **Site** API for retrieving global site data like header and footer resources.
 - **Staff** API for accessing the _IStaffService_.
 - **Storage** API for accessing the _IBlobStorageProvider_. You will need to make sure the _Authorize()_ attribute is applied appropriately for you application's usage.
 - **{Your Controllers}** APIs that you create for your application will manage the implementation of state changes to your entities. Again, please make sure you use the _Authorize()_ attribute appropriately to enforce security on your APIs. A good pattern for entity data validation is to validate any business rules that span over a set of entities within the controller. Validation rules that pertain only to the entity instance should be implemented within the entity itself using _DataAnnotations_ and the _IValidatableObject.Validate()_ method. Using this approach allows you to return a _BadRequest(ModelState) IActionResult_ and the client application's _http service_ will expose the list of validation errors to the client _store service_ which in turn can be handed off to the calling _component_ for processing.
 
 #### Server - Automation
-
-![alt text](Documentation/template_architecture_automation.jpg "Automation")
 
 The _Automation_ namespace contains the hosted services needed by an application. Hosted services run in the background and are not context bound to an HTTP request. The purpose of hosted services is to perform some automated task needed by the application, and to repeat that task based on some time interval. Examples of this are cleaning up temporary BLOB storage every hour or auto-expiring permits beyond their expiration date daily. A lot of functions that traditionally have been implemented as separate batch jobs can probably fit nicely as a hosted service. In fact, it is best to think of hosted services as batch jobs that run inside the application. Because hosted services execute on threads not bound to an HTTP request, there is no notion of a current principal. However, hosted services can use injected dependencies like a DbContext for data access and other services.
 
@@ -305,25 +377,27 @@ The _app.module_ imports the component declarations, other module imports (inclu
 
 The _app-routing.module_ is where all client application routes (URLs) are defined. Routes can optionally use the _route-guard_ with a _RouteData_ object to restrict access to specific roles. This is based on evaluating the _ClientToken_ and is not tamper-proof, but it serves the purpose of implementing a consistent UI workflow.
 
-#### Client - services
+#### Client - Services
 
-![alt text](Documentation/template_architecture_client_services.jpg "Services")
-
-The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). The Template Application Architecture only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is generally the service scope you want, but there may be cases when you want a component to have its own instance of a service.
+The _services_ folder is where all client services are located (except stores). Services are basically just JavaScript (TypeScript) objects that can be injected into components to provide some function. Try to adhere to a single-responsibility principle when designing your services. Also, it is important to understand how the Angular injector decides what scope a service has. This is especially important with any service that manages application state (i.e. stores). ETA only imports (provides) services in the _app.module_ which means all services are singletons and shared across all components. This is generally the service scope you want, but there may be cases when you want a component to have its own instance of a service.
 
 ##### data
 
 - **blob** Provides access to the server's _Storage_ controller. This service does not maintain any state.
 - **data-marshaler** Provides a means to pass string data from one component to another. This service maintains a string payload state.
 - **data-navigation** Provides a means to sort, filter, and page through a data array. This service does not maintain any state.
+- **edms** Provides access to the server's _Edms_ controller. This service does not maintain any state.
 - **email** Provides access to the server's _Email_ controller. This service does not maintain any state. You will probably not use this service if you only need to send emails from the server application. In that case, just inject the IEmailService into the server controller or business service and use it directly.
 - **excel-export** Provides a means to export a JSON data array to a Microsoft Excel file. This service does not maintain any state.
 - **ngbMomentDatePickerAdapter** Extension service for the ng-bootstrap date picker component to use moment.js objects instead of the proprietary structure.
+- **pdf-document** Provides a method to create a PDF document from an HTML template. This is just one example usage of the jsPDF library.
 - **staff** Provides access to the server's _Staff_ controller. This service does not maintain any state.
 
 ##### environment
 
-The _environment_ service provides a means for the Angular router to compose URLs by specifying the application root path ('/' is the default). This service does not maintain any state.
+- **environment** Provides a means for the Angular router to compose URLs by specifying the application root path ('/' is the default). This service does not maintain any state.
+- **loading** Provides a trigger for displaying a loading animation after a specified duration is exceeded on an asynchronous HTTP request.
+- **toast** Provides a trigger for displaying toast messages.
 
 ##### http
 
@@ -339,13 +413,9 @@ The _http_ service is a wrapper around Angular's http service that has been exte
 - **route-guard** Used in a declarative manner in the _app-routing.module_ to restrict access to routes not authorized for the principal's _ClientToken_ roles. This service does not maintain any state.
 - **security** Provides a means to access the principal's _ClientToken_ from the _Security_ controller. This service maintains the client application's state of the _ClientToken_ and is a observable store service.
 
-##### store
+#### Client - Stores
 
-- **store** Abstract class that all observable store services should extend from. This service provides access to an Observable for services that extend from it, and it provides a safe subscribe method for components to receive state change notifications about the Observable. The _Store_ service was based on the following pattern, but has been extended to provide better protection from memory leak risk... [State management in Angular with observable store services](https://jurebajt.com/state-management-in-angular-with-observable-store-services/)
-
-##### {Your Store Services}
-
-Your store services that represent the state management of your application's data should be placed in the _features_ folder.
+Store services that represent the state management of your application's data should be placed in the _features_ folder.
 
 Store services are a special type of service that manages the state of some 'subject' and notifies all subscribers of any changes to that subject's state. This is how you will manage your model's state in the client application, and this is the most typical type of custom service you will implement. Your application model entities should always be managed by store services, and the same entity type should never be the subject of more than one store service (directly or indirectly). This is how we ensure a single source of truth in the client application.
 
@@ -355,9 +425,11 @@ Store services extend the _Store_ abstract class. This class implements two subs
 
 **A note about Observables and store services:** Observables come in two flavors; finite and infinite. Many Angular services (like Http and ActivatedRoute) return finite Observables in that Angular handles unsubscribing when the operation completes (i.e. an HTTP call finishes or a route is changed). All store services manage infinite Observables, meaning that the Observable represents some type of application state over a non-deterministic amount of time. These types of Observables must be unsubscribed from to avoid a memory leak in the client application. The abstract _Store_ class handles the unsubscribe for all services that extend from it. The _safeSubscribe(Map)_ methods protect the actual Observable and instead return only a representation of the current state (the value of the Observable) to the Observer callback in the component whenever the Observable state changes. So components never have access to the actual Observable. Your custom store services that extend from _Store_ do have access to the Observable and have the sole responsibility for mutating the Observable's state. If your store service manages an entire object graph (typical scenario) and you have components that only need to be notified of changes to a sub-set of the graph, you should subscribe with the _safeSubscribeMap_ method and pass a predicate to project only the state your component is interested in. Your component will only be notified of changes to state for objects in the projection. In other words, _safeSubscribeMap_ allows a component to subscribe to only a part of the Observable managed by your store service. The _safeSubscribe_ method always subscribes to the root Observable of the store service.
 
-#### Client - components
+##### store
 
-![alt text](Documentation/template_architecture_client_components.jpg "Components")
+The store abstract class that all observable store services should extend from. This service provides access to an Observable for services that extend from it, and it provides a safe subscribe method for components to receive state change notifications about the Observable. The _Store_ service was based on the following pattern, but has been extended to provide better protection from memory leak risk... [State management in Angular with observable store services](https://jurebajt.com/state-management-in-angular-with-observable-store-services/)
+
+#### Client - Components
 
 The _components_ folder is where all client general use components are located. The components you build for your application will typically go in the _features_ folder. Components are basically just JavaScript (TypeScript) objects with an associated HTML template. It is up to you to decide how to compose your application's views with components, but generally you should try to keep components as small as possible for reusability. A component can be as small as a single button like the Template Application's _sort-button_ or can be more complex like the _file-upload_ component. Components are often composed of other components like the Template Application's _sample-data_ component. This component uses the _sort-button_, _filter-field_, and _sample-modal_ components. The _sample-modal_ component in turn uses the _staff-picker_ component. Any view within your application is typically composed of many components in what is referred to as the component tree. It is very important to begin to think of your application in terms of component composition views instead of 'page' views.
 
@@ -373,10 +445,15 @@ Common components are utility components that serve very specific technical purp
 
 - **chart-to-table** Switches the graphical SVG view of an ngx-charts chart to a tabular view of the bound data to meet accessibility requirements.
 - **date-field** An alternate component to the _ng-Bootstrap_ datepicker. This component is a standard textbox with a date format mask that binds to a _momentjs_ object.
+- **edms-file-upload** Provides file uploading capabilities (new document and new version) to the FDOT's EDMS.
+- **field-validation-message** Provides a means to display an error message in the context of the field the error is related to.
 - **file-upload** Provides a view for selecting and uploading files.
 - **filter-field** Provides a view for entering string data to be applied as a filter to a property in an object array.
+- **map-field** Provides a means to view, draw, search, and annotate GIS data on a map.
+- **signature-field** Provides a means to display and capture a hand-drawn signature on a canvas.
 - **sort-button** Provides a view for sorting data ascending or descending.
 - **staff-picker** Provides a type-ahead select for FDOT staff (SRS).
+- **toasts-container** Provides an area to display messages from the toast service.
 
 ##### footer
 
@@ -402,72 +479,120 @@ The _not-authorized_ component is where the _http_ service re-routes a user when
 
 The _server-error_ component's sole purpose is to render the detailed .NET Core error page in an iframe for debugging. This is a development-only component.
 
-##### {Your Components}
-
-Your components that represent the functions and views of your application should be placed in the _features_ folder.
-
-#### Client - features
+##### Client - features
 
 The _features_ folder is where should place the components and store services that represent the business domain of your application. You should break up features by 'areas' that represent distinct sections or functionality within your application.
 
-## Questions
+## Configuration Files
 
-_**What about Visual Studio? Can I still use it?**_
+The configuration files described below control many aspects of the build and runtime of the ETA. Knowing what the settings represent and what options are available is very important.
 
-Yes. After the project is configured, you can choose to use Visual Studio as your IDE. Debugging in Visual Studio will use IIS Express as the development server, whereas debugging in VS Code will use the Angular CLI (Node) server.
+### .NET Core global.json
 
-_Caution: If you use both Visual Studio and VS Code, be aware that debugging in Visual Studio will result in IIS Express blocking port 44376 until you manually exit it in your system tray. If you leave IIS Express running and then try to debug in VS Code, you will get an error._
+The only purpose of this file is to specify which SDK version to use for building the .NET Core application. Currently, the ETA is targeting the latest SDK version 3.1.100. The ETA is kept current with .NET Core versions, but because of the dependence on the Reinforced.Typings library, the ETA usually lags a bit behind when new .NET Core versions are released.
 
-_**Where is the unit test project, and where are the client testing frameworks and configuration?**_
+### .NET Core appsettings.json
 
-They have been removed in an effort to keep the code as simple and straight-forward as possible. Please feel free to add a .NET Core unit test project and add the Jasmine test framework back to Angular.
+The appsettings.json file is the primary configuration source for the .NET Core application. The most important settings are described below. You will typically keep the settings appropriate for a developer's workstation, and this is the configuration that you'll commit to Git. As part of the DevOps Release Pipeline configuration, many of the settings will be replaced with values for hosting the application as an Azure App Service.
 
-_**I am so sick of the template theme. How do I change it?**_
+- `Logging`
+  - `LogLevel`
+    - `Default`:
+- `AllowedHosts`:
+- `ConnectionStrings`
+  - `DbConnection`:
+  - `DockerDbConnection`:
+- `AutomationConfig`
+  - `RunTasks`:
+- `EntityFrameworkConfig`
+  - `InitializeDatabase`:
+  - `DeduplicateLoggedCommands`:
+  - `UseDocker`:
+- `Security`
+  - `AuthProviderConfig`
+    - `AllowB2C`:
+    - `AllowImpersonation`:
+  - `OpenIdConnectB2COptions`
+    - `ClientSecret`:
+    - `Authority`:
+    - `CallbackPath`:
+    - `ClientId`:
+    - `PolicyEditProfile`:
+    - `PolicyResetPassword`:
+    - `PolicySignInSignUp`:
+    - `Scheme`:
+  - `OpenIdConnectB2EOptions`
+    - `ClientSecret`:
+    - `Authority`:
+    - `CallbackPath`:
+    - `ClientId`:
+    - `RemoveUnusedClaims`:
+    - `Roles`
+      - `Admin`:
+    - `Scheme`:
+- `FdotCoreApisConfig`
+  - `ClientSecret`:
+  - `ProductUri`:
+  - `ApiDotCodes`:
+  - `ApiOrgCodes`:
+  - `ApiStaff`:
+  - `ApiStaffJson`:
+- `EdmsApiConfig`
+  - `ProductUri`:
+  - `UserId`:
+  - `Password`:
+  - `Library`:
+  - `ClientSecret`:
+- `AzureStorageConfig`
+  - `ConnectionString`:
+  - `ContainerName`:
+- `SendGridConfig`
+  - `ClientSecret`:
+  - `Enabled`:
+  - `DoNotReplyEmailAddress`:
+  - `OverrideToEmailAddresses`:
+  - `DeveloperEmailAddressClaim`:
+- `ApplicationInsights`
+  - `InstrumentationKey`:
 
-The EDAT Template supports [SASS styling](https://sass-lang.com/). the SASS files (.scss) are compiled to CSS as part of the build process. There are currently two built-in Bootstrap themes available, `office` (default) and `fdot`. You can change the theme in `{your-project-name}\ClientApp\src\styles\styles.scss`
+### ClientApp angular.json
 
-![alt text](Documentation/sass_themes.png "SASS themes")
+The angular.json file primarily describes how to assemble and build (transpile) the client application. Both development and production build configurations are included.
 
-Commenting out the `_theme_office.scss` and uncommenting the `_theme_fdot.scss` changes the application theme to standard FDOT colors.
+### ClientApp package.json
 
-![alt text](Documentation/_theme_fdot.png "SASS themes")
+The package.json file primarily defines the npm packages (JavaScript frameworks and libraries) that the application depends on. These dependencies are spilt into packages needed at runtime and packages needed only for development. The determination of which packages are needed at runtime (and therefore included in the build output) is actually governed by the the `import` declarations in the application's source code, not the package.json. However, you should still keep the separation clear in the package.json.
 
-Please feel free to create your own themes, and please be sure to share with the rest of us. Currently, all themes must meet one of the approved [FDOT color palettes](http://www.fdot.gov/it/docs/standards/colorpalette-10252013.htm)
-
-[Font Awesome](https://fontawesome.com/icons?d=gallery) is included in the template as our glyph library.
-
-_**What do I need to know about the application configuration (appsettings.json) besides the user secrets already mentioned?**_
-
-Here's a cheat-sheet of the more important settings and what their purpose is.
-
-![alt text](Documentation/appsettings_help.png "appsettings help")
-
-_**What do I need to know about the application's security model and how does it work?**_
+## ETA Security Model
 
 The `OpenIdConnectB2EOptions:Roles` setting (appsettings.json) is where you define the roles your application will use for network users. In the template application the `Admin` role will be assigned to any authenticated network user that belongs to any of the security groups listed in the array. You will need to use the Azure Portal to determine the Object IDs for the security groups you are using as your application roles.
 
-![alt text](Documentation/security_group.png "Azure AD security groups")
+![alt text](Documentation/images/security-group.png "Azure AD security groups")
 
 In `B2EOpenIdConnectEvents.cs` the principal's role claim will be assigned the admin role (i.e. `Admin`) if the user is a member of the AS-EDAT security group (i.e. `d13a3eb1-9867-4796-8ae5-7fd75e724613`).
 
-![alt text](Documentation/role_assignment_code.png "Role assignment code")
+![alt text](Documentation/images/role-assignment-code.png "Role assignment code")
 
 _IMPORTANT:_ You should use the standard `Authorize()` attribute to decorate your .NET API controllers/methods that are secured (access restricted). This is the primary security layer within the application.
 
-![alt text](Documentation/authorize_attribute.png "Authorize attribute")
+![alt text](Documentation/images/authorize-attribute.png "Authorize attribute")
 
 In the Angular `app-routing.module.ts` you should use the `RouteGuard` to restrict access to routes by user role. This is not a security aspect in that roles can be spoofed on the client browser by tech-savvy people, but it helps make the security intentions within the application clearer and helps prevents users from accessing routes that will result in an unauthorized (403) response code when an API call is made.
 
-![alt text](Documentation/route_guard.png "RouteGuard")
+![alt text](Documentation/images/route-guard.png "RouteGuard")
 
 It is also the developer's responsibility to render only the application menu options that are accessible by the current user's role. This is handled by subscribing to the `SecurityService` (security.service.ts) in the `ngOnInit` lifecycle event of your component. See the example below from the `nav-menu.component.(ts|html)`.
 
-![alt text](Documentation/security_service_component.png "SecurityService use in a component")
+![alt text](Documentation/images/security-service-component.png "SecurityService use in a component")
 
-![alt text](Documentation/ngif_role_eval_in_template.png "Evaluating the role in the template with *ngIf")
+![alt text](Documentation/images/ngif-role-eval-in-template.png "Evaluating the role in the template with *ngIf")
 
 Role assignment for B2C users must be handled via a custom user/role management implementation in your application since these users are not in AD.
 
-### Where We're Heading
+## Command Line Interface
 
-- Full-stack Node.js architecture version (at some point, maybe...)
+### dotnet
+
+### npm
+
+### ng
