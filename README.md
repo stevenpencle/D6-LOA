@@ -34,7 +34,7 @@
      - [Services](#client---services)
      - [Stores](#client---stores)
      - [Components](#client---components)
-4. [Configuration Files](#configuration-files) - Updating documentation on the topics below is in progress
+4. [Configuration Files](#configuration-files)
    - [.NET Core global.json](#.net-core-global.json)
    - [.NET Core appsettings.json](#.net-core-appsettings.json)
    - [ClientApp angular.json](#clientapp-angular.json)
