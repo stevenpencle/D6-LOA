@@ -491,79 +491,75 @@ The configuration files described below control many aspects of the build and ru
 
 ### .NET Core global.json
 
+_You will not need to alter this file unless you upgrade your application's .NET Core SDK target._
+
 The only purpose of this file is to specify which SDK version to use for building the .NET Core application. Currently, the ETA is targeting the latest SDK version 3.1.100. The ETA is kept current with .NET Core versions, but because of the dependence on the Reinforced.Typings library, the ETA usually lags a bit behind when new .NET Core versions are released.
 
 ### .NET Core appsettings.json
 
-The appsettings.json file is the primary configuration source for the .NET Core application. The most important settings are described below. You will typically keep the settings appropriate for a developer's workstation, and this is the configuration that you'll commit to Git. As part of the DevOps Release Pipeline configuration, many of the settings will be replaced with values for hosting the application as an Azure App Service.
+The `appsettings.json` file is the primary configuration source for the .NET Core application. The settings you'll work with for development and deployment are described below. You will typically keep the settings appropriate for a developer's workstation, and this is the configuration that you'll commit to Git. As part of the DevOps Release Pipeline configuration, many of the settings will be replaced with values for hosting the application as an Azure App Service.
 
-- `Logging`
-  - `LogLevel`
-    - `Default`:
-- `AllowedHosts`:
-- `ConnectionStrings`
-  - `DbConnection`:
-  - `DockerDbConnection`:
-- `AutomationConfig`
-  - `RunTasks`:
-- `EntityFrameworkConfig`
-  - `InitializeDatabase`:
-  - `DeduplicateLoggedCommands`:
-  - `UseDocker`:
-- `Security`
-  - `AuthProviderConfig`
-    - `AllowB2C`:
-    - `AllowImpersonation`:
-  - `OpenIdConnectB2COptions`
-    - `ClientSecret`:
-    - `Authority`:
-    - `CallbackPath`:
-    - `ClientId`:
-    - `PolicyEditProfile`:
-    - `PolicyResetPassword`:
-    - `PolicySignInSignUp`:
-    - `Scheme`:
-  - `OpenIdConnectB2EOptions`
-    - `ClientSecret`:
-    - `Authority`:
-    - `CallbackPath`:
-    - `ClientId`:
-    - `RemoveUnusedClaims`:
-    - `Roles`
-      - `Admin`:
-    - `Scheme`:
-- `FdotCoreApisConfig`
-  - `ClientSecret`:
-  - `ProductUri`:
-  - `ApiDotCodes`:
-  - `ApiOrgCodes`:
-  - `ApiStaff`:
-  - `ApiStaffJson`:
-- `EdmsApiConfig`
-  - `ProductUri`:
-  - `UserId`:
-  - `Password`:
-  - `Library`:
-  - `ClientSecret`:
-- `AzureStorageConfig`
-  - `ConnectionString`:
-  - `ContainerName`:
-- `SendGridConfig`
-  - `ClientSecret`:
-  - `Enabled`:
-  - `DoNotReplyEmailAddress`:
-  - `OverrideToEmailAddresses`:
-  - `DeveloperEmailAddressClaim`:
-- `ApplicationInsights`
-  - `InstrumentationKey`:
+- `ConnectionStrings`: Database connection strings configuration
+  - `DbConnection`: SQL Server (or Azure SQL) connection string - use your local server for development and replace in the DevOps Release Configuration for deployment
+  - `DockerDbConnection`: Docker container connection if you prefer a Docker SQL Server container instead of a local development DB - (Development Only)
+- `AutomationConfig`: Configuration settings for hosted services
+  - `RunTasks`: Boolean value for starting the hosted services or not - usually hosted services are not run during development unless you're testing them
+- `EntityFrameworkConfig`: Configuration settings for EntityFrameworkCore
+  - `InitializeDatabase`: Boolean value to drop and recreate the SQL Server database or not (Development Only)
+  - `DeduplicateLoggedCommands`: Boolean value to only capture distinct commands in the SQL log or all commands (Development Only)
+  - `UseDocker`: Boolean value to use a Docker container SQL Server or a local SQL Server (Development Only)
+- `Security`: Azure AD and B2C configuration settings
+  - `AuthProviderConfig`: General authentication settings
+    - `AllowB2C`: Boolean value to enable B2C authentication or not
+    - `AllowImpersonation`: Boolean value to enable role impersonation for Azure AD authenticated users (Development Only)
+  - `OpenIdConnectB2COptions`: Azure B2C Open ID settings
+    - `ClientSecret`: The application secret for authorizing the use of Azure B2C - value is read from dotnet user-secrets during development and set in the DevOps Release Configuration for deployment
+    - `ClientId`: The identifier for the application registration - the ETA Client ID for development and set in the DevOps Release Configuration to your application's ID for deployment
+  - `OpenIdConnectB2EOptions`: Azure AD Open ID settings
+    - `ClientSecret`: The application secret for authorizing the use of Azure AD - value is read from dotnet user-secrets during development and set in the DevOps Release Configuration for deployment
+    - `ClientId`: The identifier for the application registration - the ETA Client ID for development and set in the DevOps Release Configuration to your application's ID for deployment
+    - `RemoveUnusedClaims`: Boolean to remove all security group claims from the user principal except for the claims that match the configured roles for your application
+    - `Roles`: An array of role names and security group identifier values that represent the application roles for AD users in the application
+      - `Admin (or whatever you decide to name the role)`: An array of security group identifiers for the named role in the application
+      - `(Other Roles)`: Roles that represent access levels in your application
+- `FdotCoreApisConfig`: Arculus common services configuration
+  - `ClientSecret`: The application's API key for authorizing the use of Arculus via Azure API Management - value is read from dotnet user-secrets during development and set in the DevOps Release Configuration for deployment
+  - `ProductUri`: The base URI for the service endpoints
+  - `ApiDotCodes`: The service endpoint segment for the DOTCODES service
+  - `ApiOrgCodes`: The service endpoint segment for the ORGCODES service
+  - `ApiStaff`: The service endpoint segment for the STAFF (SRS) service
+  - `ApiStaffJson`: The service endpoint segment for the STAFF (SRS) service as JSON - if you prefer to manage the caching of staff information yourself
+- `EdmsApiConfig`: Arculus EDMS service configuration
+  - `ProductUri`: The service endpoint for the EDMS service
+  - `UserId`: The EDMS service account user - set in the DevOps Release Configuration for deployment
+  - `Password`: The EDMS Service account password - value is read from dotnet user-secrets during development and set in the DevOps Release Configuration for deployment
+  - `Library`: The EDMS library associated with the service account user
+  - `ClientSecret`: The application's API key for authorizing the use of Arculus EDMS via Azure API Management - value is read from dotnet user-secrets during development and set in the DevOps Release Configuration for deployment
+- `AzureStorageConfig`: Azure BLOB Storage configuration
+  - `ConnectionString`: The connection string for the application's BLOB Storage container - the emulator connection string is used during development and set in the DevOps Release Configuration for deployment
+  - `ContainerName`: The top container name for the application (must be a lowercase value)
+- `SendGridConfig`: SendGrid service configuration for SMTP
+  - `ClientSecret`: The application's API key for authorizing the use of the SendGrid service - value is read from dotnet user-secrets during development and set in the DevOps Release Configuration for deployment
+  - `Enabled`: Boolean value to send emails or not - sometimes developers prefer not to send emails during development
+  - `DoNotReplyEmailAddress`: The standard do-not-reply email address
+  - `OverrideToEmailAddresses`: An array of email addresses to send emails to regardless of the email addresses specified in the application logic - this is used for testing emails in development and Azure pre-prod (UAT)
+  - `DeveloperEmailAddressClaim`: The AD claim that contains the developer's email address - this email address will be used to send emails to regardless of the email addresses specified in the application logic when debugging
+- `ApplicationInsights`: Application analytics and logging configuration
+  - `InstrumentationKey`: The instrumentation key for the application - the ETA key is used during development and the value is replaced in the DevOps Release Configuration for deployment
 
 ### ClientApp angular.json
 
-The angular.json file primarily describes how to assemble and build (transpile) the client application. Both development and production build configurations are included.
+_You will not need to alter this file unless you need to include additional scripts in the output bundles or change the structure of the client application._
+
+The `angular.json` file primarily describes how to assemble and build (transpile) the client application. Both development and production build configurations are included.
 
 ### ClientApp package.json
 
-The package.json file primarily defines the npm packages (JavaScript frameworks and libraries) that the application depends on. These dependencies are spilt into packages needed at runtime and packages needed only for development. The determination of which packages are needed at runtime (and therefore included in the build output) is actually governed by the the `import` declarations in the application's source code, not the package.json. However, you should still keep the separation clear in the package.json.
+_You will not need to alter this file unless you need to add custom scripts to use with `npm`. However, this file will be automatically updated anytime you add, update, or remove `npm` packages._
+
+The `package.json` file primarily defines the npm packages (JavaScript frameworks and libraries) that the application depends on. These dependencies are spilt into packages needed at runtime and packages needed only for development. The determination of which packages are needed at runtime (and therefore included in the build output) is actually governed by the the `import` declarations in the application's source code, not the `package.json`. However, you should still keep the separation clear in the `package.json`.
+
+_The `package-lock.json` contains the full list of packages (with their dependencies) and the specific versions used by your application. The `npm install` command will use the `package-lock.json` file to pull your application's node modules first, but will defer to using the `package.json` file if the lock file doesn't exist._
 
 ## ETA Security Model
 
@@ -579,7 +575,7 @@ _IMPORTANT:_ You should use the standard `Authorize()` attribute to decorate you
 
 ![alt text](Documentation/images/authorize-attribute.png "Authorize attribute")
 
-In the Angular `app-routing.module.ts` you should use the `RouteGuard` to restrict access to routes by user role. This is not a security aspect in that roles can be spoofed on the client browser by tech-savvy people, but it helps make the security intentions within the application clearer and helps prevents users from accessing routes that will result in an unauthorized (403) response code when an API call is made.
+In the Angular `app-routing.module.ts` you should use the `RouteGuard` to restrict access to routes by user role. This is not a security aspect in that roles can be spoofed on the client browser by tech-savvy people, but it helps make the security intentions within the application clearer and helps prevent users from accessing routes that will result in an unauthorized (403) response code when an API call is made.
 
 ![alt text](Documentation/images/route-guard.png "RouteGuard")
 
@@ -593,8 +589,29 @@ Role assignment for B2C users must be handled via a custom user/role management 
 
 ## Command Line Interface
 
-### dotnet
+These are the CLIs and the common commands you'll use to build, maintain, and configure your application.
 
-### npm
+### dotnet - .NET Core CLI
 
-### ng
+The following `dotnet` CLI commands must be executed in the `.sln` or `.csproj` containing directory.
+
+- `dotnet clean` - Clean the .NET Core project's build output directories.
+- `dotnet restore` - Restore (download) the NuGet packages in the .csproj file.
+- `dotnet build` - Build the .NET Core project (and Angular client app) for debugging.
+- `dotnet publish` - Build the .NET Core project (and Angular client app) with optimized bundles for deployment.
+
+### npm - Node Package Manager
+
+The following `npm` commands must be executed in the `package.json` containing directory.
+
+- `npm install [package] (use --save-dev for a 'devDependency')` - Install a npm package for use in your application. If you omit the package name, npm will download (to `node_modules`) all missing packages for the dependencies in your `package.json` file.
+- `npm uninstall [package]` - Remove a package.
+- `npm run [script in package.json - typically 'build']` - Execute a named script defined in your `package.json` file. For example, if you want to build the client app, use `npm run build`. The 'build' script is defined in the `package.json` file, and simply executes the Angular build command `ng build -c dev`.
+- `npm audit` - Audit your application's dependencies for reported vulnerabilities and provide direction for updating the packages to newer versions.
+
+### ng - Angular CLI
+
+The following `ng` commands must be executed in the `angular.json` containing directory.
+
+- `ng update` - Audit and provide directions for updating Angular.
+- `ng generate` - Template code generation for Angular types (i.e. component, service, module, and other types).
