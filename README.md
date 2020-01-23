@@ -41,9 +41,9 @@
    - [ClientApp package.json](#clientapp-package.json)
 5. [ETA Security Model](#eta-security-model)
 6. [Command Line Interface](#command-line-interface)
-   - [dotnet](#dotnet)
-   - [npm](#npm)
-   - [ng](#ng)
+   - [dotnet](#dotnet---.net-core-cli)
+   - [npm](#npm---node-package-manager)
+   - [ng](#ng---angular-cli)
 
 ## Introduction
 
