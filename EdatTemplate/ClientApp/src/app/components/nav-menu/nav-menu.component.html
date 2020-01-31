@@ -1,10 +1,10 @@
 <button
-  class="btn btn-link sr-only sr-only-focusable"
+  class="btn btn-link sr-only"
   title="Skip to main content"
   aria-label="Skip to main content"
   (click)="skipNavigation()"
 >
-  Skip to main content
+  Skip to Main Content
 </button>
 <app-header></app-header>
 <nav id="navigationMenu" class="navbar navbar-expand-lg navbar-light bg-light">
@@ -135,4 +135,4 @@
     </form>
   </div>
 </nav>
-<a [routerLink]="" #skipnav></a>
+<a class="sr-only" [routerLink]="" #skipnav>Main Content</a>
