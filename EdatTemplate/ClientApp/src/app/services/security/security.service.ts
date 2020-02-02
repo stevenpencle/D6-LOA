@@ -27,7 +27,7 @@ export class SecurityService extends Store<IClientToken> {
     this.httpClient
       .get<IClientToken>(
         'api/security/getToken',
-        this.httpConfigService.getOptions
+        this.httpConfigService.getOptions()
       )
       .subscribe(
         result => {

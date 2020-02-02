@@ -26,7 +26,10 @@ export class EnvironmentService extends Store<EnvironmentData> {
     }
     const completedHeader = this.loadingService.show();
     this.httpClient
-      .get<IEdatHeader>('api/site/GetHeader', this.httpConfigService.getOptions)
+      .get<IEdatHeader>(
+        'api/site/GetHeader',
+        this.httpConfigService.getOptions()
+      )
       .subscribe(
         result => {
           this.setState({ header: result, footer: this.getState().footer });
@@ -38,7 +41,10 @@ export class EnvironmentService extends Store<EnvironmentData> {
       );
     const completedFooter = this.loadingService.show();
     this.httpClient
-      .get<IEdatFooter>('api/site/GetFooter', this.httpConfigService.getOptions)
+      .get<IEdatFooter>(
+        'api/site/GetFooter',
+        this.httpConfigService.getOptions()
+      )
       .subscribe(
         result => {
           this.setState({ header: this.getState().header, footer: result });

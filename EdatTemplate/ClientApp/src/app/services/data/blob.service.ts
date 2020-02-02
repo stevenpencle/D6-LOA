@@ -1,15 +1,17 @@
 ﻿import { Injectable } from '@angular/core';
-import { IDocumentMetadata, IStringResponse } from '../../model/model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  IDocumentMetadata,
+  IStringResponse,
+  IStringRequest
+} from '../../model/model';
 import { saveAs } from 'file-saver';
 import { LoadingService } from '../environment/loading.service';
-import { HttpConfigService } from '../http/http-config.service';
+import { HttpService } from '../http/http.service';
 
 @Injectable()
 export class BlobService {
   constructor(
-    private httpClient: HttpClient,
-    private httpConfigService: HttpConfigService,
+    private httpService: HttpService,
     private loadingService: LoadingService
   ) {}
 
@@ -18,43 +20,30 @@ export class BlobService {
     callback: (metadata: IDocumentMetadata[]) => void
   ): void {
     const completed = this.loadingService.show();
-    this.httpClient
-      .get<IDocumentMetadata[]>(
-        'api/Storage/GetFileList?directory=' + directory,
-        this.httpConfigService.getOptions
-      )
-      .subscribe(
-        result => {
-          completed();
-          callback(result);
-        },
-        () => {
-          completed();
-        }
-      );
+    this.httpService.get<IDocumentMetadata[]>(
+      'api/Storage/GetFileList?directory=' + directory,
+      result => {
+        completed();
+        callback(result);
+      },
+      () => {
+        completed();
+      }
+    );
   }
 
   get(id: string, fileName: string): void {
     const completed = this.loadingService.show();
-    this.httpClient
-      .get<Blob>('api/Storage/GetFile?id=' + id, {
-        responseType: 'blob' as 'json',
-        headers: {
-          'ng-api-call': 'true',
-          'Cache-Control': 'no-cache',
-          Pragma: 'no-cache',
-          Expires: 'Sat, 01 Jan 2020 00:00:00 GMT'
-        }
-      })
-      .subscribe(
-        result => {
-          completed();
-          saveAs(result, fileName);
-        },
-        () => {
-          completed();
-        }
-      );
+    this.httpService.getBlobResponse(
+      'api/Storage/GetFile?id=' + id,
+      result => {
+        completed();
+        saveAs(result, fileName);
+      },
+      () => {
+        completed();
+      }
+    );
   }
 
   add(
@@ -63,62 +52,49 @@ export class BlobService {
     errorCallback?: (error: string) => void
   ): void {
     const completed = this.loadingService.show();
-    this.httpClient
-      .post<IDocumentMetadata[]>(
-        '/api/Storage/UploadFiles',
-        formData,
-        this.httpConfigService.postOptions
-      )
-      .subscribe(
-        result => {
-          completed();
-          callback(result);
-        },
-        (httpErrorResponse: HttpErrorResponse) => {
-          completed();
-          console.error(httpErrorResponse.message);
-          if (errorCallback) {
-            errorCallback(httpErrorResponse.message);
-          }
+    this.httpService.post<FormData, IDocumentMetadata[]>(
+      'api/Storage/UploadFiles',
+      formData,
+      result => {
+        completed();
+        callback(result);
+      },
+      errors => {
+        completed();
+        if (errorCallback) {
+          errorCallback(errors.list());
         }
-      );
+      }
+    );
   }
 
   remove(id: string, callback: (response: string) => void): void {
     const completed = this.loadingService.show();
-    this.httpClient
-      .post<IStringResponse>(
-        'api/Storage/RemoveFile',
-        { data: id },
-        this.httpConfigService.postOptions
-      )
-      .subscribe(
-        result => {
-          completed();
-          callback(result.data);
-        },
-        () => {
-          completed();
-        }
-      );
+    this.httpService.post<IStringRequest, IStringResponse>(
+      'api/Storage/RemoveFile',
+      { data: id },
+      result => {
+        completed();
+        callback(result.data);
+      },
+      () => {
+        completed();
+      }
+    );
   }
 
   removeAll(directory: string, callback: (response: string) => void): void {
     const completed = this.loadingService.show();
-    this.httpClient
-      .post<IStringResponse>(
-        'api/Storage/RemoveFiles',
-        { data: directory },
-        this.httpConfigService.postOptions
-      )
-      .subscribe(
-        result => {
-          completed();
-          callback(result.data);
-        },
-        () => {
-          completed();
-        }
-      );
+    this.httpService.post<IStringRequest, IStringResponse>(
+      'api/Storage/RemoveFiles',
+      { data: directory },
+      result => {
+        completed();
+        callback(result.data);
+      },
+      () => {
+        completed();
+      }
+    );
   }
 }

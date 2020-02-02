@@ -64,18 +64,23 @@ export class HttpService implements OnDestroy {
     this.httpClient
       .get<TResult>(
         this.environmentService.baseUrl + api,
-        this.httpConfigService.getOptions
+        this.httpConfigService.getOptions()
       )
       .subscribe(
         result => {
           completed();
           callback(result);
         },
-        (error: HttpErrorResponse) => {
+        (httpErrorResponse: HttpErrorResponse) => {
           completed();
-          const errors = this.handleError(error);
-          if (modelStateErrorCallback) {
-            modelStateErrorCallback(errors);
+          this.handleServerError(httpErrorResponse);
+          if (httpErrorResponse.status === 400) {
+            const modelStateValidations = this.populateModelStateValidations(
+              httpErrorResponse.error
+            );
+            if (modelStateErrorCallback) {
+              modelStateErrorCallback(modelStateValidations);
+            }
           }
         }
       );
@@ -92,26 +97,103 @@ export class HttpService implements OnDestroy {
       .post<TResult>(
         this.environmentService.baseUrl + api,
         payload,
-        this.httpConfigService.postOptions
+        this.httpConfigService.postOptions()
       )
       .subscribe(
         result => {
           completed();
           callback(result);
         },
-        (error: HttpErrorResponse) => {
+        (httpErrorResponse: HttpErrorResponse) => {
           completed();
-          const errors = this.handleError(error);
-          if (modelStateErrorCallback) {
-            modelStateErrorCallback(errors);
+          this.handleServerError(httpErrorResponse);
+          if (httpErrorResponse.status === 400) {
+            const modelStateValidations = this.populateModelStateValidations(
+              httpErrorResponse.error
+            );
+            if (modelStateErrorCallback) {
+              modelStateErrorCallback(modelStateValidations);
+            }
           }
         }
       );
   }
 
-  private handleError(
-    httpErrorResponse: HttpErrorResponse
-  ): ModelStateValidations {
+  getBlobResponse(
+    api: string,
+    callback: (result: Blob) => void,
+    modelStateErrorCallback?: (errors: ModelStateValidations) => void
+  ): void {
+    const completed = this.loadingService.show();
+    this.httpClient
+      .get<Blob>(
+        this.environmentService.baseUrl + api,
+        this.httpConfigService.getOptions(true)
+      )
+      .subscribe(
+        result => {
+          completed();
+          callback(result);
+        },
+        (httpErrorResponse: HttpErrorResponse) => {
+          completed();
+          this.handleServerError(httpErrorResponse);
+          if (httpErrorResponse.status === 400) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const errorObj = JSON.parse(reader.result.toString());
+              const modelStateValidations = this.populateModelStateValidations(
+                errorObj
+              );
+              if (modelStateErrorCallback) {
+                modelStateErrorCallback(modelStateValidations);
+              }
+            };
+            reader.readAsText(httpErrorResponse.error);
+          }
+        }
+      );
+  }
+
+  postBlobResponse<TPayload>(
+    api: string,
+    payload: TPayload,
+    callback: (result: Blob) => void,
+    modelStateErrorCallback?: (errors: ModelStateValidations) => void
+  ): void {
+    const completed = this.loadingService.show();
+    this.httpClient
+      .post<Blob>(
+        this.environmentService.baseUrl + api,
+        payload,
+        this.httpConfigService.postOptions(true)
+      )
+      .subscribe(
+        result => {
+          completed();
+          callback(result);
+        },
+        (httpErrorResponse: HttpErrorResponse) => {
+          completed();
+          this.handleServerError(httpErrorResponse);
+          if (httpErrorResponse.status === 400) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const errorObj = JSON.parse(reader.result.toString());
+              const modelStateValidations = this.populateModelStateValidations(
+                errorObj
+              );
+              if (modelStateErrorCallback) {
+                modelStateErrorCallback(modelStateValidations);
+              }
+            };
+            reader.readAsText(httpErrorResponse.error);
+          }
+        }
+      );
+  }
+
+  private handleServerError(httpErrorResponse: HttpErrorResponse): void {
     const applicationError = httpErrorResponse.headers.get('Application-Error');
     if (applicationError) {
       throw applicationError;
@@ -119,33 +201,37 @@ export class HttpService implements OnDestroy {
     if (httpErrorResponse.status === 500) {
       this.dataMarshalerService.load(httpErrorResponse.error);
       this.router.navigateByUrl('/server-error');
-    }
-    let modelStateErrorsConsole = '';
-    const modelStateValidations: ModelStateValidations = new ModelStateValidations();
-    if (httpErrorResponse.status === 400) {
-      for (const property in httpErrorResponse.error) {
-        if (httpErrorResponse.error.hasOwnProperty(property)) {
-          const modelStateValidation: ModelStateValidation = {
-            property: property,
-            validations: []
-          };
-          httpErrorResponse.error[property].forEach((error: string) => {
-            modelStateErrorsConsole += error + '\n';
-            modelStateValidation.validations.push(error);
-          });
-          modelStateValidations.validations.push(modelStateValidation);
-        }
-      }
+      return;
     }
     if (httpErrorResponse.status === 401) {
       this.securityService.removeToken();
       this.router.navigateByUrl('/');
+      return;
     }
     if (httpErrorResponse.status === 403) {
       if (this.token == null) {
         window.location.replace('security/adLogin');
       } else {
         this.router.navigateByUrl('/not-authorized');
+      }
+      return;
+    }
+  }
+
+  private populateModelStateValidations(errorObj: any): ModelStateValidations {
+    let modelStateErrorsConsole = '';
+    const modelStateValidations: ModelStateValidations = new ModelStateValidations();
+    for (const property in errorObj) {
+      if (errorObj.hasOwnProperty(property)) {
+        const modelStateValidation: ModelStateValidation = {
+          property: property,
+          validations: []
+        };
+        errorObj[property].forEach((error: string) => {
+          modelStateErrorsConsole += error + '\n';
+          modelStateValidation.validations.push(error);
+        });
+        modelStateValidations.validations.push(modelStateValidation);
       }
     }
     console.error(

@@ -16,14 +16,18 @@ export class StaffService {
 
   search(namePattern: string): Observable<IStaff[]> {
     return this.httpClient
-      .post<IStaff[]>('api/Staff/Search', { data: namePattern }, this.httpConfigService.postOptions)
+      .post<IStaff[]>(
+        'api/Staff/Search',
+        { data: namePattern },
+        this.httpConfigService.postOptions()
+      )
       .pipe(map(result => result));
   }
 
   get(id: number, callback: (staff: IStaff) => void): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<IStaff>('api/Staff/Get/' + id, this.httpConfigService.getOptions)
+      .get<IStaff>('api/Staff/Get/' + id, this.httpConfigService.getOptions())
       .subscribe(
         result => {
           completed();
@@ -41,7 +45,11 @@ export class StaffService {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .post<IFdotAppUser>('api/Staff/SaveFdotAppUser/', staff, this.httpConfigService.postOptions)
+      .post<IFdotAppUser>(
+        'api/Staff/SaveFdotAppUser/',
+        staff,
+        this.httpConfigService.postOptions()
+      )
       .subscribe(
         result => {
           completed();
