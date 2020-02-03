@@ -29,6 +29,7 @@ export class ModelStateValidations {
     return '<ul>' + errorList + '</ul>';
   }
 }
+
 @Injectable()
 export class HttpService implements OnDestroy {
   private token: IClientToken = null;
@@ -119,7 +120,7 @@ export class HttpService implements OnDestroy {
       );
   }
 
-  getBlobResponse(
+  getWithBlobResponse(
     api: string,
     callback: (result: Blob) => void,
     modelStateErrorCallback?: (errors: ModelStateValidations) => void
@@ -155,7 +156,7 @@ export class HttpService implements OnDestroy {
       );
   }
 
-  postBlobResponse<TPayload>(
+  postWithBlobResponse<TPayload>(
     api: string,
     payload: TPayload,
     callback: (result: Blob) => void,

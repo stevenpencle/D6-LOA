@@ -56,7 +56,7 @@ export class EdmsService {
 
   get(id: number, fileName: string): void {
     const completed = this.loadingService.show();
-    this.httpService.getBlobResponse(
+    this.httpService.getWithBlobResponse(
       'api/Edms/GetDocument?id=' + id,
       result => {
         completed();

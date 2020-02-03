@@ -34,7 +34,7 @@ export class BlobService {
 
   get(id: string, fileName: string): void {
     const completed = this.loadingService.show();
-    this.httpService.getBlobResponse(
+    this.httpService.getWithBlobResponse(
       'api/Storage/GetFile?id=' + id,
       result => {
         completed();

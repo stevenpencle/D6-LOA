@@ -16,6 +16,7 @@ export interface FilterEvent {
   field: string;
   value: any;
 }
+
 @Injectable()
 export class DataNavigationService {
   constructor() {}
