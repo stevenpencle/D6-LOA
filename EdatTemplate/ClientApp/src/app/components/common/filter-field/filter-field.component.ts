@@ -6,7 +6,8 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  OnInit
+  OnInit,
+  OnChanges
 } from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
@@ -16,7 +17,7 @@ import { FilterEvent } from '../../../services/data/data-navigation.service';
   selector: 'app-filter-field',
   templateUrl: './filter-field.component.html'
 })
-export class FilterFieldComponent implements OnInit, AfterViewInit {
+export class FilterFieldComponent implements OnInit, AfterViewInit, OnChanges {
   @Output()
   filter = new EventEmitter<FilterEvent>();
   @Input()
@@ -28,6 +29,8 @@ export class FilterFieldComponent implements OnInit, AfterViewInit {
   @Input()
   selectValues: Array<{ label: string; value: string }>;
   @Input() filterVal = '';
+  @Output()
+  filterValChange = new EventEmitter<string>();
   keyUp: Subscription;
   @ViewChild('filterText', { static: false })
   inputElRef: ElementRef;
@@ -38,8 +41,17 @@ export class FilterFieldComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.filterVal !== '') {
+      this.filterValChange.emit(this.filterVal);
       this.invokeFilter();
     }
+  }
+
+  ngOnChanges(): void {
+    if (this.filterVal === null) {
+      this.filterVal = '';
+    }
+    this.filterValChange.emit(this.filterVal);
+    this.invokeFilter();
   }
 
   ngAfterViewInit(): void {
@@ -49,6 +61,8 @@ export class FilterFieldComponent implements OnInit, AfterViewInit {
       );
       const debouncedInput = obs.pipe(debounceTime(700));
       debouncedInput.subscribe(val => {
+        this.filterVal = val;
+        this.filterValChange.emit(this.filterVal);
         this.filter.emit({ field: this.field, value: val });
       });
     }
@@ -56,6 +70,8 @@ export class FilterFieldComponent implements OnInit, AfterViewInit {
       fromEvent(this.selectElRef.nativeElement, 'change')
         .pipe(map((i: any) => i.currentTarget.value))
         .subscribe(val => {
+          this.filterVal = val;
+          this.filterValChange.emit(this.filterVal);
           this.filter.emit({ field: this.field, value: val });
         });
     }
