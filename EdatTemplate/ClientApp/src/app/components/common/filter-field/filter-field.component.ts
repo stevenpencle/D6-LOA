@@ -5,7 +5,8 @@ import {
   EventEmitter,
   ViewChild,
   ElementRef,
-  AfterViewInit
+  AfterViewInit,
+  OnInit
 } from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
@@ -15,7 +16,7 @@ import { FilterEvent } from '../../../services/data/data-navigation.service';
   selector: 'app-filter-field',
   templateUrl: './filter-field.component.html'
 })
-export class FilterFieldComponent implements AfterViewInit {
+export class FilterFieldComponent implements OnInit, AfterViewInit {
   @Output()
   filter = new EventEmitter<FilterEvent>();
   @Input()
@@ -26,7 +27,7 @@ export class FilterFieldComponent implements AfterViewInit {
   type: 'text' | 'select';
   @Input()
   selectValues: Array<{ label: string; value: string }>;
-  filterVal = '';
+  @Input() filterVal = '';
   keyUp: Subscription;
   @ViewChild('filterText', { static: false })
   inputElRef: ElementRef;
@@ -35,7 +36,13 @@ export class FilterFieldComponent implements AfterViewInit {
 
   constructor() {}
 
-  ngAfterViewInit() {
+  ngOnInit(): void {
+    if (this.filterVal !== '') {
+      this.invokeFilter();
+    }
+  }
+
+  ngAfterViewInit(): void {
     if (this.type === 'text') {
       const obs = fromEvent(this.inputElRef.nativeElement, 'keyup').pipe(
         map((i: any) => i.currentTarget.value)
@@ -55,6 +62,6 @@ export class FilterFieldComponent implements AfterViewInit {
   }
 
   invokeFilter(): void {
-    this.filter.emit({ field: this.field, value: this.filterVal });
+    this.filter.emit({ field: this.field, value: this.filterVal.toString() });
   }
 }
