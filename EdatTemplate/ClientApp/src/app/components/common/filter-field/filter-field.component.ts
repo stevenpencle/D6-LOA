@@ -40,17 +40,10 @@ export class FilterFieldComponent implements OnInit, AfterViewInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {
-    if (this.filterVal !== '') {
-      this.filterValChange.emit(this.filterVal);
-      this.invokeFilter();
-    }
+    this.invokeFilter();
   }
 
   ngOnChanges(): void {
-    if (this.filterVal === null) {
-      this.filterVal = '';
-    }
-    this.filterValChange.emit(this.filterVal);
     this.invokeFilter();
   }
 
@@ -77,7 +70,14 @@ export class FilterFieldComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  invokeFilter(): void {
-    this.filter.emit({ field: this.field, value: this.filterVal.toString() });
+  private invokeFilter(): void {
+    this.filterValChange.emit(this.filterVal);
+    this.filter.emit({
+      field: this.field,
+      value:
+        this.filterVal === undefined || this.filterVal === null
+          ? ''
+          : this.filterVal.toString()
+    });
   }
 }
