@@ -68,6 +68,9 @@ export class DataNavigationService {
   ): void {
     data.sortedFilteredData = [...data.sourceData];
     for (let i = 0; i < filters.length; i++) {
+      if (filters[i].value === '') {
+        continue;
+      }
       const fieldGraph = filters[i].field.split('.');
       if (fieldGraph.length === 1) {
         data.sortedFilteredData = linq

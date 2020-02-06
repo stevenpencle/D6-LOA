@@ -55,8 +55,7 @@ export class FilterFieldComponent implements OnInit, AfterViewInit, OnChanges {
       const debouncedInput = obs.pipe(debounceTime(700));
       debouncedInput.subscribe(val => {
         this.filterVal = val;
-        this.filterValChange.emit(this.filterVal);
-        this.filter.emit({ field: this.field, value: val });
+        this.invokeFilter();
       });
     }
     if (this.type === 'select') {
@@ -64,8 +63,7 @@ export class FilterFieldComponent implements OnInit, AfterViewInit, OnChanges {
         .pipe(map((i: any) => i.currentTarget.value))
         .subscribe(val => {
           this.filterVal = val;
-          this.filterValChange.emit(this.filterVal);
-          this.filter.emit({ field: this.field, value: val });
+          this.invokeFilter();
         });
     }
   }
