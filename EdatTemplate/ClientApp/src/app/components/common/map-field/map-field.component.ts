@@ -12,7 +12,7 @@ import 'leaflet-draw';
 import 'leaflet-search';
 import 'leaflet-styleeditor';
 import { GeoSearchControl, EsriProvider } from 'leaflet-geosearch';
-import { stringify, parse } from 'wellknown';
+import { stringify, parse, GeoJSONGeometry } from 'wellknown';
 import { HttpService } from 'src/app/services/http/http.service';
 import {
   IMapRequest,
@@ -32,7 +32,7 @@ export class MapFieldComponent implements AfterContentInit {
   // vars
   map: L.Map;
   featureGroup: L.FeatureGroup = new L.FeatureGroup();
-  geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry, any>;
+  geoJson: GeoJSON.FeatureCollection<GeoJSONGeometry>;
   options = [];
   mapJson: Array<string> = [];
   loadedLayers: Array<string> = [];
@@ -232,7 +232,9 @@ export class MapFieldComponent implements AfterContentInit {
   private drawCreated(event: L.LeafletEvent): void {
     const layer = (event as any).layer;
     this.featureGroup.addLayer(layer);
-    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
+    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection<
+      GeoJSONGeometry
+    >;
     layer.options.id = layer._leaflet_id;
     this.options.push(layer.options);
     this.updateMap();
@@ -248,7 +250,9 @@ export class MapFieldComponent implements AfterContentInit {
           this.options[i] = layer.options;
         }
       });
-      this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
+      this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection<
+        GeoJSONGeometry
+      >;
       this.updateMap();
     });
   }
@@ -262,7 +266,9 @@ export class MapFieldComponent implements AfterContentInit {
         }
       });
     });
-    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
+    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection<
+      GeoJSONGeometry
+    >;
     this.updateMap();
   }
 
@@ -272,7 +278,9 @@ export class MapFieldComponent implements AfterContentInit {
         this.options[i] = (element as any).options;
       }
     });
-    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection;
+    this.geoJson = this.featureGroup.toGeoJSON() as GeoJSON.FeatureCollection<
+      GeoJSONGeometry
+    >;
     this.updateMap();
   }
 
