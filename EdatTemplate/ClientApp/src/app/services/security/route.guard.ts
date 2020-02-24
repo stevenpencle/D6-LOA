@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { IClientToken } from '../../model/model';
 import { SecurityService } from './security.service';
 import { HttpConfigService } from '../http/http-config.service';
+import { RouteData } from 'src/typings';
 
 @Injectable()
 export class RouteGuard implements CanActivate, OnDestroy {

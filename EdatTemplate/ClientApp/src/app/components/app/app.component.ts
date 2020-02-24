@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
+import { LocationData } from 'src/typings';
 
 @Component({
   selector: 'app-root',
