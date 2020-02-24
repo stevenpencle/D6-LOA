@@ -1,12 +1,13 @@
-/* Route data definition */
-interface LocationData {
+export interface LocationData {
   path: any[];
   queryParams: any;
 }
-interface RouteData {
+
+export interface RouteData {
   AuthorizedRoles: string[];
 }
-interface TimePickerStruct {
+
+export interface TimePickerStruct {
   hour: number;
   minute: number;
 }
