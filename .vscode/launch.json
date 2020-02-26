@@ -3,12 +3,6 @@
   // Use hover for the description of the existing attributes
   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
   "version": "0.2.0",
-  "compounds": [
-    {
-      "name": "ASP.Net Core & Browser",
-      "configurations": [".NET Core Launch (web)", "Launch Chrome"]
-    }
-  ],
   "configurations": [
     {
       "name": ".NET Core Launch (web)",
@@ -21,19 +15,10 @@
       "cwd": "${workspaceFolder}/EdatTemplate",
       "stopAtEntry": false,
       "internalConsoleOptions": "neverOpen",
-      "launchBrowser": {
-        "enabled": false,
-        "args": "${auto-detect-url}",
-        "windows": {
-          "command": "cmd.exe",
-          "args": "/C start ${auto-detect-url}"
-        },
-        "osx": {
-          "command": "open"
-        },
-        "linux": {
-          "command": "xdg-open"
-        }
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "pattern": "^\\s*Now listening on:\\s+http://\\S+:([0-9]+)",
+        "uriFormat": "http://localhost:%s"
       },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
