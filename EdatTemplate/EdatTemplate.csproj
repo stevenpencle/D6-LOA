@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
-    <PackageReference Include="Reinforced.Typings" Version="1.5.6" />
+    <PackageReference Include="Reinforced.Typings" Version="1.5.7" />
     <PackageReference Include="Sendgrid" Version="9.12.7" />
   </ItemGroup>
 
