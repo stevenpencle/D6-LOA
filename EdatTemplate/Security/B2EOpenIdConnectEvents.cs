@@ -48,19 +48,13 @@ namespace EdatTemplate.Security
                 var staff = await staffService.GetByEmailAsync(email);
                 if (staff == null)
                 {
-                    var givenName = ctx.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").Value;
-                    var surName = ctx.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").Value;
-                    staff = await staffService.GetByEmailAsync($"{givenName}.{surName}@dot.state.fl.us");
-                    if (staff == null)
-                    {
-                        throw new InvalidOperationException($"Staff not found for email {email}");
-                    }
+                    throw new InvalidOperationException($"Staff not found for email {email}");
                 }
                 identityClaims.Add(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
                 identityClaims.Add(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
                 //Custom logic to examine group claims and “transform” them into application specific claims.
                 //Roles should be placed in appsettings in the hierarchical order of most important to least important because the standard behavior is
-                //to break the loop on the first successful match 
+                //to break the loop on the first successful match
                 var hasRole = false;
                 foreach (var role in openIdConnectB2EOptions.Roles)
                 {
