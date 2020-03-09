@@ -23,57 +23,46 @@ namespace EdatTemplate.Infrastructure
 
         public async Task<IEnumerable<Staff>> GetStaffByNameAsync(string name)
         {
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            var nameParts = name.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            var uri = _endpoint;
+            var nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (nameParts.Length == 2)
             {
-                queryString["firstName"] = nameParts[0];
-                queryString["lastName"] = nameParts[1];
+                uri += "?first-name=" + HttpUtility.UrlEncode(nameParts[0]) + "&last-name=" + HttpUtility.UrlEncode(nameParts[1]);
+
             }
             else
             {
-                queryString["partialName"] = name;
+                uri += "?partial-name=" + HttpUtility.UrlEncode(name);
             }
-            queryString["status"] = "active";
-            var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
             var response = await Client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var staffs = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data);
-            return staffs
-                .Select(s => new Staff
+            if (staffs != null)
+            {
+                foreach (var staff in staffs)
                 {
-                    FirstName = s.FirstName,
-                    Id = s.Id,
-                    LastName = s.LastName,
-                    RacfId = s.RacfId,
-                    EmailAddress = s.EmailAddress,
-                    District = DecodeDistrict(s.District)
-                }).ToList();
+                    staff.District = DecodeDistrict(staff.District);
+                }
+            }
+            return staffs;
         }
 
         public async Task<Staff> GetByIdAsync(int id)
         {
-            var uri = _endpoint + $"GetStaffById?id={id}";
+            var uri = _endpoint + $"/{id}";
             var response = await Client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var s = JsonConvert.DeserializeObject<Staff>(data);
-            return new Staff
+            if (s != null)
             {
-                FirstName = s.FirstName,
-                Id = s.Id,
-                LastName = s.LastName,
-                RacfId = s.RacfId,
-                EmailAddress = s.EmailAddress,
-                District = DecodeDistrict(s.District)
-            };
+                s.District = DecodeDistrict(s.District);
+            }
+            return s;
         }
 
         public async Task<Staff> GetByEmailAsync(string email)
         {
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            queryString["emailAddress"] = email;
-            queryString["status"] = "active";
-            var uri = _endpoint + "SearchStaffBySearchCriteria?" + queryString;
+            var uri = _endpoint + "?email-address=" + HttpUtility.UrlEncode(email);
             var response = await Client.GetAsync(uri);
             var data = await response.Content.ReadAsStringAsync();
             var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
@@ -82,15 +71,8 @@ namespace EdatTemplate.Infrastructure
                 return null;
             }
             var s = sl.First();
-            return new Staff
-            {
-                FirstName = s.FirstName,
-                Id = s.Id,
-                LastName = s.LastName,
-                RacfId = s.RacfId,
-                EmailAddress = s.EmailAddress,
-                District = DecodeDistrict(s.District)
-            };
+            s.District = DecodeDistrict(s.District);
+            return s;
         }
 
         private static string DecodeDistrict(string district)
