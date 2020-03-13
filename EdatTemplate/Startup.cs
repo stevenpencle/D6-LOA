@@ -144,7 +144,9 @@ namespace EdatTemplate
                 .AddMvc(options => options.EnableEndpointRouting = false)
                 .AddNewtonsoftJson(options =>
                 {
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+                    options.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects;
                 });
             //global SPA config
             services.AddSpaStaticFiles(configuration =>

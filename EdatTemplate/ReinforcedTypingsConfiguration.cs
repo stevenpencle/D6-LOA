@@ -15,13 +15,23 @@ namespace EdatTemplate
         public static void Configure(ConfigurationBuilder builder)
         {
             // fluent configuration goes here
+
+            // EF MODELS
             builder.ExportAsInterfaces(new[] {
                 // domain entity models
                 typeof(Staff),
                 typeof(AppUser),
                 typeof(FdotAppUser),
                 typeof(PublicAppUser),
-                typeof(Sample),
+                typeof(Sample)
+            }, c => c
+            .WithCodeGenerator<ReinforcedTypingsEntityInterfaceCodeGenerator>()
+            .WithPublicProperties(p => p.ForceNullable())
+            .ExportTo("model.d.ts")
+            .DontIncludeToNamespace());
+
+            // Other View Models
+            builder.ExportAsInterfaces(new[] {
                 // security models
                 typeof(ClientToken),
                 typeof(AuthProviderConfig),
@@ -53,6 +63,7 @@ namespace EdatTemplate
             .ExportTo("model.d.ts")
             .DontIncludeToNamespace();
 
+            // Enums
             builder.ExportAsEnums(new[]
             {
                 typeof(AppUserType),

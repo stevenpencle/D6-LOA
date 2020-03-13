@@ -7,6 +7,7 @@ import { IClientToken } from '../../model/model';
 import { DataMarshalerService } from '../data/data-marshaler.service';
 import { LoadingService } from '../environment/loading.service';
 import { HttpConfigService } from './http-config.service';
+require('./decycle.js');
 
 export interface ModelStateValidation {
   property: string;
@@ -69,6 +70,7 @@ export class HttpService implements OnDestroy {
       )
       .subscribe(
         result => {
+          result = this.deserializeWithReferenceLooping<TResult>(result);
           completed();
           callback(result);
         },
@@ -97,11 +99,12 @@ export class HttpService implements OnDestroy {
     this.httpClient
       .post<TResult>(
         this.environmentService.baseUrl + api,
-        payload,
+        this.serializeWithReferenceLooping(payload),
         this.httpConfigService.postOptions()
       )
       .subscribe(
         result => {
+          result = this.deserializeWithReferenceLooping<TResult>(result);
           completed();
           callback(result);
         },
@@ -192,6 +195,25 @@ export class HttpService implements OnDestroy {
           }
         }
       );
+  }
+
+  private deserializeWithReferenceLooping<T>(obj: T): T {
+    const json = JSON.stringify(obj);
+    const refMap = {};
+    return JSON.parse(json, function(key, value) {
+      if (key === '$id') {
+        refMap[value] = this;
+      }
+      if (value && value.$ref) {
+        return refMap[value.$ref];
+      }
+      return value;
+    });
+  }
+
+  private serializeWithReferenceLooping<T>(obj: T): T {
+    const o = (JSON as any).decycle(obj);
+    return o;
   }
 
   private handleServerError(httpErrorResponse: HttpErrorResponse): void {
