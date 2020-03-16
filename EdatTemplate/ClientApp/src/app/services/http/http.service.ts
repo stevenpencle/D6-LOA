@@ -70,7 +70,9 @@ export class HttpService implements OnDestroy {
       )
       .subscribe(
         result => {
-          result = this.deserializeWithReferenceLooping<TResult>(result);
+          if (result !== undefined && result !== null) {
+            result = this.deserializeWithReferenceLooping<TResult>(result);
+          }
           completed();
           callback(result);
         },
@@ -96,15 +98,24 @@ export class HttpService implements OnDestroy {
     modelStateErrorCallback?: (errors: ModelStateValidations) => void
   ): void {
     const completed = this.loadingService.show();
+    if (
+      payload !== undefined &&
+      payload !== null &&
+      !(payload instanceof FormData)
+    ) {
+      payload = this.serializeWithReferenceLooping(payload);
+    }
     this.httpClient
       .post<TResult>(
         this.environmentService.baseUrl + api,
-        this.serializeWithReferenceLooping(payload),
+        payload,
         this.httpConfigService.postOptions()
       )
       .subscribe(
         result => {
-          result = this.deserializeWithReferenceLooping<TResult>(result);
+          if (result !== undefined && result !== null) {
+            result = this.deserializeWithReferenceLooping<TResult>(result);
+          }
           completed();
           callback(result);
         },
