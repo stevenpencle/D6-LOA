@@ -7,7 +7,7 @@ import { IClientToken } from '../../model/model';
 import { DataMarshalerService } from '../data/data-marshaler.service';
 import { LoadingService } from '../environment/loading.service';
 import { HttpConfigService } from './http-config.service';
-require('./decycle.js');
+import { isObject } from 'lodash';
 
 export interface ModelStateValidation {
   property: string;
@@ -64,17 +64,27 @@ export class HttpService implements OnDestroy {
   ): void {
     const completed = this.loadingService.show();
     this.httpClient
-      .get<TResult>(
-        this.environmentService.baseUrl + api,
-        this.httpConfigService.getOptions()
-      )
+      .get(this.environmentService.baseUrl + api, {
+        responseType: 'text',
+        headers: {
+          'ng-api-call': 'true',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2020 00:00:00 GMT'
+        }
+      })
       .subscribe(
         result => {
           if (result !== undefined && result !== null) {
-            result = this.deserializeWithReferenceLooping<TResult>(result);
+            const resultParsed = this.deserializeWithReferenceLooping<TResult>(
+              result
+            );
+            completed();
+            callback(resultParsed);
+          } else {
+            completed();
+            callback(null);
           }
-          completed();
-          callback(result);
         },
         (httpErrorResponse: HttpErrorResponse) => {
           completed();
@@ -106,18 +116,27 @@ export class HttpService implements OnDestroy {
       payload = this.serializeWithReferenceLooping(payload);
     }
     this.httpClient
-      .post<TResult>(
-        this.environmentService.baseUrl + api,
-        payload,
-        this.httpConfigService.postOptions()
-      )
+      .post(this.environmentService.baseUrl + api, payload, {
+        responseType: 'text',
+        headers: {
+          'ng-api-call': 'true',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: 'Sat, 01 Jan 2020 00:00:00 GMT'
+        }
+      })
       .subscribe(
         result => {
           if (result !== undefined && result !== null) {
-            result = this.deserializeWithReferenceLooping<TResult>(result);
+            const resultParsed = this.deserializeWithReferenceLooping<TResult>(
+              result
+            );
+            completed();
+            callback(resultParsed);
+          } else {
+            completed();
+            callback(null);
           }
-          completed();
-          callback(result);
         },
         (httpErrorResponse: HttpErrorResponse) => {
           completed();
@@ -208,8 +227,7 @@ export class HttpService implements OnDestroy {
       );
   }
 
-  private deserializeWithReferenceLooping<T>(obj: T): T {
-    const json = JSON.stringify(obj);
+  private deserializeWithReferenceLooping<T>(json: string): T {
     const refMap = {};
     return JSON.parse(json, function(key, value) {
       if (key === '$id') {
@@ -222,9 +240,46 @@ export class HttpService implements OnDestroy {
     });
   }
 
+  private decycle(
+    obj: any,
+    id: number,
+    objectMap: WeakMap<object, number>
+  ): any {
+    if (
+      isObject(obj) &&
+      !(obj instanceof Boolean) &&
+      !(obj instanceof Date) &&
+      !(obj instanceof Number) &&
+      !(obj instanceof RegExp) &&
+      !(obj instanceof String)
+    ) {
+      const oldId = objectMap.get(obj);
+      if (oldId !== undefined) {
+        return { $ref: oldId.toString() };
+      }
+      id += 1;
+      obj['$id'] = id.toString();
+      objectMap.set(obj, id);
+      if (Array.isArray(obj)) {
+        const newArray = [];
+        obj.forEach((item, i) => {
+          newArray[i] = this.decycle(item, id, objectMap);
+        });
+        return newArray;
+      } else {
+        const newObj = {};
+        Object.keys(obj).forEach(property => {
+          newObj[property] = this.decycle(obj[property], id, objectMap);
+        });
+        return newObj;
+      }
+    }
+    return obj;
+  }
+
   private serializeWithReferenceLooping<T>(obj: T): T {
-    const o = (JSON as any).decycle(obj);
-    return o;
+    const objectMap = new WeakMap<object, number>();
+    return this.decycle(obj, 0, objectMap);
   }
 
   private handleServerError(httpErrorResponse: HttpErrorResponse): void {

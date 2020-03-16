@@ -146,7 +146,7 @@ namespace EdatTemplate
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
                     options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-                    options.SerializerSettings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects;
+                    options.SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
                 });
             //global SPA config
             services.AddSpaStaticFiles(configuration =>
