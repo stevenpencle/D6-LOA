@@ -41,6 +41,7 @@ namespace EdatTemplate.ORM
             _environment = environment;
             _httpContextAccessor = httpContextAccessor;
             _entityFrameworkConfig = entityFrameworkConfig;
+            ChangeTracker.LazyLoadingEnabled = false;
             ConfigureLogging();
         }
 
