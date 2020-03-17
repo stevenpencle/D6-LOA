@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EdatTemplate.Models.Domain
+namespace EdatTemplate.Models.Arculus
 {
     public class Staff
     {

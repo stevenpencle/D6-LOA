@@ -1,4 +1,5 @@
-﻿using EdatTemplate.Models.Domain;
+﻿using EdatTemplate.Models.Arculus;
+using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.Domain.Enums;
 using EdatTemplate.Models.Edms;
 using EdatTemplate.Models.Security;
@@ -19,7 +20,6 @@ namespace EdatTemplate
             // EF MODELS
             builder.ExportAsInterfaces(new[] {
                 // domain entity models
-                typeof(Staff),
                 typeof(AppUser),
                 typeof(FdotAppUser),
                 typeof(PublicAppUser),
@@ -35,6 +35,9 @@ namespace EdatTemplate
                 // security models
                 typeof(ClientToken),
                 typeof(AuthProviderConfig),
+                // arculus models
+                typeof(Staff),
+                typeof(StaffConnector),
                 // edms models
                 typeof(EdmsDocument),
                 typeof(EdmsDocumentMetadata),

@@ -1,4 +1,4 @@
-﻿using EdatTemplate.Models.Domain;
+﻿using EdatTemplate.Models.Arculus;
 using EdatTemplate.Services;
 using Newtonsoft.Json;
 using System;
