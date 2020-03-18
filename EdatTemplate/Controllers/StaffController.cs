@@ -1,4 +1,5 @@
-﻿using EdatTemplate.Models.Domain;
+﻿using EdatTemplate.Models.Arculus;
+using EdatTemplate.Models.Domain;
 using EdatTemplate.Models.View;
 using EdatTemplate.ORM;
 using EdatTemplate.Services;

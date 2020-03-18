@@ -1,4 +1,4 @@
-namespace EdatTemplate.Models.Domain
+namespace EdatTemplate.Models.Arculus
 {
     public class StaffConnector
     {

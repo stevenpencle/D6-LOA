@@ -1,4 +1,4 @@
-﻿using EdatTemplate.Models.Domain;
+﻿using EdatTemplate.Models.Arculus;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
