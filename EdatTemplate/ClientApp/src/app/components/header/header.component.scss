@@ -35,6 +35,7 @@
   position: relative;
   background-color: #32557c;
   overflow: hidden;
+  margin: 0;
 }
 .fdot-nav li {
   float: left;
@@ -48,7 +49,6 @@
   text-decoration: none;
 }
 .fdot-nav li a:hover {
-  color: #32557c;
-  background-color: #d2d7e1;
+  text-decoration: underline;
 }
 /* End FDOT Header Styles */
