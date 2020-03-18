@@ -94,7 +94,7 @@ In VS Code, click the "Manage" gear button and select "Settings."
 
 ![alt text](Documentation/images/vscode-settings.png "VS Code Settings")
 
-Under "Extensions" select "Code Settings Sync" and input the value `573094cd2d2d12bf89d3d590ab59a674` in the "Sync: Gist" textbox.
+Under "Extensions" select "Code Settings Sync" and input the value `ec7e93219fa06fd07531262eb1ae9aa8` in the "Sync: Gist" textbox.
 
 ![alt text](Documentation/images/settings-sync-configuration.png "Settings Sync Configuration")
 
