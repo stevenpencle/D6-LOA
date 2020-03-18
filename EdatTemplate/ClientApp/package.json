@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
     "@fortawesome/fontawesome-free": "^5.12.1",
-    "@ng-bootstrap/ng-bootstrap": "^5.1.5",
+    "@ng-bootstrap/ng-bootstrap": "^5.3.0",
     "@swimlane/ngx-charts": "^13.0.2",
     "classlist.js": "^1.1.20150312",
     "detect-browser": "^4.8.0",

@@ -39,7 +39,11 @@
   >
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarContent">
+  <div
+    class="collapse navbar-collapse"
+    id="navbarContent"
+    [ngbCollapse]="collapsed"
+  >
     <ul class="navbar-nav mr-auto">
       <li *ngIf="isAdmin || isB2CUser" class="nav-item" ngbDropdown>
         <a
