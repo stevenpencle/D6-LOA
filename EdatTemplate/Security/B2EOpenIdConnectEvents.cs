@@ -45,10 +45,10 @@ namespace EdatTemplate.Security
                 //Set name claim
                 identityClaims.Add(new Claim(claimsIdentity.NameClaimType, name));
                 //Get staff object
-                var staff = await staffService.GetByEmailAsync(email);
+                var staff = await staffService.GetByAzureAdOidAsync(sid);
                 if (staff == null)
                 {
-                    throw new InvalidOperationException($"Staff not found for email {email}");
+                    throw new InvalidOperationException($"Staff not found for object ID {sid}");
                 }
                 identityClaims.Add(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
                 identityClaims.Add(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
