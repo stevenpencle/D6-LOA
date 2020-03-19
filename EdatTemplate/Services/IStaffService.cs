@@ -9,5 +9,6 @@ namespace EdatTemplate.Services
         Task<IEnumerable<Staff>> GetStaffByNameAsync(string name);
         Task<Staff> GetByIdAsync(int id);
         Task<Staff> GetByEmailAsync(string email);
+        Task<Staff> GetByAzureAdOidAsync(string azureAdOid);
     }
 }

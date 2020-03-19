@@ -75,6 +75,21 @@ namespace EdatTemplate.Infrastructure
             return s;
         }
 
+        public async Task<Staff> GetByAzureAdOidAsync(string azureAdOid)
+        {
+            var uri = _endpoint + "?azure-ad-oid=" + HttpUtility.UrlEncode(azureAdOid);
+            var response = await Client.GetAsync(uri);
+            var data = await response.Content.ReadAsStringAsync();
+            var sl = JsonConvert.DeserializeObject<IEnumerable<Staff>>(data).ToList();
+            if (sl.Count != 1)
+            {
+                return null;
+            }
+            var s = sl.First();
+            s.District = DecodeDistrict(s.District);
+            return s;
+        }
+
         private static string DecodeDistrict(string district)
         {
             if (district == null) return null;
