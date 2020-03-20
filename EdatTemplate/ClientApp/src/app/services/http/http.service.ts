@@ -91,7 +91,7 @@ export class HttpService implements OnDestroy {
           this.handleServerError(httpErrorResponse);
           if (httpErrorResponse.status === 400) {
             const modelStateValidations = this.populateModelStateValidations(
-              httpErrorResponse.error
+              JSON.parse(httpErrorResponse.error)
             );
             if (modelStateErrorCallback) {
               modelStateErrorCallback(modelStateValidations);
@@ -143,7 +143,7 @@ export class HttpService implements OnDestroy {
           this.handleServerError(httpErrorResponse);
           if (httpErrorResponse.status === 400) {
             const modelStateValidations = this.populateModelStateValidations(
-              httpErrorResponse.error
+              JSON.parse(httpErrorResponse.error)
             );
             if (modelStateErrorCallback) {
               modelStateErrorCallback(modelStateValidations);
@@ -311,6 +311,9 @@ export class HttpService implements OnDestroy {
     let modelStateErrorsConsole = '';
     const modelStateValidations: ModelStateValidations = new ModelStateValidations();
     for (const property in errorObj) {
+      if (property.startsWith('$')) {
+        continue;
+      }
       if (errorObj.hasOwnProperty(property)) {
         const modelStateValidation: ModelStateValidation = {
           property: property,
