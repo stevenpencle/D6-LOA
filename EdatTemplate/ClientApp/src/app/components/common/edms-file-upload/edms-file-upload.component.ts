@@ -19,7 +19,7 @@ export class EdmsFileUploadComponent {
   filesToUpload: Array<File> = [];
   selectedFileNames: string[] = [];
   isLoadingData: Boolean = false;
-  @ViewChild('fileUpload', { static: false }) fileUploadVar: any;
+  @ViewChild('fileUpload') fileUploadVar: any;
   @Output() documentUploaded = new EventEmitter<IEdmsDocument>();
   @Input() accept: string;
   @Input() documentTypeId: string | null = null;

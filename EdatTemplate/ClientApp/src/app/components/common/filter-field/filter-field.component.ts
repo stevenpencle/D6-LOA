@@ -32,9 +32,9 @@ export class FilterFieldComponent implements OnInit, AfterViewInit, OnChanges {
   @Output()
   filterValChange = new EventEmitter<string>();
   keyUp: Subscription;
-  @ViewChild('filterText', { static: false })
+  @ViewChild('filterText')
   inputElRef: ElementRef;
-  @ViewChild('filterSelect', { static: false })
+  @ViewChild('filterSelect')
   selectElRef: ElementRef;
 
   constructor() {}

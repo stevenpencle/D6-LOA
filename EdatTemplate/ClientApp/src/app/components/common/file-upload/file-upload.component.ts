@@ -18,7 +18,7 @@ export class FileUploadComponent {
   filesToUpload: Array<File> = [];
   selectedFileNames: string[] = [];
   isLoadingData: Boolean = false;
-  @ViewChild('fileUpload', { static: false })
+  @ViewChild('fileUpload')
   fileUploadVar: any;
   @Input() blobDirectory: string;
   @Output() documentUploaded = new EventEmitter<IDocumentMetadata[]>();
