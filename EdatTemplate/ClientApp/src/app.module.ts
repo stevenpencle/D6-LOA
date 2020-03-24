@@ -9,7 +9,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NgxMaskModule } from 'ngx-mask';
+import { IMaskModule } from 'angular-imask';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 // routing
@@ -111,8 +111,8 @@ import { SampleMapComponent } from './app/features/administration/sample/sample-
     NgxChartsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    IMaskModule,
     NgbModule,
-    NgxMaskModule.forRoot(),
     NgxSpinnerModule
   ],
   providers: [
