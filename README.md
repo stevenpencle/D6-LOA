@@ -67,7 +67,7 @@ The default installation is all that is needed for all of the required software 
 4. [.NET Core SDK](https://www.microsoft.com/net/download) - **Please make sure you install version 3.1.200**
 5. [Azure Storage Emulator (standalone installer)](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and (optionally) [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) - latest versions
 6. [Node.js and NPM](https://nodejs.org/en/) - latest LTS version - **This is one install - NPM is part of Node**
-7. [Angular CLI](https://cli.angular.io/) - currently using version 8.2.14 - **You can install this from a command terminal window (Windows Start -> type 'cmd') with the command `npm install -g @angular/cli`**
+7. [Angular CLI](https://cli.angular.io/) - currently using version 9.0.7 - **You can install this from a command terminal window (Windows Start -> type 'cmd') with the command `npm install -g @angular/cli`**
 8. [VS Code](https://code.visualstudio.com/) - latest version
 
 _Visual Studio 2019 is optional, but provides better server-side debugging. If you want to use Visual Studio, please make sure all updates are installed. VS Code is the recommended IDE for developing, but it can be slow when debugging .NET Core code. The ETA is configured for debugging in both VS Code (Node server) and Visual Studio (IIS development server), but they use the same port (44376). If you use Visual Studio for debugging, you will need to kill the IIS process before using the Node server again. Not doing so will result in an exception for the port already in use._
