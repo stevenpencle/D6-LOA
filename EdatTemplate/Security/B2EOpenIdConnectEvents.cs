@@ -48,7 +48,11 @@ namespace EdatTemplate.Security
                 var staff = await staffService.GetByAzureAdOidAsync(sid);
                 if (staff == null)
                 {
-                    throw new InvalidOperationException($"Staff not found for object ID {sid}");
+                    staff = await staffService.GetByEmailAsync(email);
+                    if (staff == null)
+                    {
+                        throw new InvalidOperationException($"Staff not found for object ID {sid} or email {email}");
+                    }
                 }
                 identityClaims.Add(new Claim(ApplicationClaims.UserId, staff.District.ToUpper() + "\\" + staff.RacfId.ToUpper()));
                 identityClaims.Add(new Claim(ApplicationClaims.StaffId, staff.Id.ToString()));
