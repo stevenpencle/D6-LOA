@@ -64,7 +64,7 @@ The default installation is all that is needed for all of the required software 
 1. [Google Chrome](https://www.google.com/chrome/?brand=CHBD&gclid=Cj0KCQiA04XxBRD5ARIsAGFygj-zVcWMKlPkx_upUXkyUoH-DbhKUATruLe4oAP8_IS-uWWaPvo-v48aAuJEEALw_wcB&gclsrc=aw.ds) and (optionally) [Augury](https://augury.rangle.io/)
 2. [Git for Windows](https://gitforwindows.org/) - latest version
 3. [SQL Server Developer](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017) - latest versions **Please make sure you install the SQL Server Developer database engine.**
-4. [.NET Core SDK](https://www.microsoft.com/net/download) - **Please make sure you install version 3.1.200**
+4. [.NET Core SDK](https://www.microsoft.com/net/download) - **Please make sure you install version 3.1.201**
 5. [Azure Storage Emulator (standalone installer)](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) and (optionally) [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) - latest versions
 6. [Node.js and NPM](https://nodejs.org/en/) - latest LTS version - **This is one install - NPM is part of Node**
 7. [Angular CLI](https://cli.angular.io/) - currently using version 9.0.7 - **You can install this from a command terminal window (Windows Start -> type 'cmd') with the command `npm install -g @angular/cli`**
@@ -491,7 +491,7 @@ The configuration files described below control many aspects of the build and ru
 
 _You will not need to alter this file unless you upgrade your application's .NET Core SDK target._
 
-The only purpose of this file is to specify which SDK version to use for building the .NET Core application. Currently, the ETA is targeting the latest SDK version 3.1.200. The ETA is kept current with .NET Core versions.
+The only purpose of this file is to specify which SDK version to use for building the .NET Core application. Currently, the ETA is targeting the latest SDK version 3.1.201. The ETA is kept current with .NET Core versions.
 
 ### .NET Core appsettings.json
 
