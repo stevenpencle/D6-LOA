@@ -257,18 +257,19 @@ export class HttpService implements OnDestroy {
       if (oldId !== undefined) {
         return { $ref: oldId.toString() };
       }
-      id += 1;
       obj['$id'] = id.toString();
       objectMap.set(obj, id);
       if (Array.isArray(obj)) {
         const newArray = [];
         obj.forEach((item, i) => {
+          id += 1;
           newArray[i] = this.decycle(item, id, objectMap);
         });
         return newArray;
       } else {
         const newObj = {};
         Object.keys(obj).forEach(property => {
+          id += 1;
           newObj[property] = this.decycle(obj[property], id, objectMap);
         });
         return newObj;
@@ -279,7 +280,7 @@ export class HttpService implements OnDestroy {
 
   private serializeWithReferenceLooping<T>(obj: T): T {
     const objectMap = new WeakMap<object, number>();
-    return this.decycle(obj, 0, objectMap);
+    return this.decycle(obj, 1, objectMap);
   }
 
   private handleServerError(httpErrorResponse: HttpErrorResponse): void {
