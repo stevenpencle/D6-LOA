@@ -1,0 +1,14 @@
+<input
+  id="{{ id }}"
+  type="text"
+  class="form-control form-control-sm"
+  [resultFormatter]="searchStaffResultFormatter"
+  [ngModel]="selectedStaff"
+  (ngModelChange)="onModelChange($event)"
+  [ngbTypeahead]="searchStaff"
+  [editable]="false"
+  [inputFormatter]="searchStaffResultFormatter"
+  title="{{ title }}"
+  (blur)="onBlur()"
+  #input
+/>

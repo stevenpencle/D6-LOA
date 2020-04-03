@@ -181,9 +181,9 @@ ClientBin/
 *.publishsettings
 orleans.codegen.cs
 
-/EdatTemplate/ClientApp/dist
-/EdatTemplate/ClientApp/node_modules
-/EdatTemplate/ClientApp/src/app/model
+/d6loa/ClientApp/dist
+/d6loa/ClientApp/node_modules
+/d6loa/ClientApp/src/app/model
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -238,7 +238,7 @@ _Pvt_Extensions
 **/.DS_Store
 
 # NLog logs
-/EdatTemplate/Logs/
+/d6loa/Logs/
 
 # user secrets
-/EdatTemplate/secrets.json 
+/d6loa/secrets.json 

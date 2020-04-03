@@ -10,9 +10,9 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/EdatTemplate/bin/Debug/netcoreapp3.1/EdatTemplate.dll",
+      "program": "${workspaceFolder}/d6loa/bin/Debug/netcoreapp3.1/d6loa.dll",
       "args": ["node-server=true"],
-      "cwd": "${workspaceFolder}/EdatTemplate",
+      "cwd": "${workspaceFolder}/d6loa",
       "stopAtEntry": false,
       "internalConsoleOptions": "neverOpen",
       "serverReadyAction": {
@@ -35,7 +35,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "https://localhost:44376",
-      "webRoot": "${workspaceRoot}/EdatTemplate/ClientApp/dist"
+      "webRoot": "${workspaceRoot}/d6loa/ClientApp/dist"
     }
   ]
 }

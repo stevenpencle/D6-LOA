@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/EdatTemplate/EdatTemplate.csproj"
+                "${workspaceFolder}/d6loa/d6loa.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
