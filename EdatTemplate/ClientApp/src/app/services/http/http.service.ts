@@ -7,7 +7,7 @@ import { IClientToken } from '../../model/model';
 import { DataMarshalerService } from '../data/data-marshaler.service';
 import { LoadingService } from '../environment/loading.service';
 import { HttpConfigService } from './http-config.service';
-import { isObject } from 'lodash';
+import { isObject, uniqueId } from 'lodash';
 
 export interface ModelStateValidation {
   property: string;
@@ -240,11 +240,7 @@ export class HttpService implements OnDestroy {
     });
   }
 
-  private decycle(
-    obj: any,
-    id: number,
-    objectMap: WeakMap<object, number>
-  ): any {
+  private decycle(obj: any, objectMap: WeakMap<object, string>): any {
     if (
       isObject(obj) &&
       !(obj instanceof Boolean) &&
@@ -257,20 +253,19 @@ export class HttpService implements OnDestroy {
       if (oldId !== undefined) {
         return { $ref: oldId.toString() };
       }
-      obj['$id'] = id.toString();
+      const id = uniqueId();
+      obj['$id'] = id;
       objectMap.set(obj, id);
       if (Array.isArray(obj)) {
         const newArray = [];
         obj.forEach((item, i) => {
-          id += 1;
-          newArray[i] = this.decycle(item, id, objectMap);
+          newArray[i] = this.decycle(item, objectMap);
         });
         return newArray;
       } else {
         const newObj = {};
         Object.keys(obj).forEach(property => {
-          id += 1;
-          newObj[property] = this.decycle(obj[property], id, objectMap);
+          newObj[property] = this.decycle(obj[property], objectMap);
         });
         return newObj;
       }
@@ -279,8 +274,8 @@ export class HttpService implements OnDestroy {
   }
 
   private serializeWithReferenceLooping<T>(obj: T): T {
-    const objectMap = new WeakMap<object, number>();
-    return this.decycle(obj, 1, objectMap);
+    const objectMap = new WeakMap<object, string>();
+    return this.decycle(obj, objectMap);
   }
 
   private handleServerError(httpErrorResponse: HttpErrorResponse): void {
