@@ -7,7 +7,8 @@ import { IClientToken } from '../../model/model';
 import { DataMarshalerService } from '../data/data-marshaler.service';
 import { LoadingService } from '../environment/loading.service';
 import { HttpConfigService } from './http-config.service';
-import { isObject, uniqueId } from 'lodash';
+import { isObject } from 'lodash';
+import { uuid } from 'lodash-uuid';
 
 export interface ModelStateValidation {
   property: string;
@@ -253,7 +254,7 @@ export class HttpService implements OnDestroy {
       if (oldId !== undefined) {
         return { $ref: oldId.toString() };
       }
-      const id = uniqueId();
+      const id = uuid();
       obj['$id'] = id;
       objectMap.set(obj, id);
       if (Array.isArray(obj)) {
