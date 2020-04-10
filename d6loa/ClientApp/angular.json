@@ -43,7 +43,9 @@
             "tsConfig": "src/tsconfig.app.json",
             "progress": true,
             "polyfills": "src/polyfills.ts",
-            "assets": ["src/assets"],
+            "assets": [
+              "src/assets"
+            ],
             "styles": [
               "src/styles/styles.scss",
               "node_modules/leaflet/dist/images/marker-shadow.png",
@@ -124,5 +126,8 @@
       }
     }
   },
-  "defaultProject": "d6loa"
+  "defaultProject": "d6loa",
+  "cli": {
+    "analytics": "3398ba40-e64c-4f2b-a6ea-db0f8d73e546"
+  }
 }

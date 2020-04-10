@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {
   NgbModule,
   NgbDateAdapter,
-  NgbActiveModal
+  NgbActiveModal,
 } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -67,6 +67,9 @@ import { SamplePdfDocumentComponent } from './app/features/administration/sample
 import { SampleEdmsComponent } from './app/features/administration/sample/sample-edms.component';
 import { SampleSignatureComponent } from './app/features/administration/sample/sample-signature.component';
 import { SampleMapComponent } from './app/features/administration/sample/sample-map.component';
+import { VendorComponent } from './app/features/administration/vendor/vendor.component';
+import { ContractComponent } from './app/features/administration/contract/contract.component';
+import { SupplementalComponent } from './app/features/administration/supplemental/supplemental.component';
 // ** SAMPLE END
 
 @NgModule({
@@ -101,8 +104,11 @@ import { SampleMapComponent } from './app/features/administration/sample/sample-
     SampleChartsComponent,
     SamplePdfDocumentComponent,
     SampleSignatureComponent,
-    SampleMapComponent
+    SampleMapComponent,
     // ** SAMPLE END
+    ContractComponent,
+    VendorComponent,
+    SupplementalComponent
   ],
   imports: [
     BrowserModule,
@@ -113,7 +119,7 @@ import { SampleMapComponent } from './app/features/administration/sample/sample-
     AppRoutingModule,
     IMaskModule,
     NgbModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [
     NgbActiveModal,
@@ -137,9 +143,9 @@ import { SampleMapComponent } from './app/features/administration/sample/sample-
     // ** SAMPLE START
     SampleStoreService,
     // ** SAMPLE END
-    { provide: NgbDateAdapter, useClass: NgbMomentDatePickerAdapter }
+    { provide: NgbDateAdapter, useClass: NgbMomentDatePickerAdapter },
   ],
   entryComponents: [SampleModalComponent],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

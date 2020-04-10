@@ -12,6 +12,10 @@ import { ServerErrorComponent } from './app/components/server-error/server-error
 
 // ** SAMPLE START
 import { SampleComponent } from './app/features/administration/sample/sample.component';
+import { VendorComponent } from './app/features/administration/vendor/vendor.component';
+import { ContractComponent } from './app/features/administration/contract/contract.component';
+import { SupplementalComponent } from './app/features/administration/supplemental/supplemental.component';
+import { LoaComponent } from './app/features/administration/loa/loa.component';
 // ** SAMPLE END
 
 const appRoutes: Routes = [
@@ -23,16 +27,43 @@ const appRoutes: Routes = [
     canActivate: [RouteGuard],
     pathMatch: 'full',
     data: {
-      AuthorizedRoles: ['Admin', 'B2CUser']
+      AuthorizedRoles: ['Admin', 'B2CUser'],
     } as RouteData
   },
   {
-    path: 'administration',
+    path: 'administration/vendor',
+    component: VendorComponent,
     canActivate: [RouteGuard],
-    redirectTo: 'administration/sample',
     pathMatch: 'full',
     data: {
-      AuthorizedRoles: ['Admin', 'B2CUser']
+      AuthorizedRoles: ['Admin', 'B2CUser'],
+    } as RouteData
+  },
+  {
+    path: 'administration/contract',
+    component: ContractComponent,
+    canActivate: [RouteGuard],
+    pathMatch: 'full',
+    data: {
+      AuthorizedRoles: ['Admin', 'B2CUser'],
+    } as RouteData
+  },
+  {
+    path: 'administration/supplemental',
+    component: SupplementalComponent,
+    canActivate: [RouteGuard],
+    pathMatch: 'full',
+    data: {
+      AuthorizedRoles: ['Admin', 'B2CUser'],
+    } as RouteData
+  },
+  {
+    path: 'administration/loa',
+    component: LoaComponent,
+    canActivate: [RouteGuard],
+    pathMatch: 'full',
+    data: {
+      AuthorizedRoles: ['Admin', 'B2CUser'],
     } as RouteData
   },
   // ** SAMPLE END
@@ -40,16 +71,16 @@ const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, pathMatch: 'full' },
   { path: 'not-authorized', component: NotAuthorizedComponent },
   { path: 'server-error', component: ServerErrorComponent },
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: 'home' },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(appRoutes, {
       useHash: true,
-      enableTracing: false // <-- debugging purposes only
-    })
+      enableTracing: false, // <-- debugging purposes only
+    }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

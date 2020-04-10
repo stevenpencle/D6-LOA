@@ -25,6 +25,11 @@ namespace d6loa.ORM
         public virtual DbSet<FdotAppUser> FdotAppUsers { get; set; }
         public virtual DbSet<PublicAppUser> PublicAppUsers { get; set; }
         public virtual DbSet<Sample> Samples { get; set; }
+        public virtual DbSet<Contract> Contracts { get; set; }
+        public virtual DbSet<Loa> Loas { get; set; }
+        public virtual DbSet<Vendor> Vendors { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<Supplement> Supplements { get; set; }
 
         public EntityContext(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, EntityFrameworkConfig entityFrameworkConfig)
         {
@@ -127,6 +132,37 @@ namespace d6loa.ORM
                         .HasForeignKey(x => x.LastUpdatedAppUserId)
                         .IsRequired()
                         .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AppUser>()
+                        .HasMany(x => x.LastUpdatedContracts)
+                        .WithOne(x => x.LastUpdatedAppUser)
+                        .HasForeignKey(x => x.LastUpdatedAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AppUser>()
+                        .HasMany(x => x.LastUpdatedVendors)
+                        .WithOne(x => x.LastUpdatedAppUser)
+                        .HasForeignKey(x => x.LastUpdatedAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AppUser>()
+                        .HasMany(x => x.LastUpdatedInvoices)
+                        .WithOne(x => x.LastUpdatedAppUser)
+                        .HasForeignKey(x => x.LastUpdatedAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AppUser>()
+                        .HasMany(x => x.LastUpdatedLoas)
+                        .WithOne(x => x.LastUpdatedAppUser)
+                        .HasForeignKey(x => x.LastUpdatedAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AppUser>()
+                        .HasMany(x => x.LastUpdatedSupplements)
+                        .WithOne(x => x.LastUpdatedAppUser)
+                        .HasForeignKey(x => x.LastUpdatedAppUserId)
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Restrict);
+
             // FdotAppUser
             modelBuilder.Entity<FdotAppUser>()
                         .Property(x => x.District)
@@ -166,6 +202,215 @@ namespace d6loa.ORM
                         .HasIndex(e => e.Name)
                         .IsUnique()
                         .HasName("IX_Sample_Name");
+
+            // Vendor
+            modelBuilder.Entity<Vendor>()
+                        .ToTable("TBL_Vendor")
+                        .HasKey(x => x.VendorId);
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorId)
+                        .HasColumnName("VendorId");
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorFeid)
+                        .HasColumnType("varchar(16)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .HasIndex(x => x.VendorFeid)
+                        .IsUnique()
+                        .HasName("IX_Vendor_VendorFeid");
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorCompany)
+                        .HasColumnType("varchar(80)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorAddress1)
+                        .HasColumnType("varchar(60)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorAddress2)
+                        .HasColumnType("varchar(60)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorAddress3)
+                        .HasColumnType("varchar(60)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorEmail)
+                        .HasColumnType("varchar(60)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorPerson)
+                        .HasColumnType("varchar(80)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                        .Property(x => x.VendorTelephone)
+                        .HasColumnType("varchar(10)")
+                        .IsRequired();
+            modelBuilder.Entity<Vendor>()
+                      .HasMany(x => x.Contracts)
+                      .WithOne(x => x.CurrentVendor)
+                      .HasForeignKey(x => x.VendorId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Restrict);
+
+
+
+            // Contract
+            modelBuilder.Entity<Contract>()
+                        .ToTable("TBL_Contract")
+                        .HasKey(x => x.Id);
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.Id)
+                        .HasColumnName("ContractId");
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.ContractNumber)
+                        .HasColumnType("varchar(10)")
+                        .IsRequired();
+            modelBuilder.Entity<Contract>()
+                        .HasIndex(x => x.ContractNumber)
+                        .IsUnique()
+                        .HasName("IX_Contract_ContractNumber");
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.FmNumber)
+                        .HasColumnType("varchar(16)")
+                        .IsRequired();
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.StartDate)
+                        .IsRequired();
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.EndDate)
+                       .IsRequired();
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.ExtDate)
+                        .IsRequired();
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.OriginalContractAmt)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.CurrentContractAmt)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.ContractBalance)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.DecommitBalance)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Contract>()
+                        .Property(x => x.Comment)
+                        .HasColumnType("varchar(2048)");
+            // modelBuilder.Entity<Contract>()
+            //           .HasMany(x => x.Supplements)
+            //           .WithOne(x => x.CurrentContract)
+            //           .HasForeignKey(x => x.ContractId)
+            //           .IsRequired()
+            //           .OnDelete(DeleteBehavior.Restrict);
+
+
+            // Invoice
+            modelBuilder.Entity<Invoice>()
+                        .ToTable("TBL_Invoice")
+                        .HasKey(x => x.Id);
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.Id)
+                        .HasColumnName("InvoiceId");
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.ContractId)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.LoaId)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.InvoiceNumber)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.InvoiceDate)
+                        .IsRequired();
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.InvoiceAmount)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.FinalInvoice)
+                        .HasColumnType("bit");
+            modelBuilder.Entity<Invoice>()
+                        .Property(x => x.Comment)
+                        .HasColumnType("varchar(2048)");
+
+            // L.O.A.
+            modelBuilder.Entity<Loa>()
+                        .ToTable("TBL_Loa")
+                        .HasKey(x => x.Id);
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.Id)
+                        .HasColumnName("LoaId");
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.ContractId)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.LoaNumber)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Loa>()
+                       .HasIndex(e => new { e.ContractId, e.LoaNumber })
+                       .IsUnique()
+                       .HasName("IX_Loa_Contract");
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.StartDate)
+                        .IsRequired();
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.EndDate)
+                       .IsRequired();
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.ExtDate)
+                        .IsRequired();
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.OriginalLoaAmt)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.CurrentLoaAmt)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.LoaBalance)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.DecommitAmt)
+                        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Loa>()
+                        .Property(x => x.Comment)
+                        .HasColumnType("varchar(2048)");
+
+            // Supplement
+            modelBuilder.Entity<Supplement>()
+                        .ToTable("TBL_Supplement")
+                        .HasKey(x => x.Id);
+            modelBuilder.Entity<Supplement>()
+                        .Property(x => x.Id)
+                        .HasColumnName("SupplementId");
+            modelBuilder.Entity<Supplement>()
+                        .Property(x => x.ContractId)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Supplement>()
+                        .Property(x => x.SupplementNumber)
+                        .HasColumnType("int")
+                        .IsRequired();
+            modelBuilder.Entity<Supplement>()
+                        .HasIndex(e => new { e.ContractId, e.SupplementNumber })
+                        .IsUnique()
+                        .HasName("IX_Supplement_Contract");
+            modelBuilder.Entity<Supplement>()
+                        .Property(x => x.StartDate)
+                        .IsRequired();
+            modelBuilder.Entity<Supplement>()
+                        .Property(x => x.EndDate)
+                        .IsRequired();
+            modelBuilder.Entity<Supplement>()
+                        .Property(x => x.SupplementAmount)
+                        .HasColumnType("decimal(18,2)");
+
             //call base
             base.OnModelCreating(modelBuilder);
         }

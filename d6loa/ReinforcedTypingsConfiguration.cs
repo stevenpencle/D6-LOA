@@ -23,7 +23,11 @@ namespace d6loa
                 typeof(AppUser),
                 typeof(FdotAppUser),
                 typeof(PublicAppUser),
-                typeof(Sample)
+                typeof(Sample),
+                typeof(Contract),
+                typeof(Loa),
+                typeof(Vendor),
+                typeof(Supplement)
             }, c => c
             .WithCodeGenerator<ReinforcedTypingsEntityInterfaceCodeGenerator>()
             .WithPublicProperties(p => p.ForceNullable())

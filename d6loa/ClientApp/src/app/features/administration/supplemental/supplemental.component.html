@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="contractNumber">Contract #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="contractNumber"
+              name="contractNumber"
+              [(ngModel)]="supplement.currentContract.contractNumber"
+              placeholder="Contract #:"
+              aria-placeholder="Contract #:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="supplementalNumber">Supplemental #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="supplementalNumber"
+              name="supplementalNumber"
+              [(ngModel)]="supplement.supplementNumber"
+              placeholder="Enter Supplemental #:"
+              aria-placeholder="Enter Supplemental #:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="startDate"
+              name="startDate"
+              [(ngModel)]="supplement.startDate"
+              placeholder="Enter the Start Date:"
+              aria-placeholder="Enter the Start Date:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="endDate"
+              name="endDate"
+              [(ngModel)]="supplement.endDate"
+              placeholder="Enter the End Date:"
+              aria-placeholder="Enter the End Date:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="supplementAmount">Supplemental Amount</label>
+            <input
+              type="text" 
+              class="form-control form-control-sm"
+              id="supplementAmount"
+              name="supplementAmount"
+              [(ngModel)]="supplement.supplementAmount"
+              placeholder="Enter the Supplemental Amount:"
+              aria-placeholder="Enter the Supplemental Amount:"
+            />
+          </div>
+    </div> 
+</div>

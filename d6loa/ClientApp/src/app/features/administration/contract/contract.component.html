@@ -1,0 +1,206 @@
+
+<!-- Contract Information -->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="contractNumber">Contract #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="contractNumber"
+              name="contractNumber"
+              [(ngModel)]="contract.contractNumber"
+              placeholder="Enter the Contract #:"
+              aria-placeholder="Enter the Contract #:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="fmNumber">FM #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="fmNumber"
+              name="fmNumber"
+              [(ngModel)]="contract.fmNumber"
+              placeholder="Enter the FM Number:"
+              aria-placeholder="Enter the FM Number:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="vendorFEID">Vendor FEID</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="vendorFEID"
+              name="vendorFEID"
+              [(ngModel)]="contract.currentVendor.vendorFeid"
+              placeholder="Enter the Vendor FEID:"
+              aria-placeholder="Enter the Vendor FEID:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="vendorName">Vendor Name</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="vendorName"
+              name="vendorName"
+              [(ngModel)]="contract.currentVendor.vendorCompany"
+              placeholder="Enter the Vendor Name:"
+              aria-placeholder="Enter the Vendor Name:"
+            />
+          </div>
+    </div>
+
+</div>
+<!-- Date Information-->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="startDate"
+              name="startDate"
+              [(ngModel)]="contract.startDate"
+              placeholder="Enter the Start Date:"
+              aria-placeholder="Enter the Start Date:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="endDate"
+              name="endDate"
+              [(ngModel)]="contract.endDate"
+              placeholder="Enter the End Date:"
+              aria-placeholder="Enter the End Date:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="extDate">Extension Date</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="extDate"
+              name="extDate"
+              [(ngModel)]="contract.extDate"
+              placeholder="Enter the Extension Date:"
+              aria-placeholder="Enter the Extension Date:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+
+    </div>
+
+</div>
+
+<!-- Financial Information -->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="originalAmt">Original Contract Amt ($)</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="originalAmt"
+              name="originalAmt"
+              [(ngModel)]="contract.originalContractAmt"
+              placeholder="Enter the Original Contract Amt ($):"
+              aria-placeholder="Enter the Original Contract Amt ($):"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="currentAmt">Current Contract Amt</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="currentAmt"
+              name="currentAmt"
+              [(ngModel)]="contract.currentContractAmt"
+              placeholder="Enter the Current Contract Amt ($):"
+              aria-placeholder="Enter the Current Contract Amt ($):"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="contractBalance">Contract Balance</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="contractBalance"
+              name="contractBalance"
+              [(ngModel)]="contract.contractBalance"
+              placeholder="Enter the Contract Balance ($):"
+              aria-placeholder="Enter the Contract Balance ($):"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="decommitBalance">Decommitted Balance</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="decommitBalance"
+              name="decommitBalance"
+              [(ngModel)]="contract.decommitBalance"
+              placeholder="Enter the Decommitted Balance:"
+              aria-placeholder="Enter the Decommitted Balance:"
+            />
+          </div>
+    </div>
+
+</div>
+
+<!-- Comments -->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="commentBox">Comments</label>
+        </div>
+
+        <textarea
+            id="commentBox"
+            name="commentBox"
+            rows="6"
+            cols="240"
+            [(ngModel)]="contract.decommitBalance"
+            placeholder="Enter Comments:"
+            aria-placeholder="Enter Comments:">
+        </textarea>
+    </div>
+</div>
+

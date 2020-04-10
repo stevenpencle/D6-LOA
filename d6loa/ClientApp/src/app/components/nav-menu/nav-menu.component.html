@@ -19,7 +19,7 @@
         style="width: 30px;"
         src="assets/logo.png"
         title="d6loa logo"
-      />&nbsp;EDAT Template</span
+      />&nbsp;District 6 L.O.A.</span
     >
     <span class="d-sm-block d-md-none">
       <img
@@ -48,7 +48,7 @@
       <li *ngIf="isAdmin || isB2CUser" class="nav-item" ngbDropdown>
         <a
           class="nav-link"
-          style="cursor: pointer"
+          style="cursor: pointer;"
           ngbDropdownToggle
           id="adminDropdown"
           role="button"
@@ -70,7 +70,44 @@
             routerLink="/administration/sample"
             >Samples</a
           >
+
+          <a
+            class="dropdown-item"
+            aria-label="L.O.A. administration"
+            title="L.O.A. administration"
+            (click)="$event.preventDefault()"
+            routerLink="/administration/loa"
+            >L.O.A. #3</a
+          >
+
           <!-- ** SAMPLE END -->
+          <a
+            class="dropdown-item"
+            aria-label="Contract administration"
+            title="Contract administration"
+            (click)="$event.preventDefault()"
+            routerLink="/administration/contract"
+            >Contract</a
+          >
+
+          <a
+            class="dropdown-item"
+            aria-label="Vendor administration"
+            title="Vendor administration"
+            (click)="$event.preventDefault()"
+            routerLink="/administration/vendor"
+            >Vendors</a
+          >          
+
+          <a
+            class="dropdown-item"
+            aria-label="Supplemental Agreement administration"
+            title="Supplemental Agreement administration"
+            (click)="$event.preventDefault()"
+            routerLink="/administration/supplemental"
+            >Supplemental Agreements</a
+          >
+
         </div>
       </li>
     </ul>

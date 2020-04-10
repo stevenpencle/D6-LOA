@@ -326,5 +326,40 @@ textarea.form-control {
     .custom-control-label {
       margin-bottom: 0;
     }
+
+    .preference {
+      display: flex;
+      justify-content: space-between;
+      width: 60%;
+      margin: .5rem;
+  }
+  .flex-container {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+  }
+
+  .space-evenly { 
+    justify-content: space-evenly; 
+  }
+
+  .space-evenly li {
+    background: #ffffff; 
+  }
+
+  .flex-item {
+    background: rgb(255, 255, 255);
+    padding: 5px;
+    width: 60px;
+    height: 50px;
+    margin: 5px;
+    line-height: 50px;
+    color: white;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+  }
+
   }
 }
