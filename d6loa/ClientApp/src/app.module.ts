@@ -70,6 +70,8 @@ import { SampleMapComponent } from './app/features/administration/sample/sample-
 import { VendorComponent } from './app/features/administration/vendor/vendor.component';
 import { ContractComponent } from './app/features/administration/contract/contract.component';
 import { SupplementalComponent } from './app/features/administration/supplemental/supplemental.component';
+import { LoaComponent } from './app/features/administration/loa/loa.component';
+import { InvoiceComponent } from './app/features/administration/invoice/invoice.component';
 // ** SAMPLE END
 
 @NgModule({
@@ -108,6 +110,8 @@ import { SupplementalComponent } from './app/features/administration/supplementa
     // ** SAMPLE END
     ContractComponent,
     VendorComponent,
+    LoaComponent,
+    InvoiceComponent,
     SupplementalComponent
   ],
   imports: [

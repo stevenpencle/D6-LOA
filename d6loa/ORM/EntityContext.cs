@@ -244,7 +244,7 @@ namespace d6loa.ORM
                         .IsRequired();
             modelBuilder.Entity<Vendor>()
                         .Property(x => x.VendorTelephone)
-                        .HasColumnType("varchar(10)")
+                        .HasColumnType("varchar(16)")
                         .IsRequired();
             modelBuilder.Entity<Vendor>()
                       .HasMany(x => x.Contracts)
@@ -264,7 +264,7 @@ namespace d6loa.ORM
                         .HasColumnName("ContractId");
             modelBuilder.Entity<Contract>()
                         .Property(x => x.ContractNumber)
-                        .HasColumnType("varchar(10)")
+                        .HasColumnType("varchar(16)")
                         .IsRequired();
             modelBuilder.Entity<Contract>()
                         .HasIndex(x => x.ContractNumber)
@@ -281,8 +281,9 @@ namespace d6loa.ORM
                         .Property(x => x.EndDate)
                        .IsRequired();
             modelBuilder.Entity<Contract>()
-                        .Property(x => x.ExtDate)
-                        .IsRequired();
+                        .Property(x => x.ExtDate);
+//                        .IsRequired()                        
+
             modelBuilder.Entity<Contract>()
                         .Property(x => x.OriginalContractAmt)
                         .HasColumnType("decimal(18,2)");

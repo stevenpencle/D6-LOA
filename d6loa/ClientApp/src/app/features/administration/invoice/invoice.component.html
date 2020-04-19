@@ -1,0 +1,120 @@
+
+<!-- Contract Information -->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="contractNumber">Contract #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="contractNumber"
+              name="contractNumber"
+              [(ngModel)]="invoice.contractId"
+              placeholder="Enter the Contract #:"
+              aria-placeholder="Enter the Contract #:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="loaNumber">LOA #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="loaNumber"
+              name="loaNumber"
+              [(ngModel)]="invoice.loaId"
+              placeholder="Enter the LOA Number:"
+              aria-placeholder="Enter the LOA Number:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="invoiceNumber">Invoice #</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="invoiceNumber"
+              name="invoiceNumber"
+              [(ngModel)]="invoice.invoiceNumber"
+              placeholder="Enter the Invoice #:"
+              aria-placeholder="Enter the Invoice #:"
+            />
+          </div>
+
+    </div>
+
+</div>
+<!-- Date Information-->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="invoiceDate">Invoice Date</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="invoiceDate"
+              name="invoiceDate"
+              [(ngModel)]="invoice.invoiceDate"
+              placeholder="Enter the Invoice Date:"
+              aria-placeholder="Enter the Invoice Date:"
+            />
+          </div>
+
+    </div>
+
+    <div class="col">
+        <div class="form-group">
+            <label for="invoiceAmt">Invoice Amount</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="invoiceAmt"
+              name="invoiceAmt"
+              [(ngModel)]="invoice.invoiceAmount"
+              placeholder="Enter the Invoice Amount:"
+              aria-placeholder="Enter the Invoice Amount:"
+            />
+          </div>
+    </div>
+
+    <div class="col">
+        <div class="form-group form-check">
+            <input
+              ngbAutofocus
+              type="checkbox"
+              class="form-check-input"
+              id="finalInvoice"
+              name="finalInvoice"
+              [(ngModel)]="invoice.finalInvoice"
+              aria-label="Check if Final Invoice:"
+              title="Check if Final Invoice:"
+            />
+            <label class="form-check-label" for="finalInvoice">Final Invoice</label>
+          </div>
+    </div>
+
+</div>
+
+<!-- Comments -->
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            <label for="commentBox">Comments</label>
+        </div>
+
+        <textarea
+            id="commentBox"
+            name="commentBox"
+            rows="6"
+            cols="240"
+            [(ngModel)]="invoice.comment"
+            placeholder="Enter Comments:"
+            aria-placeholder="Enter Comments:">
+        </textarea>
+    </div>
+</div>
+

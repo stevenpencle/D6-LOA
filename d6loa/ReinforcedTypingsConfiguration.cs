@@ -26,6 +26,7 @@ namespace d6loa
                 typeof(Sample),
                 typeof(Contract),
                 typeof(Loa),
+                typeof(Invoice),
                 typeof(Vendor),
                 typeof(Supplement)
             }, c => c

@@ -16,6 +16,7 @@ import { VendorComponent } from './app/features/administration/vendor/vendor.com
 import { ContractComponent } from './app/features/administration/contract/contract.component';
 import { SupplementalComponent } from './app/features/administration/supplemental/supplemental.component';
 import { LoaComponent } from './app/features/administration/loa/loa.component';
+import { InvoiceComponent } from './app/features/administration/invoice/invoice.component';
 // ** SAMPLE END
 
 const appRoutes: Routes = [
@@ -42,6 +43,15 @@ const appRoutes: Routes = [
   {
     path: 'administration/contract',
     component: ContractComponent,
+    canActivate: [RouteGuard],
+    pathMatch: 'full',
+    data: {
+      AuthorizedRoles: ['Admin', 'B2CUser'],
+    } as RouteData
+  },
+  {
+    path: 'administration/invoice',
+    component: InvoiceComponent,
     canActivate: [RouteGuard],
     pathMatch: 'full',
     data: {

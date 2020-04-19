@@ -14,13 +14,13 @@ namespace d6loa.Models.Domain
         [MaxLength(10, ErrorMessage = "Contract # must be 6 - 10 characters.")]
         public string ContractNumber { get; set; }
         [Required(ErrorMessage = "FM # is required.")]
-        [MaxLength(10, ErrorMessage = "FM # must be 16 characters or less.")]
+        [MaxLength(16, ErrorMessage = "FM # must be 16 characters or less.")]
         public string FmNumber { get; set; }
         [Required(ErrorMessage = "Start Date is required.")]
         public DateTime StartDate { get; set; }
         [Required(ErrorMessage = "End Date is required.")]
         public DateTime EndDate { get; set; }
-        [Required(ErrorMessage = "Extension Date is required.")]
+       // [Required(ErrorMessage = "Extension Date is required.")]
         public DateTime ExtDate { get; set; }
         public Decimal OriginalContractAmt { get; set; }
         public Decimal CurrentContractAmt { get; set; }

@@ -14,7 +14,6 @@
               aria-placeholder="Enter the Contract #:"
             />
           </div>
-
     </div>
 
     <div class="col">
@@ -30,7 +29,6 @@
               aria-placeholder="Enter the FM Number:"
             />
           </div>
-
     </div>
 
     <div class="col">
@@ -41,7 +39,7 @@
               class="form-control form-control-sm"
               id="vendorFEID"
               name="vendorFEID"
-              [(ngModel)]="contract.currentVendor.vendorFeid"
+              [(ngModel)]="contract.vendorId"
               placeholder="Enter the Vendor FEID:"
               aria-placeholder="Enter the Vendor FEID:"
             />
@@ -57,7 +55,7 @@
               class="form-control form-control-sm"
               id="vendorName"
               name="vendorName"
-              [(ngModel)]="contract.currentVendor.vendorCompany"
+
               placeholder="Enter the Vendor Name:"
               aria-placeholder="Enter the Vendor Name:"
             />
@@ -68,49 +66,40 @@
 <!-- Date Information-->
 <div class="row">
     <div class="col">
-        <div class="form-group">
-            <label for="startDate">Start Date</label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="startDate"
-              name="startDate"
-              [(ngModel)]="contract.startDate"
-              placeholder="Enter the Start Date:"
-              aria-placeholder="Enter the Start Date:"
-            />
-          </div>
+
+      <div class="form-group">
+        <label class="form-label" for="startDate"
+          >Start Date</label>
+        <app-date-field
+          [(moment)]="startDate"
+          id="startDate"
+          title="Enter Start Date:"
+        ></app-date-field>
+      </div>
 
     </div>
 
     <div class="col">
-        <div class="form-group">
-            <label for="endDate">End Date</label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="endDate"
-              name="endDate"
-              [(ngModel)]="contract.endDate"
-              placeholder="Enter the End Date:"
-              aria-placeholder="Enter the End Date:"
-            />
-          </div>
+
+      <div class="form-group">
+        <label class="form-label" for="endDate">End Date</label>
+        <app-date-field
+          [(moment)]="endDate"
+          id="endDate"
+          title="Enter End Date:"></app-date-field>
+      </div>
+
+
 
     </div>
 
     <div class="col">
         <div class="form-group">
             <label for="extDate">Extension Date</label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="extDate"
-              name="extDate"
-              [(ngModel)]="contract.extDate"
-              placeholder="Enter the Extension Date:"
-              aria-placeholder="Enter the Extension Date:"
-            />
+            <app-date-field
+            [(moment)]="extDate"
+            id="extDate"
+            title="Enter Extension Date:"></app-date-field>  
           </div>
 
     </div>
@@ -197,10 +186,15 @@
             name="commentBox"
             rows="6"
             cols="240"
-            [(ngModel)]="contract.decommitBalance"
+            [(ngModel)]="contract.comment"
             placeholder="Enter Comments:"
             aria-placeholder="Enter Comments:">
         </textarea>
     </div>
 </div>
 
+<div class="row">
+  <div class="col">
+    <button class="btn btn-sm btn-primary" (click)="saveContract()">Save</button>
+  </div>
+</div>

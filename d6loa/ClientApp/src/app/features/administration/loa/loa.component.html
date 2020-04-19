@@ -1,18 +1,72 @@
 <h1>LOA</h1>
 <div class="row">
-    <div class="col">
-        <!-- <div class="form-group">
-            <label for="contractNumber">Contract #</label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="contractNumber"
-              name="contractNumber"
-              [(ngModel)]="contract.contractNumber"
-              placeholder="Enter the Contract #:"
-              aria-placeholder="Enter the Contract #:"
-            />
-          </div> -->
+  <div class="col">
+    <div class="form-group">
+      <label for="loaContract">Contract Number</label><br />
+      <input type="text" minlength="9" maxlength="15" size="25" id="loaContract" name="loaContract"
+        [(ngModel)]="loa.contractId" placeholder="Enter the Contract #:"
+        aria-placeholder="Enter the Contract #:" />
     </div>
+  </div>
+  <div class="col">
+    <div class="form-group">
+      <label for="loaNumber">L.O.A. Number</label><br />
+      <input type="text" minlength="9" maxlength="15" size="25" id="loaNumber" name="loaNumber"
+        [(ngModel)]="loa.loaNumber" placeholder="Enter the LOA #:" aria-placeholder="Enter the LOA #:" />
+    </div>
+  </div>
+  <div class="col">
+
+  </div>
 </div>
 
+<div class="row">
+  <div class="col">
+    <div class="form-group">
+      <label for="loaStartDate">Start Date</label><br/>
+      <input
+      type="text" 
+      minlength="9" 
+      maxlength="15" 
+      size="25"
+      id="loaStartDate"
+      name="loaStartDate"
+      [(ngModel)]="loa.startDate"
+      placeholder="Enter the Start Date:"
+      aria-placeholder="Enter the Start Date:"
+    />
+    </div>
+  </div>
+  <div class="col">
+    <div class="form-group">
+      <label for="loaEndDate">End Date</label><br/>
+      <input
+      type="text" 
+      minlength="9" 
+      maxlength="15" 
+      size="25"
+      id="loaEndDate"
+      name="loaEndDate"
+      [(ngModel)]="loa.endDate"
+      placeholder="Enter the End Date:"
+      aria-placeholder="Enter the End Date:"
+    />
+    </div>
+  </div>
+  <div class="col">
+    <div class="form-group">
+      <label for="loaExtDate">Extension Date</label><br/>
+      <input
+      type="text" 
+      minlength="9" 
+      maxlength="15" 
+      size="25"
+      id="loaExtDate"
+      name="loaExtDate"
+      [(ngModel)]="loa.extDate"
+      placeholder="Enter the Extension Date:"
+      aria-placeholder="Enter the Extension Date:"
+    />
+    </div>
+  </div>
+</div>
