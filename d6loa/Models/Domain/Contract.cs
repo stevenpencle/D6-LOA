@@ -47,8 +47,20 @@ namespace d6loa.Models.Domain
             {
                 validationResults.Add(new ValidationResult("Start Date cannot be a future date", new[] { "StartDate" }));
             }
+            
+            
+            if (EndDate < StartDate)
+                {
+                    validationResults.Add(new ValidationResult("Start Date less than End Date", new[] { "EndDate" }));
+                   
+                }
+                
+           
 
             return validationResults;
+
+ 
+            
         }
 
     }
