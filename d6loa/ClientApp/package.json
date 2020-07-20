@@ -39,7 +39,7 @@
     "leaflet-search": "^2.9.8",
     "leaflet-styleeditor": "^0.1.16",
     "linq": "^3.2.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "lodash-uuid": "0.0.3",
     "moment": "^2.24.0",
     "ngx-spinner": "^9.0.1",
